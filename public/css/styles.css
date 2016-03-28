@@ -1,0 +1,22 @@
+
+.small-tokenly{
+	position: relative;
+	width: 100px;
+	display: block;
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
+.small-tokenly img{
+	max-width: 100%;
+}
+
+.navbar-header .logo{
+	display: block;
+	position: relative;
+	width: 150px;
+}
+
+.navbar-header .logo img{
+	max-width: 100%;
+}

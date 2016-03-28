@@ -1,0 +1,70 @@
+{
+    "name": "tokenly/bitsplit",
+    "description": "Cryptocurrency token distributor & payment routing application.",
+    "keywords": ["bitcoin", "counterparty", "tokens", "cryptocurrency"],
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": ">=5.5.9",
+        "laravel/framework": "5.2.*",
+        "tokenly/accounts-client": "dev-master",
+        "laravel/socialite": "^3.0@dev",
+		"tokenly/tokenslot-client": "dev-master@dev",
+		"linusu/bitcoin-address-validator": "~0",
+		"tokenly/xchain-client": "dev-master@dev",
+		"guzzlehttp/guzzle": "~6.0",
+		"tokenly/token-generator": "dev-master@dev",
+        "tokenly/laravel-event-log": "dev-master@dev",
+        "simplesoftwareio/simple-qrcode": "1.4.*",        
+        "nesbot/carbon": "*",
+        "tokenly/laravel-api-provider": "dev-master@dev"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "~1.4",
+        "mockery/mockery": "0.9.*",
+        "phpunit/phpunit": "~4.0",
+        "symfony/css-selector": "2.8.*|3.0.*",
+        "symfony/dom-crawler": "2.8.*|3.0.*"
+        
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "classmap": [
+            "database",
+            "app/Models"
+        ],
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/TestCase.php"
+        ]
+    },
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/tokenly/tokenslot-client"
+		}
+	],    
+    "scripts": {
+        "post-root-package-install": [
+            "php -r \"copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "php artisan key:generate"
+        ],
+        "post-install-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postInstall",
+            "php artisan optimize"
+        ],
+        "post-update-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "php artisan optimize"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}
