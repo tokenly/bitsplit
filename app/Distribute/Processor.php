@@ -6,7 +6,7 @@ class Processor
 {
 	function __construct()
 	{
-		
+		$this->initializer = new Initialize;
 	}
 	
 	public function processDistributions()
@@ -19,10 +19,15 @@ class Processor
 		foreach($get as $k => $row){
 			$this->processStage($row);
 		}
+		return true;
 	}
 	
 	protected function processStage($distro)
 	{
+		if($distro->stage == 0){
+			$this->initializer->init($distro);
+			return true;
+		}
 		$stage = $distro->stageName();
 		if(!$stage){
 			return false;
@@ -30,5 +35,6 @@ class Processor
 		$stage = 'Stages\\'.$stage;
 		$load = new $stage($distro);
 		$init = $load->init();
+		return true;
 	}
 }
