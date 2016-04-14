@@ -3,7 +3,11 @@
 use User, Config, Distribution;
 class WebhookController extends Controller {
 
-	
+	public function DistributorDeposit()
+	{
+		
+		
+	}
 
 
 }

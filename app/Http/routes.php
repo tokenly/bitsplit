@@ -13,6 +13,10 @@
 
 Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
 
+//webhooks
+Route::post('hooks/distribution/deposit', array('as' => 'hooks.distro.deposit',
+		'uses' => 'WebhookController@DistributorDeposit'));
+
 //tokenly accounts stuff
 // The welcome page for the user that requires a logged in user
 $router->get('/account/welcome', 'AccountController@welcome');

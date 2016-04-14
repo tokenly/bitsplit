@@ -14,7 +14,7 @@ class Initialize
 		if($distro->monitor_uuid != '' OR $distro->hold == 1){
 			return false;
 		}
-		$webhook = ''; //add webhook route later
+		$webhook = route('hooks.distro.deposit'); 
 		try{
 			$xchain = xchain();
 			$monitor = $xchain->newAddressMonitor($distro->deposit_address, $webhook);
