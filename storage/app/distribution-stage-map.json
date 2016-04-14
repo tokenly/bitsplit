@@ -1,0 +1,10 @@
+{
+	"1": "CollectTokens",
+	"2": "PrimeUtxos",
+	"3": "PrepareTxs",
+	"4": "SignTxs",
+	"5": "BroadcastTxs",
+	"6": "ConfirmBroadcasts",
+	"7": "ConsoldateTxs",
+	"8": "ConfirmCleanup"
+}
