@@ -1,5 +1,5 @@
 <?php namespace App\Http\Controllers;
-use User, Auth, Config, AccountPayment;
+use User, Auth, Config;
 class HomeController extends Controller {
 
 	/*
