@@ -7,7 +7,7 @@
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
-        "tokenly/accounts-client": "dev-master",
+        "tokenly/tokenpass-client": "dev-master",
         "laravel/socialite": "^3.0@dev",
 		"tokenly/tokenslot-client": "dev-master@dev",
 		"linusu/bitcoin-address-validator": "~0",
@@ -31,7 +31,8 @@
     "autoload": {
         "classmap": [
             "database",
-            "app/Models"
+            "app/Models",
+            "app/Distribute"
         ],
         "psr-4": {
             "App\\": "app/"

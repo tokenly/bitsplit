@@ -8,7 +8,7 @@ use Tokenly\TokenSlotClient;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 use App\Http\Controllers\Controller;
-use Tokenly\AccountsClient\Facade\TokenlyAccounts;
+use Tokenly\TokenpassClient\Facade\Tokenpass;
 
 class AccountController extends Controller {
 
@@ -82,7 +82,7 @@ class AccountController extends Controller {
 
         try {
             // check for an error returned from Tokenly Accounts
-            $error_description = TokenlyAccounts::checkForError($request);
+            $error_description = Tokenpass::checkForError($request);
             if ($error_description) {
                 return view('account.authorization-failed', ['error_msg' => $error_description]);
             }

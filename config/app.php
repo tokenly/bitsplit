@@ -156,7 +156,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         
-        Tokenly\AccountsClient\Provider\TokenlyAccountsServiceProvider::class,
+        Tokenly\TokenpassClient\Provider\TokenpassServiceProvider::class,
 		Tokenly\XChainClient\XChainServiceProvider::class,
 		Tokenly\HmacAuth\ServiceProvider\HmacAuthServiceProvider::class,
 		Tokenly\LaravelEventLog\EventLogServiceProvider::class,
