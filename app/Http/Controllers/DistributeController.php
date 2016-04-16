@@ -251,7 +251,31 @@ class DistributeController extends Controller {
 	
 	public function getDetails($address)
 	{
+		$user = Auth::user();
+		if(!$user){
+			return Redirect::route('account.auth');
+		}
+		$distro = Distro::where('deposit_address', $address)->where('user_id', $user->id)->first();
+		if(!$distro){
+			return $this->return_error('home', 'Distribution not found');
+		}
 		
+		$address_list = DistroTx::where('distribution_id', $distro->id)->orderBy('quantity', 'desc')->get();
 		
+		$address_count = 0;
+		$num_complete = 0;
+		if($address_list){
+			foreach($address_list as $row){
+				$address_count++;
+				if($row->confirmed == 1){
+					$num_complete++;
+				}
+			}
+		}
+		
+		return view('distribute.details', array('user' => $user, 'distro' => $distro,
+												'address_list' => $address_list,
+												'address_count' => $address_count,
+												'num_complete' => $num_complete,));
 	}
 }

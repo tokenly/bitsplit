@@ -20,3 +20,16 @@
 .navbar-header .logo img{
 	max-width: 100%;
 }
+
+.distro-info{
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+
+.distro-info li{
+	list-style-type: none;
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
