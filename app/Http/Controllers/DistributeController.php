@@ -308,4 +308,24 @@ class DistributeController extends Controller {
 		}
 		return $this->return_success(array('distribute.details', $address), 'Distribution details updated!');
 	}
+	
+	public function deleteDistribution($id)
+	{
+		$user = Auth::user();
+		if(!$user){
+			return Redirect::route('account.auth');
+		}
+		$distro = Distro::where('id', $id)->where('user_id', $user->id)->first();
+		if(!$distro){
+			return $this->return_error('home', 'Distribution not found');
+		}
+		if($distro->complete == 0 AND ($distro->fee_received > 0 OR $distro->asset_received > 0)){
+			return $this->return_error('home', 'You cannot delete a distribution in progress');
+		}
+		$delete = $distro->delete();
+		if(!$delete){
+			return $this->return_error('home', 'Error deleting distribution');
+		}
+		return $this->return_success('home', 'Distribution deleted!');
+	}
 }

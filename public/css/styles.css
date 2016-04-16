@@ -33,3 +33,8 @@
 	margin: 0px;
 	padding: 0px;
 }
+
+.distro-history-table .btn{
+	font-size: 11px;
+	padding: 3px 5px;
+}

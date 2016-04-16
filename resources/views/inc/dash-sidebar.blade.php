@@ -18,7 +18,7 @@
 				You have made no distributions yet.
 			</p>
 		@else
-			<table class="table table-bordered table-striped" style="font-size: 12px;">
+			<table class="table table-bordered table-striped distro-history-table" style="font-size: 12px;">
 				<thead>
 					<tr>
 						<th>ID</th>
@@ -32,7 +32,7 @@
 					@foreach($dash_info['distribution_history'] as $row)
 						<tr>
 							<td>
-								#{{ $row->id }}
+								<strong>#{{ $row->id }}</strong>
 								@if($row->label != '')
 									{{ $row->label }}
 								@endif
@@ -105,6 +105,9 @@
 							</td>
 							<td>
 								<a href="{{ route('distribute.details', $row->deposit_address) }}" class="btn btn-info btn-sm" title="View details"><i class="fa fa-info"></i></a>
+								@if($row->complete == 1 OR ($row->asset_received == 0 AND $row->fee_received == 0))
+									<a href="{{ route('distribute.delete', $row->id) }}" class="btn btn-sm btn-danger delete" title="Delete"><i class="fa fa-close"></i></a>
+								@endif
 							</td>
 						</tr>
 					@endforeach
