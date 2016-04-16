@@ -21,7 +21,8 @@
 		</p>
 		<hr>
 		<div id="new-distro-form">
-			<form action="" method="post" enctype="multipart/form-data">
+			<form action="{{ route('distribute.post') }}" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 				<div class="form-group">
 					<label for="asset">Token Name</label>
 					<input type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" required />
@@ -68,6 +69,7 @@
 			<li><strong>User:</strong> {{ $user->username }}</li>
 			<li><strong>BTC Fuel Balance:</strong> 0</li>
 			<li><strong>BTC Fuel Address:</strong> <a href="" target="_blank"></a></li>
+			<li><strong>Fuel Spent:</strong> </li>
 			<li><strong>Distributions Completed:</strong> 0</li>
 			<li><strong># Distribution Txs:</strong> 0</li>
 		</ul>
