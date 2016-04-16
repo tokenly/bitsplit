@@ -50,6 +50,10 @@
 					<label for="csv_list">Upload .CSV file</label>
 					<input type="file" name="csv_list" id="csv_list" />
 				</div>
+				<div class="form-group checkbox">
+					<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="cut_head" id="cut_head" value="1" checked="checked" />
+					<label for="cut_head" style="padding-left: 35px; font-size: 13px;" >Remove heading line from csv?</label>
+				</div>
 				<p>
 					<strong>OR</strong>
 				</p>

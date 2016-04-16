@@ -11,11 +11,17 @@
 |
 */
 
+//main pages
 Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
 
 //webhooks
 Route::post('hooks/distribution/deposit', array('as' => 'hooks.distro.deposit',
 		'uses' => 'WebhookController@DistributorDeposit'));
+		
+//distributions
+Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'DistributeController@submitDistribution'));
+Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
+		
 
 //tokenly accounts stuff
 // The welcome page for the user that requires a logged in user

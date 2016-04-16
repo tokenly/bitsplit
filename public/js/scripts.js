@@ -27,4 +27,16 @@ function eraseCookie(name) {
 $(document).ready(function(){
 	$('.fancy').fancybox();
 	$('.datetimepicker').datetimepicker();
+	
+	$('select#value_type').change(function(e){
+		var val = $(this).val();
+		if(val == 'percent'){
+			$('#percent_asset_total').slideDown();
+		}
+		else{
+			$('#percent_asset_total').slideUp();
+		}
+		
+	});
+	
 });

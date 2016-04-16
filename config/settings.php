@@ -9,5 +9,5 @@ return array(
 						),
 	'broadcast_interval' => 0.5, //number of seconds to wait in between tx broadcasts
 	'amount_decimals' => 8, //# of decimals to round quantities to (e.g for percent value type distros)
-
+	'min_distribution_addresses' => 3, //no point in creating distributions to less than this amount of addresses
 );
