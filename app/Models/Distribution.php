@@ -55,4 +55,13 @@ class Distribution extends Model
 		return $this->save();
 	}
 	
+	public function getExtra()
+	{
+		$decode = json_decode($this->extra, true);
+		if(!is_array($decode)){
+			return false;
+		}
+		return $decode;
+	}
+	
 }
