@@ -31,7 +31,7 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a href="{{ URL::to('/') }}" class="navbar-brand"><!--<img src="" alt="" /> --> <strong>BitSplit</strong></a>
+		  <a href="{{ URL::to('/') }}" class="navbar-brand"><!--<img src="" alt="" /> --> <strong><i class="fa fa-code-fork"></i> BitSplit</strong></a>
 		</div>
 		<nav class="collapse navbar-collapse" role="navigation">
 		  <ul class="nav navbar-nav">
@@ -45,7 +45,7 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> {{ Auth::user()->username }} <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
 						<li><a href="{{ URL::to('/home') }}">BitSplit Dashboard</a></li>
-						<li><a href="{{ env('TOKENLY_ACCOUNTS_PROVIDER_HOST') }}/dashboard" target="_blank">Account Settings</a></li>
+						<li><a href="{{ env('TOKENPASS_PROVIDER_HOST') }}/dashboard" target="_blank">Account Settings</a></li>
 						<li><a href="{{ url('/account/logout') }}">Logout</a></li>
 					</ul>
 				</li>
