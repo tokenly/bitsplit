@@ -64,4 +64,14 @@ class Distribution extends Model
 		return $decode;
 	}
 	
+	public function addressCount()
+	{
+		return DistributionTx::where('distribution_id', $this->id)->count();
+	}
+	
+	public function countComplete()
+	{
+		return DistributionTx::where('distribution_id', $this->id)->where('confirmed', 1)->count();
+	}
+	
 }

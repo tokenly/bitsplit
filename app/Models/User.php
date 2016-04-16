@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Models\Distribution, Models\DistributionTx;
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
 	use Authenticatable, CanResetPassword;
@@ -32,5 +33,38 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 			return false;
 		}
 		return true;
+	}
+	
+	public static function getDashInfo($userId = 0)
+	{
+		if($userId == 0){
+			$user = Auth::user();
+		}
+		else{
+			$user = User::find($userId);
+		}
+		if(!$user){
+			return false;
+		}
+		
+		$output = array();
+		$output['fuel_address'] = '';
+		$output['fuel_balance'] = 0;
+		$output['fuel_spent'] = 0;
+		
+		$distros = Distribution::where('user_id', $user->id)->get();
+		$output['distribution_history'] = $distros;
+		$output['distributions_complete'] = 0;
+		$output['distribution_txs'] = 0;
+		if($distros){
+			foreach($distros as $distro){
+				if($distro->complete == 1){
+					$output['distributions_complete']++;
+				}
+				$output['distribution_txs'] += $distro->countComplete();
+			}
+		}
+
+		return $output;
 	}
 }

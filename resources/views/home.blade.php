@@ -55,7 +55,7 @@
 					<label for="cut_head" style="padding-left: 35px; font-size: 13px;" >Remove heading line from csv?</label>
 				</div>
 				<p>
-					<strong>OR</strong>
+					<strong class="text-info">OR</strong>
 				</p>
 				<div class="form-group">
 					<label for="address_list">Manually Enter Address List:</label>

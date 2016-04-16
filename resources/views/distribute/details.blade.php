@@ -7,6 +7,9 @@
 		@if(trim($distro->label) != '')
 			<h3>{{ $distro->label }}</h3>
 		@endif
+		<p>
+			<a href="{{ route('home') }}"><i class="fa fa-mail-reply"></i> Go Back</a>
+		</p>
 		<h4>Details &amp; Status</h4>
 		<form action="{{ route('distribute.details.update', $distro->deposit_address) }}" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="_token" value="{{ csrf_token() }}" />		
@@ -82,6 +85,11 @@
 				}
 				?>
 			</li>
+			<li><strong>Date Created:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->created_at)) }} </li>
+			<li><strong>Last Updated:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->updated_at)) }}</li>
+			@if($distro->complete == 1)
+				<li><strong>Completed:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->completed_at)) }}</li>
+			@endif
 			@if($distro->complete == 0)
 			<li>
 				<div class="checkbox">
