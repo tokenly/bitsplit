@@ -48,7 +48,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		}
 		
 		$output = array();
-		$output['fuel_address'] = '';
+		$output['fuel_address'] = User::getFuelAddress($user->id);
 		$output['fuel_balance'] = 0;
 		$output['fuel_spent'] = 0;
 		
@@ -66,5 +66,28 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		}
 
 		return $output;
+	}
+	
+	public static function getFuelAddress($userId)
+	{
+		$get_address = UserMeta::getMeta($userId, 'fuel_address');
+		if(!$get_address){
+			$xchain = xchain();
+			try{
+				$new_address = $xchain->newPaymentAddress();
+			}
+			catch(\Exception $e){
+				\Log::error('Error getting user '.$userId.' fuel address: '.$e->getMessage());
+				return false;
+			}
+			
+			if($new_address AND isset($new_address['address'])){
+				UserMeta::setMeta($userId, 'fuel_address', $new_address['address']);
+				UserMeta::setMeta($userId, 'fuel_address_uuid', $new_address['id']);
+				return $new_address['address'];
+			}
+			return false;
+		}
+		return $get_address;
 	}
 }
