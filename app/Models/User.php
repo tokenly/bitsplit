@@ -57,6 +57,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		$output['distributions_complete'] = 0;
 		$output['distribution_txs'] = 0;
 		if($distros){
+			$output['distribution_count'] = count($distros);
 			foreach($distros as $distro){
 				if($distro->complete == 1){
 					$output['distributions_complete']++;

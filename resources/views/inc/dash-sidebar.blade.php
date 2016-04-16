@@ -8,8 +8,6 @@
 			<li><strong>BTC Fuel Balance:</strong> {{ rtrim(rtrim(number_format($dash_info['fuel_balance'],8),"0"),".") }}</li>
 			<li><strong>BTC Fuel Address:</strong> <a href="https://blocktrail.com/BTC/address/{{ $dash_info['fuel_address'] }}" target="_blank">{{ $dash_info['fuel_address'] }}</a></li>
 			<li><strong>Fuel Spent:</strong> {{ rtrim(rtrim(number_format($dash_info['fuel_spent'],8),"0"),".") }}</li>
-			<li><strong>Distributions Completed:</strong> {{ number_format($dash_info['distributions_complete']) }}</li>
-			<li><strong># Distribution Txs:</strong> {{ number_format($dash_info['distribution_txs']) }}</li>
 		</ul>
 		<hr>
 		<h3>Distribution History</h3>
@@ -18,6 +16,11 @@
 				You have made no distributions yet.
 			</p>
 		@else
+			<p>
+				<strong>Count:</strong> {{ number_format($dash_info['distribution_count']) }}<br>
+				<strong>Completed:</strong> {{ number_format($dash_info['distributions_complete']) }}<br>
+				<strong># Txs:</strong> {{ number_format($dash_info['distribution_txs']) }}
+			</p>
 			<table class="table table-bordered table-striped distro-history-table" style="font-size: 12px;">
 				<thead>
 					<tr>
