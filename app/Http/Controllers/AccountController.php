@@ -54,7 +54,7 @@ class AccountController extends Controller {
      */
     public function logout() {
         Auth::logout();
-        return redirect('/account/login');
+        return Redirect::route('account.auth');
     }
 
 
