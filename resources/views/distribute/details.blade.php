@@ -85,7 +85,7 @@
 			@if($distro->complete == 0)
 			<li>
 				<div class="checkbox">
-					<label><input type="checkbox" name="hold" id="hold" value="1" style="margin-top: 2px;" /> Pause Distribution</label>
+					<label><input type="checkbox" name="hold" id="hold" value="1" style="margin-top: 2px;" @if($distro->hold == 1) checked="checked" @endif /> Pause Distribution</label>
 				</div>
 			</li>
 			@endif
@@ -95,7 +95,7 @@
 			</div>
 		</form>
 		<hr>
-		<h4>Transactions ({{ $num_complete }} / {{ $address_count }})</h4>
+		<h4>Transactions ({{ $num_complete }} / {{ $address_count }} complete)</h4>
 		<p>
 			<strong>Received:</strong><br>
 			{{ rtrim(rtrim(number_format($distro->asset_received / 100000000, 8),"0"),".") }} / {{ rtrim(rtrim(number_format($distro->asset_total / 100000000, 8),"0"),".") }} {{ $distro->asset }}

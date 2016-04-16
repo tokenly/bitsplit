@@ -15,7 +15,15 @@ class Controller extends BaseController
     {
 		\Session::flash('message', $message);
 		\Session::flash('message-class', $class);
-		return \Redirect::route($route);
+		$opts = null;
+		if(is_array($route) AND isset($route[0])){
+			$arr = $route;
+			$route = $arr[0];
+			if(isset($arr[1])){
+				$opts = $arr[1];
+			}
+		}
+		return \Redirect::route($route, $opts);
 	}
     
     protected function return_error($route, $message)

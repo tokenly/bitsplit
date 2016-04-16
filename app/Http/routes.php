@@ -21,7 +21,7 @@ Route::post('hooks/distribution/deposit', array('as' => 'hooks.distro.deposit',
 //distributions
 Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'DistributeController@submitDistribution'));
 Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
-Route::post('distribute/{address}', array('as' => 'distribute.details.update', 'uses' => 'DistributeController@getDetails'));
+Route::post('distribute/{address}', array('as' => 'distribute.details.update', 'uses' => 'DistributeController@updateDetails'));
 		
 
 //tokenly accounts stuff

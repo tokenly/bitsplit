@@ -278,4 +278,34 @@ class DistributeController extends Controller {
 												'address_count' => $address_count,
 												'num_complete' => $num_complete,));
 	}
+	
+	public function updateDetails($address)
+	{
+		$user = Auth::user();
+		if(!$user){
+			return Redirect::route('account.auth');
+		}
+		$distro = Distro::where('deposit_address', $address)->where('user_id', $user->id)->first();
+		if(!$distro){
+			return $this->return_error('home', 'Distribution not found');
+		}
+		$input = Input::all();
+		
+		if(isset($input['label'])){
+			$distro->label = htmlentities(trim($input['label']));
+		}
+		if($distro->complete == 0){
+			$hold = 0;
+			if(isset($input['hold']) AND intval($input['hold']) == 1){
+				$hold = 1;
+			}
+			$distro->hold = $hold;
+		}
+		
+		$save = $distro->save();
+		if(!$save){
+			return $this->return_error(array('distribute.details', $address), 'Error updating distribution details');
+		}
+		return $this->return_success(array('distribute.details', $address), 'Distribution details updated!');
+	}
 }
