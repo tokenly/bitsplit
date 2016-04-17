@@ -61,6 +61,10 @@
 					<label for="address_list">Manually Enter Address List:</label>
 					<textarea id="address_list" style="height: 150px;" name="address_list" class="form-control" placeholder="&lt;address&gt;,&lt;amount&gt;"></textarea>
 				</div>	
+				<div class="form-group checkbox">
+					<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="use_fuel" id="use_fuel" value="1" checked="checked" />
+					<label for="use_fuel" style="padding-left: 35px; font-size: 13px;" >Use available fuel for BTC fee?</label>
+				</div>				
 				<div class="form-submit">
 					<button type="submit" class="btn btn-lg btn-success"><i class="fa fa-check"></i> Initiate Distribution</button>
 				</div>															

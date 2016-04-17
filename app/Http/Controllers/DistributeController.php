@@ -128,6 +128,11 @@ class DistributeController extends Controller {
 			return $this->return_error('home', 'Error generating deposit address');
 		}
 		
+		$use_fuel = 0;
+		if(isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
+			$use_fuel = 1;
+		}
+		
 		//save distribution
 		$distro = new Distro;
 		$distro->user_id = $user->id;
@@ -139,6 +144,7 @@ class DistributeController extends Controller {
 		$distro->asset_total = $asset_total;
 		$distro->fee_total = $fee_total;
 		$distro->label = $label;
+		$distro->use_fuel = $use_fuel;
 		$save = $distro->save();
 		
 		if(!$save){
