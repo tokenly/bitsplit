@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use User, UserMeta;
+use User, UserMeta, Models\Distribution as Distro;
 
 class PumpFuel extends Command
 {
@@ -48,6 +48,11 @@ class PumpFuel extends Command
 		if(!$fuel_address){
 			$this->error('No fuel address on file');
 			return false;
+		}
+		//see if this is a distribution first
+		$distro = Distro::find($address);
+		if($distro){
+			$address = $distro->deposit_address;
 		}
 		$xchain = xchain();
 		try{
