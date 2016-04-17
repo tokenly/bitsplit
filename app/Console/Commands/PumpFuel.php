@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use User, UserMeta, Models\Distribution as Distro;
+use Models\Fuel;
 
 class PumpFuel extends Command
 {
@@ -39,47 +40,12 @@ class PumpFuel extends Command
         $address = $this->argument('address');
         $amount = $this->argument('amount');
         $sweep = $this->option('sweep');
-        $address_user = false;
-        if($username == 'MASTER'){
-			$fuel_address = env('MASTER_FUEL_ADDRESS_UUID');
-			//see if address is actually a user
-			$address_user = User::where('id', $address)->orWhere('username', $address)->first();
-		}
-		else{
-			$user = User::where('username', $username)->first();
-			if(!$user){
-				$this->error('User not found');
-				return false;
-			} 
-			$fuel_address = UserMeta::getMeta($user->id, 'fuel_address_uuid');
-			if(!$fuel_address){
-				$this->error('No fuel address on file');
-				return false;
-			}
-		}
-		
-		if($address_user){
-			$address = UserMeta::getMeta($address_user->id, 'fuel_address');
-			if(!$address){
-				$this->error('No fuel address on file');
-				return false;
-			}	
-		}
-		else{
-			//see if this is a distribution 
-			$distro = Distro::find($address);
-			if($distro){
-				$address = $distro->deposit_address;
-			}
-		}
-		
-		$xchain = xchain();
 		try{
 			if($sweep == 'true'){
-				$send = $xchain->sweepAllAssets($fuel_address, $address);
+				$send = Fuel::pump($username, $address, 'sweep', 'BTC', null, false);
 			}
 			else{
-				$send = $xchain->send($fuel_address, $address, $amount, 'BTC');
+				$send = Fuel::pump($username, $address, $amount, 'BTC', null, false);
 			}
 			if($send){
 				$this->info('Success: '.$send['txid']);
