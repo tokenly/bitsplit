@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
          Commands\Distribute::class,
          Commands\PumpFuel::class,
+         Commands\RefreshFuelBalances::class,
     ];
 
     /**
