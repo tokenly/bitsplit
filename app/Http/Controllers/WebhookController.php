@@ -60,7 +60,7 @@ class WebhookController extends Controller {
 								$new_pending = 0;
 							}
 							if($getTx){
-								$save = DB::table('fuel_deposits')->where('txid', $input['txid'])->update(array('confirmed', 1));
+								$save = DB::table('fuel_deposits')->where('txid', $input['txid'])->update(array('confirmed' => 1));
 								if(!$save){
 									return false;
 								}
