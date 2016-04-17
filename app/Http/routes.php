@@ -21,7 +21,7 @@ Route::post('hooks/distribution/deposit', array('as' => 'hooks.distro.deposit',
 Route::post('hooks/refuel', array('as' => 'hooks.refuel',
 		'uses' => 'WebhookController@FuelAddressDeposit'));		
 		
-Route::post('hooks/refuel', array('as' => 'hooks.unfuel',
+Route::post('hooks/unfuel', array('as' => 'hooks.unfuel',
 'uses' => 'WebhookController@DebitFuelAddress'));		
 		
 //distributions

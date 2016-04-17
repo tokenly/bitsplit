@@ -1,6 +1,7 @@
 <?php 
 namespace App\Http\Controllers;
-use User, UserMeta, Config, Models\Distribution, Models\DistributionTx, Request, Response, DB;
+use Illuminate\Http\Request, Input;
+use User, UserMeta, Config, Models\Distribution, Models\DistributionTx, Response, DB;
 class WebhookController extends Controller {
 
 	public function DistributorDeposit(Request $request)
