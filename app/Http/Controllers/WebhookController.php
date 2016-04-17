@@ -104,7 +104,7 @@ class WebhookController extends Controller {
 					$min_conf = 1;
 					$time = timestamp();
 					if(!$getTx){
-						if(!isset($valid_assets[$input['asset']])){
+						if($input['asset'] != 'BTC'){
 							Log::error('Invalid fuel debit asset '.$input['asset'].' '.$input['txid']);
 							die();
 						}
