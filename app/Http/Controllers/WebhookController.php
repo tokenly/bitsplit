@@ -40,12 +40,12 @@ class WebhookController extends Controller {
 						}
 						$save = DB::table('fuel_deposits')->insert($tx_data);
 						if(!$save){
-							return false;
+							die();
 						}
 					}
 					if($getTx AND $getTx->confirmed == 1){
 						//already confirmed
-						return true;
+						die();
 					}
 					
 					if($input['asset'] == 'BTC'){
@@ -62,7 +62,7 @@ class WebhookController extends Controller {
 							if($getTx){
 								$save = DB::table('fuel_deposits')->where('txid', $input['txid'])->update(array('confirmed' => 1));
 								if(!$save){
-									return false;
+									die();
 								}
 								UserMeta::setMeta($userId, 'fuel_pending', $new_pending);
 							}
@@ -110,12 +110,12 @@ class WebhookController extends Controller {
 						}
 						$save = DB::table('fuel_debits')->insert($tx_data);
 						if(!$save){
-							return false;
+							die();
 						}
 					}
 					if($getTx AND $getTx->confirmed == 1){
 						//already confirmed
-						return true;
+						die();
 					}					
 					if($input['asset'] == 'BTC'){
 						if($input['confirmations'] >= $min_conf
