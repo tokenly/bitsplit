@@ -18,6 +18,12 @@ Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
 Route::post('hooks/distribution/deposit', array('as' => 'hooks.distro.deposit',
 		'uses' => 'WebhookController@DistributorDeposit'));
 		
+Route::post('hooks/refuel', array('as' => 'hooks.refuel',
+		'uses' => 'WebhookController@FuelAddressDeposit'));		
+		
+Route::post('hooks/refuel', array('as' => 'hooks.unfuel',
+'uses' => 'WebhookController@DebitFuelAddress'));		
+		
 //distributions
 Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'DistributeController@submitDistribution'));
 Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));

@@ -49,8 +49,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		
 		$output = array();
 		$output['fuel_address'] = User::getFuelAddress($user->id);
-		$output['fuel_balance'] = 0;
-		$output['fuel_spent'] = 0;
+		$output['fuel_balance'] = intval(UserMeta::getMeta($user->id, 'fuel_balance'));
+		$output['fuel_spent'] = intval(UserMeta::getMeta($user->id, 'fuel_spent'));;
 		
 		$distros = Distribution::where('user_id', $user->id)->get();
 		$output['distribution_history'] = $distros;
@@ -76,15 +76,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 			$xchain = xchain();
 			try{
 				$new_address = $xchain->newPaymentAddress();
+				$monitor = false;
+				if($new_address AND isset($new_address['address'])){
+					$nonce = hash('sha256', $new_address['id'].'_'.$userId);
+					$monitor = $xchain->newAddressMonitor($new_address['address'], route('hooks.refuel').'?nonce='.$nonce);
+					$send_monitor = $xchain->newAddressMonitor($new_address['address'], route('hooks.unfuel').'?nonce='.$nonce, 'send');
+				}
 			}
 			catch(\Exception $e){
 				\Log::error('Error getting user '.$userId.' fuel address: '.$e->getMessage());
 				return false;
 			}
 			
-			if($new_address AND isset($new_address['address'])){
+			if($new_address AND isset($new_address['address']) AND $monitor AND $send_monitor){
 				UserMeta::setMeta($userId, 'fuel_address', $new_address['address']);
 				UserMeta::setMeta($userId, 'fuel_address_uuid', $new_address['id']);
+				UserMeta::setMeta($userId, 'fuel_address_monitor_receive', $monitor['id']);
+				UserMeta::setMeta($userId, 'fuel_address_monitor_send', $send_monitor['id']);
+				UserMeta::setMeta($userId, 'fuel_balance', 0);
+				UserMeta::setMeta($userId, 'fuel_pending', 0);
+				UserMeta::setMeta($userId, 'fuel_spent', 0);
 				return $new_address['address'];
 			}
 			return false;

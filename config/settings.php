@@ -10,4 +10,6 @@ return array(
 	'broadcast_interval' => 0.5, //number of seconds to wait in between tx broadcasts
 	'amount_decimals' => 8, //# of decimals to round quantities to (e.g for percent value type distros)
 	'min_distribution_addresses' => 3, //no point in creating distributions to less than this amount of addresses
+	'min_fuel_confirms' => 2, //how long to wait before crediting fuel
+	'valid_fuel_tokens' => array('BTC' => 0, 'TOKENLY' => 6), //things you can use to pay your fuel with. # is in $$
 );
