@@ -50,6 +50,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		$output = array();
 		$output['fuel_address'] = User::getFuelAddress($user->id);
 		$output['fuel_balance'] = intval(UserMeta::getMeta($user->id, 'fuel_balance'));
+		$output['fuel_pending'] = intval(UserMeta::getMeta($user->id, 'fuel_pending'));
 		$output['fuel_spent'] = intval(UserMeta::getMeta($user->id, 'fuel_spent'));;
 		
 		$distros = Distribution::where('user_id', $user->id)->get();

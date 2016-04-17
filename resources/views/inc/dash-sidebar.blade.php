@@ -5,9 +5,13 @@
 		<h3>My Account</h3>
 		<ul>
 			<li><strong>User:</strong> {{ $user->username }}</li>
-			<li><strong>BTC Fuel Balance:</strong> {{ rtrim(rtrim(number_format($dash_info['fuel_balance'],8),"0"),".") }}</li>
+			<li><strong>BTC Fuel Balance:</strong> {{ rtrim(rtrim(number_format($dash_info['fuel_balance']/100000000,8),"0"),".") }}
+				@if($dash_info['fuel_pending'] > 0)
+					({{ rtrim(rtrim(number_format($dash_info['fuel_pending']/100000000,8),"0"),".") }} pending)
+				@endif
+			</li>
 			<li><strong>BTC Fuel Address:</strong> <a href="https://blocktrail.com/BTC/address/{{ $dash_info['fuel_address'] }}" target="_blank">{{ $dash_info['fuel_address'] }}</a></li>
-			<li><strong>Fuel Spent:</strong> {{ rtrim(rtrim(number_format($dash_info['fuel_spent'],8),"0"),".") }}</li>
+			<li><strong>Fuel Spent:</strong> {{ rtrim(rtrim(number_format($dash_info['fuel_spent']/100000000,8),"0"),".") }}</li>
 		</ul>
 		<hr>
 		<h3>Distribution History</h3>
