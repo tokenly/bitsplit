@@ -1,6 +1,6 @@
 <?php 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request, Input;
+use Illuminate\Http\Request, Input, Log;
 use User, UserMeta, Config, Models\Distribution, Models\DistributionTx, Response, DB;
 class WebhookController extends Controller {
 
