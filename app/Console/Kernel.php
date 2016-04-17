@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
          Commands\PumpFuel::class,
          Commands\RefreshFuelBalances::class,
          Commands\NewAddress::class,
+         Commands\ListDistros::class,
     ];
 
     /**
