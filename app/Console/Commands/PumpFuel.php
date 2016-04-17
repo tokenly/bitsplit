@@ -39,15 +39,20 @@ class PumpFuel extends Command
         $address = $this->argument('address');
         $amount = $this->argument('amount');
         $sweep = $this->option('sweep');
-        $user = User::where('username', $username)->first();
-        if(!$user){
-			$this->error('User not found');
-			return false;
-		} 
-		$fuel_address = UserMeta::getMeta($user->id, 'fuel_address_uuid');
-		if(!$fuel_address){
-			$this->error('No fuel address on file');
-			return false;
+        if($username == 'MASTER'){
+			$fuel_address = env('MASTER_FUEL_ADDRESS_UUID');
+		}
+		else{
+			$user = User::where('username', $username)->first();
+			if(!$user){
+				$this->error('User not found');
+				return false;
+			} 
+			$fuel_address = UserMeta::getMeta($user->id, 'fuel_address_uuid');
+			if(!$fuel_address){
+				$this->error('No fuel address on file');
+				return false;
+			}
 		}
 		//see if this is a distribution first
 		$distro = Distro::find($address);
