@@ -40,11 +40,13 @@ class WebhookController extends Controller {
 						}
 						$save = DB::table('fuel_deposits')->insert($tx_data);
 						if(!$save){
+							Log::error('Error saving fuel deposit '.$input['txid']);
 							die();
 						}
 					}
 					if($getTx AND $getTx->confirmed == 1){
 						//already confirmed
+						Log::error('Fuel deposit already confirmed '.$input['txid']);
 						die();
 					}
 					
@@ -62,6 +64,7 @@ class WebhookController extends Controller {
 							if($getTx){
 								$save = DB::table('fuel_deposits')->where('txid', $input['txid'])->update(array('confirmed' => 1));
 								if(!$save){
+									Log::error('Error saving fuel deposit '.$input['txid']);
 									die();
 								}
 								UserMeta::setMeta($userId, 'fuel_pending', $new_pending);
@@ -100,7 +103,11 @@ class WebhookController extends Controller {
 					$getTx = DB::table('fuel_debits')->where('txid', $input['txid'])->first();
 					$min_conf = 1;
 					$time = timestamp();
-					if(!$getTx AND isset($valid_assets[$input['asset']])){
+					if(!$getTx){
+						if(!isset($valid_assets[$input['asset']])){
+							Log::error('Invalid fuel debit asset '.$input['asset'].' '.$input['txid']);
+							die();
+						}
 						$tx_data = array('user_id' => $userId, 'asset' => $input['asset'], 
 										'created_at' => $time, 'updated_at' => $time,
 										'quantity' => $input['quantitySat'], 
@@ -110,25 +117,32 @@ class WebhookController extends Controller {
 						}
 						$save = DB::table('fuel_debits')->insert($tx_data);
 						if(!$save){
+							Log::error('Error saving fuel debit '.$input['txid']);
 							die();
 						}
 					}
 					if($getTx AND $getTx->confirmed == 1){
 						//already confirmed
+						Log::error('Fuel debit TX already confirmed '.$input['txid']);
 						die();
 					}					
 					if($input['asset'] == 'BTC'){
-						if($input['confirmations'] >= $min_conf
-							AND (!$getTx OR $getTx->confirmed == 0)){
-							$amount = intval($input['quantitySat']);
-							$current_fuel = intval(UserMeta::getMeta($userId, 'fuel_balance'));
-							$new_amount = $current_fuel - $amount;
-							if($new_amount <= 0){
-								$new_amount = 0;
+						if(!$getTx OR $getTx->confirmed == 0){
+							if(!$getTx){
+								$amount = intval($input['quantitySat']);
+								$current_fuel = intval(UserMeta::getMeta($userId, 'fuel_balance'));
+								$new_amount = $current_fuel - $amount;
+								if($new_amount <= 0){
+									$new_amount = 0;
+								}
+								UserMeta::setMeta($userId, 'fuel_balance', $new_amount);
 							}
-							UserMeta::setMeta($userId, 'fuel_balance', $new_amount);
-							if($getTx){
-								DB::table('fuel_debits')->where('txid', $input['txid'])->update(array('confirmed' => 1));
+							if($getTx AND $input['confirmations'] >= $min_conf){
+								$save = DB::table('fuel_debits')->where('txid', $input['txid'])->update(array('confirmed' => 1));
+								if(!$save){
+									Log::error('Error confirming fuel debit tx '.$input['txid']);
+									die();
+								}
 							}
 						}
 					}
