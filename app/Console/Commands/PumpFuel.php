@@ -39,8 +39,11 @@ class PumpFuel extends Command
         $address = $this->argument('address');
         $amount = $this->argument('amount');
         $sweep = $this->option('sweep');
+        $address_user = false;
         if($username == 'MASTER'){
 			$fuel_address = env('MASTER_FUEL_ADDRESS_UUID');
+			//see if address is actually a user
+			$address_user = User::where('id', $address)->orWhere('username', $address)->first();
 		}
 		else{
 			$user = User::where('username', $username)->first();
@@ -54,11 +57,22 @@ class PumpFuel extends Command
 				return false;
 			}
 		}
-		//see if this is a distribution first
-		$distro = Distro::find($address);
-		if($distro){
-			$address = $distro->deposit_address;
+		
+		if($address_user){
+			$address = UserMeta::getMeta($address_user->id, 'fuel_address');
+			if(!$address){
+				$this->error('No fuel address on file');
+				return false;
+			}	
 		}
+		else{
+			//see if this is a distribution 
+			$distro = Distro::find($address);
+			if($distro){
+				$address = $distro->deposit_address;
+			}
+		}
+		
 		$xchain = xchain();
 		try{
 			if($sweep == 'true'){
