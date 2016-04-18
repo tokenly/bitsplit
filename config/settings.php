@@ -11,5 +11,6 @@ return array(
 	'amount_decimals' => 8, //# of decimals to round quantities to (e.g for percent value type distros)
 	'min_distribution_addresses' => 3, //no point in creating distributions to less than this amount of addresses
 	'min_fuel_confirms' => 2, //how long to wait before crediting fuel
+	'min_distribution_confirms' => 1, //how long before accepting distribution deposits
 	'valid_fuel_tokens' => array('BTC' => 0, 'TOKENLY' => 6), //things you can use to pay your fuel with. # is in $$
 );
