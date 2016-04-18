@@ -62,10 +62,6 @@ class Fuel
 			if($distro){
 				$address = $distro->deposit_address;
 			}
-			else{
-				Log::error('Fuel pump - distro not found '.$address);
-				throw new Exception($address.' distribution not found');
-			}
 		}
 		$xchain = xchain();
 		if(strtolower($amount) == 'sweep'){
