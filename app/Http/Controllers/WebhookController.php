@@ -124,30 +124,31 @@ class WebhookController extends Controller {
 					if($input['asset'] == 'BTC'){
 						//credit direct BTC fuel
 						$amount = intval($input['quantitySat']);
-						$current_fuel = intval(UserMeta::getMeta($userId, 'fuel_balance'));
-						$current_pending = intval(UserMeta::getMeta($userId, 'fuel_pending'));						
-						if($input['confirmations'] >= $min_conf){
-							$new_amount = $amount + $current_fuel;
-							$new_pending = $current_pending - $amount;
-							if($new_pending < 0){
-								$new_pending = 0;
+						try{
+							$balances = $xchain->getAccountBalances($uuid, 'default');
+							if($balances){
+								UserMeta::setMeta($userId, 'fuel_balance', round($balances['confirmed']['BTC']*100000000));
+								UserMeta::setMeta($userId, 'fuel_pending', round($balances['unconfirmed']['BTC']*100000000));
+								Log::info('User '.$userId.' fuel balances - '.json_encode($balances));
 							}
+						}
+						catch(Exception $e){
+							Log::error('Fuel deposit could not get balances '.$userId.': '.$e->getMessage());
+							die();
+						}
+						if(!$balances){
+							Log::error('Fuel deposit no balances '.$userId.': '.$e->getMessage());
+							die();
+						}				
+						if($input['confirmations'] >= $min_conf){
 							if($getTx){
 								$save = DB::table('fuel_deposits')->where('txid', $input['txid'])->update(array('confirmed' => 1, 'updated_at' => $time));
 								if(!$save){
 									Log::error('Error saving fuel deposit '.$input['txid']);
 									die();
 								}
-								UserMeta::setMeta($userId, 'fuel_pending', $new_pending);
 							}
 							Log::info('Fuel deposited user '.$userId.': '.$new_amount.' '.$input['asset']);
-							UserMeta::setMeta($userId, 'fuel_balance', $new_amount);
-						}
-						else{
-							if(!$getTx){
-								$new_pending = $current_pending + $amount;
-								UserMeta::setMeta($userId, 'fuel_pending', $new_pending);
-							}
 						}
 					}
 					elseif(isset($valid_assets[$input['asset']])){
