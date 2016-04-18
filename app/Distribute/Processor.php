@@ -1,7 +1,7 @@
 <?php
 namespace Distribute;
 use Models\Distribution as Distro;
-
+use Log;
 class Processor
 {
 	function __construct()
@@ -24,6 +24,7 @@ class Processor
 	
 	protected function processStage($distro)
 	{
+		Log::info('Processing stage '.$distro->stage.' for distro #'.$distro->id);
 		if($distro->stage == 0){
 			$this->initializer->init($distro);
 			return true;

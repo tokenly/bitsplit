@@ -1,6 +1,7 @@
 <?php
 namespace Distribute;
 use Models\Distribution as Distro;
+use Log;
 
 class Initialize
 {
@@ -14,7 +15,7 @@ class Initialize
 		if($distro->monitor_uuid != '' OR $distro->hold == 1){
 			return false;
 		}
-		$webhook = route('hooks.distro.deposit'); 
+		$webhook = route('hooks.distro.deposit').'?nonce='.hash('sha256', $distro->user_id.':'.$distro->address_uuid); 
 		try{
 			$xchain = xchain();
 			$monitor = $xchain->newAddressMonitor($distro->deposit_address, $webhook);
@@ -24,11 +25,12 @@ class Initialize
 			$monitor = false;
 		}
 		if(is_array($monitor)){
-			$distro->monitor_uuid = $monitor['uuid'];
+			$distro->monitor_uuid = $monitor['id'];
 			if($first_stage){
 				$distro->stage = 1;
 			}
 			$distro->save();
+			Log::info('Started distro receive monitor for #'.$distro->id);
 			return true;
 		}
 		return false;
@@ -41,6 +43,7 @@ class Initialize
 		}
 		$xchain = xchain();
 		$destroy = $xchain->destroyAddressMonitor($distro->monitor_uuid);
+		Log::info('Stopped distro receive monitor for #'.$distro->id);
 		return true;
 	}
 	
