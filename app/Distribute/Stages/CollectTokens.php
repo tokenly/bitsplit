@@ -9,8 +9,7 @@ class CollectTokens extends Stage
 		//received tokens + fee applied to distro via webhook
 		//do simple check and increment stage
 		$distro = $this->distro;
-		if($distro->asset_received >= $distro->asset_total
-			AND $distro->fee_received >= $distro->fee_total){
+		if($distro->asset_received >= $distro->asset_total){
 			$distro->incrementStage();
 			return true;		
 		}
