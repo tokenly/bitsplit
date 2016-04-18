@@ -40,13 +40,14 @@ class WebhookController extends Controller {
 						else{
 							if($getTx->confirmed == 1){
 								Log::error('Distro deposit already confirmed '.$input['txid']);
-								die();
 							}
-							if($input['confirmations'] >= $min_conf){
-								$save = DB::table('distribution_deposits')->where('id', $getTx->id)->update(array('confirmed' => 1, 'updated_at' => $time));
-								if(!$save){
-									Log::error('Error saving distro deposit '.$input['txid']);
-									die();
+							else{
+								if($input['confirmations'] >= $min_conf){
+									$save = DB::table('distribution_deposits')->where('id', $getTx->id)->update(array('confirmed' => 1, 'updated_at' => $time));
+									if(!$save){
+										Log::error('Error saving distro deposit '.$input['txid']);
+										die();
+									}
 								}
 							}
 						}
@@ -56,11 +57,11 @@ class WebhookController extends Controller {
 							$fuel_total = 0;
 							foreach($all_deposits as $row){
 								if($row->confirmed == 1){
-									if($row['asset'] == 'BTC'){
+									if($row->asset == 'BTC'){
 										$fuel_total += $row->quantity;
 									}
-									elseif($row['asset'] == $getDistro->asset){
-										$token_totel += $row->quantity;
+									elseif($row->asset == $getDistro->asset){
+										$token_total += $row->quantity;
 									}
 								}
 							}
