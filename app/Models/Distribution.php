@@ -2,6 +2,7 @@
 namespace Models;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Distribution extends Model
 {
@@ -72,6 +73,23 @@ class Distribution extends Model
 	public function countComplete()
 	{
 		return DistributionTx::where('distribution_id', $this->id)->where('confirmed', 1)->count();
+	}
+	
+	public function pendingDepositTotals()
+	{
+		$output = array('fuel' => 0, 'token' => 0);
+		$get = DB::table('distribution_deposits')->where('distribution_id', $this->id)->where('confirmed', 0)->get();
+		if($get AND count($get) > 0){
+			foreach($get as $row){
+				if($row->asset == 'BTC'){
+					$output['fuel'] += $row->quantity;
+				}
+				elseif($row->asset == $this->asset){
+					$output['token'] += $row->quantity;
+				}
+			}
+		}
+		return $output;
 	}
 	
 }
