@@ -2,6 +2,7 @@
 namespace Distribute;
 use Models\Distribution as Distro;
 use Log;
+use Distribute\Stages as Stages;
 class Processor
 {
 	function __construct()
@@ -33,7 +34,7 @@ class Processor
 		if(!$stage){
 			return false;
 		}
-		$stage = 'Stages\\'.$stage;
+		$stage = '\\Distribute\\Stages\\'.$stage;
 		$load = new $stage($distro);
 		$init = $load->init();
 		return true;
