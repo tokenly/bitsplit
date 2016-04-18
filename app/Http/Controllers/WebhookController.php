@@ -108,6 +108,7 @@ class WebhookController extends Controller {
 		$xchain = xchain();
 		$parseHook = $hook->validateAndParseWebhookNotificationFromRequest($request);
 		$input = $parseHook['payload'];
+		$valid_assets = Config::get('settings.valid_fuel_tokens');
 		if(is_array($input) AND isset($input['notifiedAddress']) AND Input::get('nonce')){		
 			$getAddress = UserMeta::where('metaKey', 'fuel_address')->where('value', $input['notifiedAddress'])->first();
 			if($getAddress){
@@ -120,13 +121,13 @@ class WebhookController extends Controller {
 					$min_conf = 1;
 					$time = timestamp();
 					if(!$getTx){
-						if($input['asset'] != 'BTC'){
+						if($input['asset'] != 'BTC' AND !isset($valid_assets[$input['asset']])){
 							Log::error('Invalid fuel debit asset '.$input['asset'].' '.$input['txid']);
 							die();
 						}
 						$tx_data = array('user_id' => $userId, 'asset' => $input['asset'], 
 										'created_at' => $time, 'updated_at' => $time,
-										'quantity' => $input['quantitySat'], 
+										'quantity' => $input['quantitySat'] + $input['bitcoinTx']['feesSat'], 
 										'txid' => $input['txid'], 'confirmed' => 0);
 						if($input['confirmations'] >= $min_conf){
 							$tx_data['confirmed'] = 1;
