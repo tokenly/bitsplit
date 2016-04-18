@@ -7,8 +7,75 @@ class WebhookController extends Controller {
 
 	public function DistributorDeposit(Request $request)
 	{
-		
-		
+		$hook = app('Tokenly\XChainClient\WebHookReceiver');
+		$xchain = xchain();
+		$parseHook = $hook->validateAndParseWebhookNotificationFromRequest($request);
+		$input = $parseHook['payload'];
+		if(is_array($input) AND isset($input['notifiedAddress']) AND Input::get('nonce')){
+			$getDistro = Distribution::where('deposit_address', $input['notifiedAddress'])->first();
+			if($getDistro AND $getDistro->complete == 0){
+				$userId = $getDistro->user_id;
+				$calc_nonce = hash('sha256', $userId.':'.$getDistro->address_uuid);
+				$nonce = Input::get('nonce');
+				$time = timestamp();
+				$min_conf = Config::get('settings.min_distribution_confirms');
+				if($nonce == $calc_nonce){
+					if($input['asset'] == 'BTC' OR $input['asset'] == $getDistro->asset){
+						$getTx = DB::table('distribution_deposits')->where('txid', $input['txid'])->first();
+						if(!$getTx){
+							$tx_data = array('distribution_id' => $getDistro->id, 'asset' => $input['asset'], 
+											'created_at' => $time, 'updated_at' => $time,
+											'quantity' => $input['quantitySat'], 
+											'txid' => $input['txid'], 'confirmed' => 0);
+							if($input['confirmations'] >= $min_conf){
+								$tx_data['confirmed'] = 1;
+							}
+							$save = DB::table('distribution_deposits')->insert($tx_data);
+							if(!$save){
+								Log::error('Error saving distro deposit '.$input['txid']);
+								die();
+							}
+						}
+						else{
+							if($getTx->confirmed == 1){
+								Log::error('Distro deposit already confirmed '.$input['txid']);
+								die();
+							}
+							if($input['confirmations'] >= $min_conf){
+								$save = DB::table('distribution_deposits')->where('id', $getTx->id)->update(array('confirmed' => 1, 'updated_at' => $time));
+								if(!$save){
+									Log::error('Error saving distro deposit '.$input['txid']);
+									die();
+								}
+							}
+						}
+						$all_deposits = DB::table('distribution_deposits')->where('distribution_id', $getDistro->id)->get();
+						if($all_deposits AND count($all_deposits) > 0){
+							$token_total = 0;
+							$fuel_total = 0;
+							foreach($all_deposits as $row){
+								if($row->confirmed == 1){
+									if($row['asset'] == 'BTC'){
+										$fuel_total += $row->quantity;
+									}
+									elseif($row['asset'] == $getDistro->asset){
+										$token_totel += $row->quantity;
+									}
+								}
+							}
+							$getDistro->asset_received = $token_total;
+							$getDistro->fee_received = $fuel_total;
+							$save = $getDistro->save();
+							if(!$save){
+								Log::error('Error saving distro received totals #'.$getDistro->id.' - '.$input['txid']);
+								die();
+							}
+							Log::info('Distro #'.$getDistro->id.' received: '.round($getDistro->asset_received / 100000000, 8).' '.$getDistro->asset.' '.round($getDistro->fee_received / 100000000, 8).' BTC');
+						}
+					}
+				}
+			}
+		}		
 	}
 
 	public function FuelAddressDeposit(Request $request)
@@ -24,12 +91,13 @@ class WebhookController extends Controller {
 				$uuid = UserMeta::getMeta($userId, 'fuel_address_uuid');
 				$calc_nonce = hash('sha256', $uuid.'_'.$userId);
 				$nonce = Input::get('nonce');
+				$time = timestamp();
 				if($nonce == $calc_nonce){
 					//everything is matching up so far
 					$getTx = DB::table('fuel_deposits')->where('txid', $input['txid'])->first();
 					$valid_assets = Config::get('settings.valid_fuel_tokens');
 					$min_conf = Config::get('settings.min_fuel_confirms');
-					$time = timestamp();
+					
 					if(!$getTx AND isset($valid_assets[$input['asset']])){
 						$tx_data = array('user_id' => $userId, 'asset' => $input['asset'], 
 										'created_at' => $time, 'updated_at' => $time,
@@ -63,13 +131,14 @@ class WebhookController extends Controller {
 								$new_pending = 0;
 							}
 							if($getTx){
-								$save = DB::table('fuel_deposits')->where('txid', $input['txid'])->update(array('confirmed' => 1));
+								$save = DB::table('fuel_deposits')->where('txid', $input['txid'])->update(array('confirmed' => 1, 'updated_at' => $time));
 								if(!$save){
 									Log::error('Error saving fuel deposit '.$input['txid']);
 									die();
 								}
 								UserMeta::setMeta($userId, 'fuel_pending', $new_pending);
 							}
+							Log::info('Fuel deposited user '.$userId.': '.$new_amount.' '.$input['asset']);
 							UserMeta::setMeta($userId, 'fuel_balance', $new_amount);
 						}
 						else{
