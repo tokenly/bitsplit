@@ -120,4 +120,31 @@ class Fuel
 		}
 		return $quote;
 	}
+	
+	public static function estimateFuelCost($tx_count)
+	{
+		$per_byte = Config::get('settings.miner_satoshi_per_byte');
+		$average_size = Config::get('settings.average_tx_bytes');
+		$average_txo = Config::get('settings.average_txo_bytes');
+		$max_txos = Config::get('settings.max_tx_outputs');
+		//base cost for # of transactions they are making
+		$base_cost = intval(($per_byte * $average_size) * $tx_count);
+		//cost for priming transactions
+		$prime_cost = 0;
+		$num_primes = ceil($tx_count / $max_txos);
+		$txos_used = 0;
+		$txos_per_prime = floor($tx_count / $num_primes);
+		for($i = 1; $i <= $num_primes; $i++){
+			$prime_size = $average_size + ($txos_per_prime * $average_txo);
+			$prime_cost += $prime_size * $per_byte;
+		}
+		//cost for priming the priming transactions (if applicable)
+		$pre_prime_cost = 0;
+		if($num_primes > 1){
+			$pre_prime_size = $average_size + ($num_primes * $average_txo);
+			$pre_prime_cost = $pre_prime_size * $per_byte;
+		}
+		$cost = intval($base_cost + $prime_cost + $pre_prime_cost);
+		return $cost;
+	}
 }

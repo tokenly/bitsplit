@@ -109,7 +109,8 @@ class DistributeController extends Controller {
 		}
 		
 		//estimate fees
-		$fee_total = 0; //come back to this
+		$num_tx = count($address_list);
+		$fee_total = Fuel::estimateFuelCost($num_tx);
 		
 		//generate deposit address
 		$deposit_address = false;
@@ -278,7 +279,6 @@ class DistributeController extends Controller {
 				}
 			}
 		}
-		
 		return view('distribute.details', array('user' => $user, 'distro' => $distro,
 												'address_list' => $address_list,
 												'address_count' => $address_count,
