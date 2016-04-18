@@ -3,6 +3,7 @@ use User, Auth, Config, UserMeta, Redirect, Response;
 use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
 use Input, Session, Exception, Log;
 use Tokenly\TokenpassClient\TokenpassAPI;
+use Distribute\Initialize as DistroInit;
 class DistributeController extends Controller {
 	
 	public function submitDistribution()
@@ -162,6 +163,10 @@ class DistributeController extends Controller {
 			$tx->quantity = $row['amount'];
 			$tx->save();
 		}
+		
+		//run through initialization stage immediately
+		$initializer = new DistroInit;
+		$initializer->init($distro);
 		
 		//redirect to details page
 		return Redirect::route('distribute.details', $deposit_address);
