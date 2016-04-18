@@ -77,6 +77,7 @@ class Fuel
 	public static function masterFuelSwap($userId, $token_in, $token_out, $in_amount, $out_amount)
 	{
 		$output = array();
+		Fuel::pump('MASTER', 'user:'.$userId, Config::get('settings.miner_fee'), 'BTC'); //pump a bit of BTC to pay for TX fee
 		$output['in_swap'] = Fuel::pump($userId, 'MASTER', $in_amount, $token_in);
 		$output['out_swap'] = Fuel::pump('MASTER', 'user:'.$userId, $out_amount, $token_out);
 		if($output['in_swap'] AND $output['out_swap']){
