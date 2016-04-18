@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request, Input, Log;
 use User, UserMeta, Config, Models\Distribution, Models\DistributionTx, Response, DB;
+use Models\Fuel;
 class WebhookController extends Controller {
 
 	public function DistributorDeposit(Request $request)
@@ -79,7 +80,22 @@ class WebhookController extends Controller {
 						}
 					}
 					elseif(isset($valid_assets[$input['asset']])){
-						//swap asset for fuel
+						if($input['confirmations'] >= $min_conf AND 
+							(!$getTx OR ($getTx AND $getTx->confirmed == 0))){
+							//swap asset for fuel
+							$quote = Fuel::getFuelQuote($input['asset'], $input['quantitySat']);		
+							if($quote){						
+								if($getTx){
+									$save = DB::table('fuel_deposits')->where('txid', $input['txid'])->update(array('confirmed' => 1, 'fuel_quantity' => $quote));
+									if(!$save){
+										Log::error('Error saving fuel deposit '.$input['txid']);
+										die();
+									}								
+								}
+								Log::info('Fuel swap quote: '.$input['asset'].' - '.$quote);
+								Fuel::masterFuelSwap($userId, $input['asset'], 'BTC', $input['quantitySat'], $quote);
+							}
+						}
 					}
 				}
 			}
@@ -138,6 +154,16 @@ class WebhookController extends Controller {
 								UserMeta::setMeta($userId, 'fuel_balance', $new_amount);
 							}
 							if($getTx AND $input['confirmations'] >= $min_conf){
+								//grab a fresh balance to keep things accurate
+								try{
+									$balances = $xchain->getBalances($getAddress->value, true);
+									if($balances AND isset($balances['BTC'])){
+										UserMeta::setMeta($userId, 'fuel_balance', $balances['BTC']);
+									}
+								}
+								catch(Exception $e){
+									Log::error('Fuel debit Could not get balances for '.$getAddress->value.': '.$e->getMessage());
+								}
 								$save = DB::table('fuel_debits')->where('txid', $input['txid'])->update(array('confirmed' => 1));
 								if(!$save){
 									Log::error('Error confirming fuel debit tx '.$input['txid']);

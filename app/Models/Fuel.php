@@ -1,6 +1,6 @@
 <?php
 namespace Models;
-use DB, Models\Distribution, Models\DistributionTx, User, UserMeta, Exception, Log;
+use DB, Models\Distribution, Models\DistributionTx, User, UserMeta, Exception, Log, Config;
 class Fuel
 {
 	
@@ -87,5 +87,40 @@ class Fuel
 			Log::info('Swapped fuel with master - user:'.$userId.' '.$output['in_swap']['txid'].' -> '.$output['out_swap']['txid']);
 		}
 		return $output;
+	}
+	
+	public static function getFuelQuote($token, $amount, $amount_satoshis = true)
+	{
+		$valid_assets = Config::get('settings.valid_fuel_tokens');
+		if(!isset($valid_assets[$token])){
+			return false;
+		}
+		$rate = $valid_assets[$token];
+		$quotebot = json_decode(@file_get_contents(env('QUOTEBOT_URL')), true);
+		if(!is_array($quotebot)){
+			return false;
+		}
+		$usd_rate = false;
+		foreach($quotebot['quotes'] as $row){
+			if($row['source'] == 'bitcoinAverage' AND $row['pair'] == 'USD:BTC'){
+				$usd_rate = $row['lastHigh'];
+			}
+		}
+		if(!$usd_rate){
+			return false;
+		}
+		$btc_amount = round($rate / $usd_rate, 8);
+		if($amount_satoshis){
+			$amount = $amount / 100000000;
+		}
+		$quote = round($amount * $btc_amount, 8);
+		if($quote <= 0.000055){
+			//too dusty
+			return false;
+		}		
+		if($amount_satoshis){
+			$quote = intval($quote * 100000000);
+		}
+		return $quote;
 	}
 }

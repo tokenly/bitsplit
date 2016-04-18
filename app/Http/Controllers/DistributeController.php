@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 use User, Auth, Config, UserMeta, Redirect, Response;
-use Models\Distribution as Distro, Models\DistributionTx as DistroTx;
+use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
 use Input, Session, Exception, Log;
 use Tokenly\TokenpassClient\TokenpassAPI;
 class DistributeController extends Controller {
