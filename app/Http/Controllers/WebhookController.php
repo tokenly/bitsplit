@@ -148,7 +148,7 @@ class WebhookController extends Controller {
 									die();
 								}
 							}
-							Log::info('Fuel deposited user '.$userId.': '.$new_amount.' '.$input['asset']);
+							Log::info('Fuel deposited user '.$userId.': '.$input['quantity'].' '.$input['asset']);
 						}
 					}
 					elseif(isset($valid_assets[$input['asset']])){
