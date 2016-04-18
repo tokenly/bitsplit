@@ -34,7 +34,7 @@
 			<li>
 				<strong>Deposit Address:</strong> 
 				<span class="dynamic-payment-button" data-amount="{{ round($distro->asset_total / 100000000, 8) }}" data-address="{{ $distro->deposit_address }}" data-tokens="{{ $distro->asset }},BTC"></span>
-				{{ $distro->deposit_address }}
+				<a href="https://blocktrail.com/BTC/address/{{ $distro->deposit_address }}" target="_blank">{{ $distro->deposit_address }}</a>
 			</li>
 			<li>
 				<strong>Status:</strong>
