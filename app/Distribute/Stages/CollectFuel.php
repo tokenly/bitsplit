@@ -10,6 +10,7 @@ class CollectFuel extends Stage
 		$distro = $this->distro;
 		if($distro->fee_received >= $distro->fee_total){
 			$distro->incrementStage();
+			$distro->setMessage(); //clear message
 			Log::info('Distro Fuel collected - #'.$distro->id);
 			return true;		
 		}

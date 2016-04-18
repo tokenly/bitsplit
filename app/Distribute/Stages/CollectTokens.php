@@ -11,6 +11,7 @@ class CollectTokens extends Stage
 		$distro = $this->distro;
 		if($distro->asset_received >= $distro->asset_total){
 			$distro->incrementStage();
+			$distro->setMessage(); //clear message
 			Log::info('Distro Tokens collected - #'.$distro->id);
 			return true;		
 		}

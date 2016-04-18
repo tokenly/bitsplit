@@ -35,6 +35,7 @@ class WebhookController extends Controller {
 								Log::error('Error saving distro deposit '.$input['txid']);
 								die();
 							}
+							$getDistro->setMessage('receiving');
 						}
 						else{
 							if($getTx->confirmed == 1){

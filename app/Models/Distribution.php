@@ -92,4 +92,9 @@ class Distribution extends Model
 		return $output;
 	}
 	
+	public function setMessage($message = ''){
+		$this->stage_message = $message;
+		return $this->save();
+	}
+	
 }

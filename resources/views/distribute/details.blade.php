@@ -51,7 +51,7 @@
 							echo '<span class="text-warning">Collecting Tokens</span>';
 							break;
 						case 2:
-							echo '<span class="text-warning">Fueling Address</span>';
+							echo '<span class="text-warning">Collecting Fuel</span>';
 							break;
 						case 3:
 							echo '<span class="text-info">Priming Inputs</span>';
@@ -85,6 +85,9 @@
 				}
 				?>
 			</li>
+			@if(trim($distro->stage_message) != '')
+				<li><strong class="text-info">Status Message:</strong> {{ $distro->stage_message }}</li>
+			@endif
 			<li><strong>Date Created:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->created_at)) }} </li>
 			<li><strong>Last Updated:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->updated_at)) }}</li>
 			@if($distro->complete == 1)

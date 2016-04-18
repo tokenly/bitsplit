@@ -67,7 +67,7 @@
 										echo '<span class="text-warning">Collecting Tokens</span>';
 										break;
 									case 2:
-										echo '<span class="text-warning">Fueling Address</span>';
+										echo '<span class="text-warning">Collecting Fuel</span>';
 										break;
 									case 3:
 										echo '<span class="text-info">Priming Inputs</span>';
