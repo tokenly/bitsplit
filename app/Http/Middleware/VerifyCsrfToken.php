@@ -14,6 +14,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         'hooks/distribution/deposit',
+        'hooks/distribution/send',
         'hooks/refuel',
         'hooks/unfuel',
     ];
