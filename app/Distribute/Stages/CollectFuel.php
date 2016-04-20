@@ -1,6 +1,6 @@
 <?php
 namespace Distribute\Stages;
-use Models\Fuel, Exception, Log, DB, UserMeta;
+use Models\Fuel, Exception, Log, DB, UserMeta, Config;
 class CollectFuel extends Stage
 {
 	public function init()
@@ -14,10 +14,12 @@ class CollectFuel extends Stage
 			Log::info('Distro Fuel collected - #'.$distro->id);
 			return true;		
 		}
+		
 		if($distro->use_fuel == 1){
 			//automatically fuel this distribution
 			$pending = $distro->pendingDepositTotals();
 			$pending = $pending['fuel'];
+			Log::info('Distro #'.$distro->id.' fuel received: '.($distro->fee_received + $pending));
 			$diff = $distro->fee_total - $pending;
 			if($diff > 0){
 				try{
