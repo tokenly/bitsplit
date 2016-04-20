@@ -98,7 +98,19 @@ class WebhookController extends Controller {
 				if($nonce == $calc_nonce){
 					if($input['asset'] == 'BTC'){
 						//see if this is a priming transaction
-						
+						$getTx = DB::table('distribution_primes')->where('txid', $input['txid'])->first();
+						if($getTx AND $input['confirmations'] >= $min_conf){
+							$save = DB::table('distribution_primes')->where('id', $getTx->id)->update(array('confirmed' => 1, 'updated_at' => $time));
+							if(!$save){
+								Log::error('Error saving distribution '.$getDistro->id.' prime tx');
+							}
+							else{
+								Log::info('Prime tx '.$input['txid'].' for distro '.$getDistro->id.' confirmed');
+							}
+						}
+						else{
+							Log::error('Distro send tx not found #'.$getDistro->id.' '.$input['txid']);
+						}
 						
 					}
 					elseif($input['asset'] == $getDistro->asset){
