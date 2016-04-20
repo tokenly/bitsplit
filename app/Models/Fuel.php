@@ -69,9 +69,9 @@ class Fuel
 		}
 		if($amount_satoshis){
 			$amount = round($amount / 100000000, 8); 
-		}
-		if($fee == null){
-			$fee = Config::get('settings.miner_fee');
+			if($fee !== null){
+				$fee = round(Config::get('settings.miner_fee')/100000000,8);
+			}			
 		}
 		return $xchain->send($uuid, $address, $amount, $asset, $fee);
 	}
@@ -129,13 +129,14 @@ class Fuel
 		$average_size = Config::get('settings.average_tx_bytes');
 		$average_txo = Config::get('settings.average_txo_bytes');
 		$max_txos = Config::get('settings.max_tx_outputs');
+		$dust_size = Config::get('settings.default_dust');
 		//base cost for # of transactions they are making
-		$base_cost = intval(($per_byte * $average_size) * $tx_count);
+		$base_cost = intval((($per_byte * $average_size) + ($dust_size*2)) * $tx_count);
 		//cost for priming transactions
 		$prime_cost = 0;
 		$num_primes = ceil($tx_count / $max_txos);
 		$txos_used = 0;
-		$txos_per_prime = floor($tx_count / $num_primes);
+		$txos_per_prime = floor($tx_count / $num_primes) + 1;
 		for($i = 1; $i <= $num_primes; $i++){
 			$prime_size = $average_size + ($txos_per_prime * $average_txo);
 			$prime_cost += $prime_size * $per_byte;
