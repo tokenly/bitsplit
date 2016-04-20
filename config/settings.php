@@ -2,6 +2,7 @@
 
 return array(
 	'max_tx_outputs' => 100, //max amount of new utxos created per tx, e.g for priming
+	'default_dust' => 5600, 
 	'fee_levels' => array( //amounts used for fees (change these later)
 						'low' => array('miner' => 1000, 'dust' => 1000, 'service' => 1000),
 						'medium' => array('miner' => 1000, 'dust' => 1000, 'service' => 1000),
