@@ -70,7 +70,9 @@ class Fuel
 		if($amount_satoshis){
 			$amount = round($amount / 100000000, 8); 
 		}
-
+		if($fee == null){
+			$fee = Config::get('settings.miner_fee');
+		}
 		return $xchain->send($uuid, $address, $amount, $asset, $fee);
 	}
 	
