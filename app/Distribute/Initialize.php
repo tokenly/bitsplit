@@ -34,7 +34,7 @@ class Initialize
 				$distro->stage = 1;
 			}
 			$distro->save();
-			Log::info('Started distro receive monitor for #'.$distro->id);
+			Log::info('Started distro monitors for #'.$distro->id);
 			return true;
 		}
 		return false;
