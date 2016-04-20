@@ -16,10 +16,11 @@ class Initialize
 			return false;
 		}
 		$webhook = route('hooks.distro.deposit').'?nonce='.hash('sha256', $distro->user_id.':'.$distro->address_uuid); 
+		$send_webhook = route('hooks.distro.send').'?nonce='.hash('sha256', $distro->user_id.':'.$distro->address_uuid); 
 		try{
 			$xchain = xchain();
 			$monitor = $xchain->newAddressMonitor($distro->deposit_address, $webhook);
-			$send_monitor = $xchain->newAddressMonitor($distro->deposit_address, $webhook, 'send');
+			$send_monitor = $xchain->newAddressMonitor($distro->deposit_address, $send_webhook, 'send');
 		}
 		catch(Exception $e)
 		{

@@ -79,6 +79,35 @@ class WebhookController extends Controller {
 			}
 		}		
 	}
+	
+	
+	public function DistributorSend(Request $request)
+	{
+		$hook = app('Tokenly\XChainClient\WebHookReceiver');
+		$xchain = xchain();
+		$parseHook = $hook->validateAndParseWebhookNotificationFromRequest($request);
+		$input = $parseHook['payload'];
+		if(is_array($input) AND isset($input['notifiedAddress']) AND Input::get('nonce')){
+			$getDistro = Distribution::where('deposit_address', $input['notifiedAddress'])->first();
+			if($getDistro AND $getDistro->complete == 0){
+				$userId = $getDistro->user_id;
+				$calc_nonce = hash('sha256', $userId.':'.$getDistro->address_uuid);
+				$nonce = Input::get('nonce');
+				$time = timestamp();
+				$min_conf = Config::get('settings.min_distribution_confirms');
+				if($nonce == $calc_nonce){
+					if($input['asset'] == 'BTC'){
+						//see if this is a priming transaction
+						
+						
+					}
+					elseif($input['asset'] == $getDistro->asset){
+						//see if this matches up to an outgoing token distribution tx
+					}
+				}
+			}
+		}
+	}
 
 	public function FuelAddressDeposit(Request $request)
 	{

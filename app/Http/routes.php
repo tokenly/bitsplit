@@ -18,6 +18,9 @@ Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
 Route::post('hooks/distribution/deposit', array('as' => 'hooks.distro.deposit',
 		'uses' => 'WebhookController@DistributorDeposit'));
 		
+Route::post('hooks/distribution/send', array('as' => 'hooks.distro.send',
+		'uses' => 'WebhookController@DistributorSend'));		
+		
 Route::post('hooks/refuel', array('as' => 'hooks.refuel',
 		'uses' => 'WebhookController@FuelAddressDeposit'));		
 		
