@@ -18,6 +18,18 @@ class PrimeUtxos extends Stage
 		$base_txo_cost = ($average_size * $per_byte) + ($dust_size * 2);
 		$base_cost = ($average_size * $per_byte);
 		
+		//check if any primes waiting on confirmations
+		$unconf_primes = DB::table('distribution_primes')->where('distribution_id', $distro->id)->where('confirmed', 0)->get();
+		if($unconf_primes AND count($unconf_primes) > 0){
+			Log::info('Waiting for distro #'.$distro->id.' primes to confirm');
+			return true;
+		}
+		$pending_totals = $distro->pendingDepositTotals();
+		if($pending_totals['fuel'] > 0){
+			Log::info('Waiting for more fuel to confirm for distro #'.$distro->id.' [priming]');
+			return true;
+		}
+		
 		$checkPrimes = false;
 		try{
 			$checkPrimes = $xchain->checkPrimedUTXOs($distro->address_uuid, round($base_txo_cost/100000000,8));
@@ -37,18 +49,7 @@ class PrimeUtxos extends Stage
 			$distro->incrementStage();
 			return true;
 		}		
-		
-		//check if any primes waiting on confirmations
-		$unconf_primes = DB::table('distribution_primes')->where('distribution_id', $distro->id)->where('confirmed', 0)->get();
-		if($unconf_primes AND count($unconf_primes) > 0){
-			Log::info('Waiting for distro #'.$distro->id.' primes to confirm');
-			return true;
-		}
-		$pending_totals = $distro->pendingDepositTotals();
-		if($pending_totals['fuel'] > 0){
-			Log::info('Waiting for more fuel to confirm for distro #'.$distro->id.' [priming]');
-			return true;
-		}
+				
 
 		$txos_needed = $tx_count - $checkPrimes['primedCount'];
 		$num_primes = intval(ceil($txos_needed  / $max_txos));
