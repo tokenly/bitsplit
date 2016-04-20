@@ -36,6 +36,7 @@ class CollectFuel extends Stage
 						$new_spent = $fuel_spent + $diff + Config::get('settings.miner_fee');
 						UserMeta::setMeta($distro->user_id, 'fuel_spent', $new_spent);	
 						Log::info('Distro #'.$distro->id.' fuel pumped '.$pump['txid']);
+						$distro->setMessage('receiving');
 					}
 				}
 				catch(Exception $e){
