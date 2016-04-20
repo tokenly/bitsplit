@@ -19,13 +19,16 @@ class Initialize
 		try{
 			$xchain = xchain();
 			$monitor = $xchain->newAddressMonitor($distro->deposit_address, $webhook);
+			$send_monitor = $xchain->newAddressMonitor($distro->deposit_address, $webhook, 'send');
 		}
 		catch(Exception $e)
 		{
 			$monitor = false;
+			$send_monitor = false;
 		}
-		if(is_array($monitor)){
+		if(is_array($monitor) AND is_array($send_monitor)){
 			$distro->monitor_uuid = $monitor['id'];
+			$distro->send_monitor_uuid = $send_monitor['id'];
 			if($first_stage){
 				$distro->stage = 1;
 			}
@@ -43,6 +46,7 @@ class Initialize
 		}
 		$xchain = xchain();
 		$destroy = $xchain->destroyAddressMonitor($distro->monitor_uuid);
+		$destroy_sender = $xchain->destroyAddressMonitor($distro->send_monitor_uuid);
 		Log::info('Stopped distro receive monitor for #'.$distro->id);
 		return true;
 	}
