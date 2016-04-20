@@ -1,6 +1,6 @@
 <?php
 namespace Distribute\Stages;
-use Models\Fuel, Exception, Log, DB;
+use Models\Fuel, Exception, Log, DB, UserMeta;
 class CollectFuel extends Stage
 {
 	public function init()
@@ -32,6 +32,9 @@ class CollectFuel extends Stage
 							Log::error('Error saving fuel pump for distribution #'.$distro->id);
 							return false;
 						}
+						$fuel_spent = intval(UserMeta::getMeta($distro->user_id, 'fuel_spent'));
+						$new_spent = $fuel_spent + $diff;
+						UserMeta::setMeta($distro->user_id, 'fuel_spent', $new_spent);	
 						Log::info('Distro #'.$distro->id.' fuel pumped '.$pump['txid']);
 					}
 				}
