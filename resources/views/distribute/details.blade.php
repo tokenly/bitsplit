@@ -124,10 +124,18 @@
 				<tbody>
 					@foreach($address_list as $row)
 						<tr>
-							<td>{{ $row->destination }}</td>
+							<td><a href="https://blockscan.com/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a></td>
 							<td>{{ rtrim(rtrim(number_format($row->quantity / 100000000, 8),"0"),".") }}</td>
 							<td>
-								
+								@if($row->confirmed == 1)
+									<a href="https://blocktrail.com/BTC/tx/{{ $row->txid }}" target="_blank" title="View complete transaction"><i class="fa fa-check text-success"></i></a>
+								@elseif(trim($row->txid) != '')
+									<a href="https://blocktrail.com/BTC/tx/{{ $row->txid }}" target="_blank" title="View transaction (in progress)"><i class="fa fa-spinner fa-spin"></i></a>
+								@elseif(trim($row->utxo) != '')
+									<i class="fa fa-cog fa-spin" title="Preparing transaction"></i>
+								@else
+									<i class="fa fa-cog" title="Awaiting fuel availability" style="color: #ccc;"></i>
+								@endif
 							</td>
 						</tr>
 					@endforeach
