@@ -16,6 +16,8 @@ class PrepareTxs extends Stage
 		$default_miner = Config::get('settings.miner_fee');
 		$base_txo_cost = ($average_size * $per_byte) + ($dust_size * 2);
 		$float_cost = round($base_txo_cost/100000000,8);
+		$fee_float = round(($average_size*$per_byte)/100000000,8);
+		$dust_size_float = round($dust_size/100000000,8);
 		
 		$address_list = DistroTx::where('distribution_id', $distro->id)->get();
 		if(!$address_list OR count($address_list) == 0){
@@ -82,7 +84,39 @@ class PrepareTxs extends Stage
 			}
 			else{
 				//construct raw transaction
+				$unsigned = false;
+				$exp_utxo = explode(':', $row->utxo);
+				if(!isset($exp_utxo[1])){
+					Log::error('Malformed utxo entry for distro '.$distro->id.' -> '.$row->destination);
+					continue;
+				}
+				$custom_inputs = array(array('txid' => $exp_utxo[0], 'n' => intval($exp_utxo[1])));
+				$quantity_float = round($row->quantity/100000000, 8, PHP_ROUND_HALF_DOWN);
+				try{
+					$unsigned = $xchain->unsignedSend($distro->address_uuid, $row->destination, $quantity_float, $distro->asset, $fee_float, $dust_size_float, $custom_inputs);
+				}
+				catch(Exception $e){
+					Log::error('Error constructing Distro '.$distro->id.' transaction to '.$row->destination.': '.$e->getMessage());
+					continue;
+				}
+				if(!$unsigned){
+					Log::error('Unknown error constructing Distro '.$distro->id.' transaction to '.$row->destination);
+					continue;
+				}
+				if(!isset($unsigned['unsignedTx']) OR trim($unsigned['unsignedTx']) == '' OR trim($unsigned['unsignedTx']) == 'NULL'){
+					Log::error('Failed constructing unsignedTx for Distro '.$distro->id.' transaction to '.$row->destination);
+					continue;
+				}
+				$row->raw_tx = $unsigned['unsignedTx'];
+				$save = $row->save();
+				if(!$save){
+					Log::error('Error saving raw tx for Distro '.$distro->id.' transaction to '.$row->destination);
+				}
+				else{
+					Log::info('Raw tx generated for Distro '.$distro->id.' transaction to '.$row->destination);
+				}
 			}
-		}	
+		}
+		return true;	
 	}
 }
