@@ -60,18 +60,15 @@
 							echo '<span class="text-info">Preparing Transactions</span>';
 							break;
 						case 5:
-							echo '<span class="text-info">Signing Transactions</span>';
-							break;
-						case 6:
 							echo '<span class="text-info">Broadcasting Transactions</span>';
 							break;
-						case 7:
+						case 6:
 							echo '<span class="text-info">Confirming Broadcasts</span>';
 							break;
-						case 8:
+						case 7:
 							echo '<span class="text-success">Performing Cleanup</span>';
 							break;
-						case 9:
+						case 8:
 							echo '<span class="text-success">Confirming Cleanup</span>';
 							break;
 						default:

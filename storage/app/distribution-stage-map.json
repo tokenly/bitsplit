@@ -3,9 +3,8 @@
 	"2": "CollectFuel",
 	"3": "PrimeUtxos",
 	"4": "PrepareTxs",
-	"5": "SignTxs",
-	"6": "BroadcastTxs",
-	"7": "ConfirmBroadcasts",
-	"8": "ConsoldateTxs",
-	"9": "ConfirmCleanup"
+	"5": "BroadcastTxs",
+	"6": "ConfirmBroadcasts",
+	"7": "ConsoldateTxs",
+	"8": "ConfirmCleanup"
 }
