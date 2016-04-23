@@ -23,7 +23,7 @@
 				</div>
 			</li>
 			<li>
-				<strong>Token:</strong> {{ $distro->asset }}
+				<strong>Token:</strong> <a href="https://blockscan.com/assetInfo/{{ $distro->asset }}" target="_blank">{{ $distro->asset }}</a>
 			</li>
 			<li>
 				<strong>Amount to Distribute:</strong> {{ rtrim(rtrim(number_format($distro->asset_total / 100000000, 8),"0"),".") }} {{ $distro->asset }}
