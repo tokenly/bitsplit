@@ -101,16 +101,18 @@ class PrimeUtxos extends Stage
 			}
 			if(!$submit_prime OR trim($submit_prime['txid']) == ''){
 				Log::error('Unkown error priming distro '.$distro->id);
-				//pump a bit of fuel to give this a kick
-				try{
-					$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $default_miner, 'BTC', $default_miner);
-					$spent = intval(UserMeta::getMeta($distro->user_id, 'fuel_spent'));
-					$spent = $spent + ($default_miner*2);
-					UserMeta::setMeta($distro->user_id, 'fuel_spent', $spent);
-					Log::info('Extra fuel pumped for distro '.$distro->id.' priming '.$pump['txid']);
-				}
-				catch(Exception $e){
-					Log::error('Error pumping extra fuel for distro '.$distro->id.' priming: '.$e->getMessage());
+				if($distro->use_fuel == 1){
+					//pump a bit of fuel to give this a kick
+					try{
+						$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $default_miner, 'BTC', $default_miner);
+						$spent = intval(UserMeta::getMeta($distro->user_id, 'fuel_spent'));
+						$spent = $spent + ($default_miner*2);
+						UserMeta::setMeta($distro->user_id, 'fuel_spent', $spent);
+						Log::info('Extra fuel pumped for distro '.$distro->id.' priming '.$pump['txid']);
+					}
+					catch(Exception $e){
+						Log::error('Error pumping extra fuel for distro '.$distro->id.' priming: '.$e->getMessage());
+					}
 				}
 				return false;
 			}			
