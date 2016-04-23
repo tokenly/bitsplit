@@ -35,9 +35,15 @@ class PrepareTxs extends Stage
 				$used_txos[] = $utxo;
 			}
 		}
+		if(count($used_txos) < count($address_list)){
+			$distro->setMessage('Assigning UTXOs');
+		}
+		else{
+			$distro->setMessage('Constructing Raw Transactions');
+		}
 		
 		if(count($assign_list) == 0){
-			//all utxos assigned
+			//all utxos assigned and transactions constructed
 			Log::info('All Transactions prepared for distro '.$distro->id);
 			$distro->incrementStage();
 			return true;
