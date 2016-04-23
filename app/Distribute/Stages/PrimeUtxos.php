@@ -78,7 +78,7 @@ class PrimeUtxos extends Stage
 		$submit_prime = false;
 		$prime_repeat = 1;
 		if($prime_stage == 1){
-			//perform 1st-stage priming
+			//perform 1st-stage priming (priming the primes)
 			$per_txo = $pre_prime_txo;
 			$prime_fee = $base_cost + ($num_primes * $txo_size * $per_byte);
 			$prime_count = $num_primes + 1;
@@ -121,7 +121,8 @@ class PrimeUtxos extends Stage
 			if(!$save){
 				Log::error('Error saving distribution '.$distro->id.' prime TX '.$submit_prime['txid']);
 				return false;
-			}			
+			}
+			Log::info('Prime stage'.$prime_stage.' sent for Distro '.$distro->id.' '.$submit_prime['txid']);			
 		}
 		return true;
 	}
