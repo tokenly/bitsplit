@@ -50,27 +50,50 @@ class PrimeUtxos extends Stage
 			return true;
 		}		
 				
-
 		$txos_needed = $tx_count - $checkPrimes['primedCount'];
 		$num_primes = intval(ceil($txos_needed  / $max_txos));
 		$per_prime = intval(floor($txos_needed / $num_primes)) + 1;
+		$pre_prime_txo = ($base_txo_cost * $per_prime) + $base_cost;
 		
 		$prime_stage = 2;
 		if($num_primes > 1){
 			//possible two-stage priming needed
-			
-			//$prime_stage = 1;
+			$checkPrePrimes = false;
+			try{
+				$checkPrePrimes = $xchain->checkPrimedUTXOs($distro->address_uuid, round($pre_prime_txo/100000000,8));
+			}
+			catch(Exception $e){
+				Log::error('Error checking stage1 primes for distro #'.$distro->id.': '.$e->getMessage());
+				return false;
+			}
+			if(!$checkPrePrimes){
+				Log::error('Unknown error checking stage1 primes for distro #'.$distro->id);
+				return false;
+			}		
+			if($checkPrePrimes['primedCount'] < $num_primes){
+				Log::info('Starting stage1 priming for distro #'.$distro->id);
+				$prime_stage = 1;
+			}					
 		}
-		
+		$submit_prime = false;
+		$prime_repeat = 1;
 		if($prime_stage == 1){
 			//perform 1st-stage priming
+			$per_txo = $pre_prime_txo;
+			$prime_fee = $base_cost + ($num_primes * $txo_size * $per_byte);
+			$prime_count = $num_primes + 1;
 		}
 		else{
 			//perform second-stage priming
 			$per_txo = $base_txo_cost;
 			$prime_fee = $base_cost + ($per_prime * $txo_size * $per_byte);
+			$prime_count = $per_prime;
+			$prime_repeat = $num_primes;
+		}
+		$time = timestamp();
+		for($i = 0; $i < $prime_repeat; $i++){
 			try{
-				$submit_prime = $xchain->primeUTXOs($distro->address_uuid, round($per_txo/100000000,8), $per_prime, round($prime_fee/100000000,8), true);
+				$submit_prime = $xchain->primeUTXOs($distro->address_uuid, round($per_txo/100000000,8), $prime_count, round($prime_fee/100000000,8), true);
 			}
 			catch(Exception $e){
 				Log::error('Priming error distro '.$distro->id.': '.$e->getMessage());
@@ -90,17 +113,16 @@ class PrimeUtxos extends Stage
 					Log::error('Error pumping extra fuel for distro '.$distro->id.' priming: '.$e->getMessage());
 				}
 				return false;
-			}
-			$time = timestamp();
+			}			
 			$tx_data = array('created_at' => $time, 'updated_at' => $time, 'distribution_id' => $distro->id,
 							'quantity' => $prime_fee + ($per_txo*$per_prime), 'txid' => $submit_prime['txid'],
 							'stage' => 2, 'confirmed' => 0);
 			$save = DB::table('distribution_primes')->insert($tx_data);
 			if(!$save){
-				Log::error('Error saving distribution '.$distro->id.' prime TX');
+				Log::error('Error saving distribution '.$distro->id.' prime TX '.$submit_prime['txid']);
 				return false;
-			}
-			return true;
+			}			
 		}
+		return true;
 	}
 }

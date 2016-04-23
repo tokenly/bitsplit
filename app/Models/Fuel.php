@@ -144,7 +144,7 @@ class Fuel
 		//cost for priming the priming transactions (if applicable)
 		$pre_prime_cost = 0;
 		if($num_primes > 1){
-			$pre_prime_size = $average_size + ($num_primes * $average_txo);
+			$pre_prime_size = $average_size + (($num_primes+1) * $average_txo);
 			$pre_prime_cost = $pre_prime_size * $per_byte;
 		}
 		$cost = intval($base_cost + $prime_cost + $pre_prime_cost);
