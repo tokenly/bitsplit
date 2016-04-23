@@ -27,27 +27,30 @@ class PrepareTxs extends Stage
 		$assign_list = array();
 		$used_txos = array();
 		foreach($address_list as $row){
-			$utxo = trim($row->utxo);
-			if($utxo == '' OR trim($row->raw_tx) == ''){
-				$assign_list[] = $row;
+			$exp_utxo = explode(',', $row->utxo);
+			foreach($exp_utxo as $exp){
+				$utxo = trim($exp);
+				if($utxo == ''){
+					$assign_list[] = $row;
+				}
+				else{
+					$used_txos[] = $utxo;
+				}
 			}
-			if($utxo != ''){
-				$used_txos[] = $utxo;
-			}
 		}
-		if(count($used_txos) < count($address_list)){
-			$distro->setMessage('Assigning UTXOs');
-		}
-		else{
-			$distro->setMessage('Constructing Raw Transactions');
-		}
-		
+
 		if(count($assign_list) == 0){
-			//all utxos assigned and transactions constructed
+			//all utxos assigned
 			Log::info('All Transactions prepared for distro '.$distro->id);
 			$distro->incrementStage();
 			return true;
 		}
+		
+		$pending_totals = $distro->pendingDepositTotals();
+		if($pending_totals['fuel'] > 0){
+			Log::info('Waiting for more fuel to confirm for distro #'.$distro->id.' [utxo prep]');
+			return true;
+		}		
 				
 		$utxo_list = false;
 		try{
@@ -61,65 +64,50 @@ class PrepareTxs extends Stage
 		if($utxo_list AND isset($utxo_list['utxos'])){
 			$utxo_list = $utxo_list['utxos'];
 		}
+		
 		foreach($assign_list as $row){
-			if(trim($row->utxo) == ''){
-				//assign utxo first
-				$new_utxo = false;
-				foreach($utxo_list as $utxo){
-					if($utxo['amount'] >= $float_cost){
-						$txo_id = $utxo['txid'].':'.$utxo['n'];
-						if(!in_array($txo_id, $used_txos)){
-							$new_utxo = $txo_id;
-							$used_txos[] = $txo_id;
-							break;
-						}
-					}
-				}
-				if($new_utxo){
-					$row->utxo = $new_utxo;
-					$save = $row->save();
-					if(!$save){
-						Log::error('Error assigning utxo to Distro #'.$distro->id.' -> '.$row->destination.' '.$new_utxo);
-						continue;
-					}
-					else{
-						Log::info('Distro #'.$distro->id.' UTXO assigned to '.$row->destination.' '.$new_utxo);
-						continue;
-					}
+			$row_utxos = array();
+			$coin_left = $float_cost;
+			foreach($utxo_list as $utxo){
+				$txo_id = $utxo['txid'].':'.$utxo['n'];
+				if(!in_array($txo_id, $used_txos) AND $coin_left > 0){
+					$row_utxos[] = $txo_id;
+					$used_txos[] = $txo_id;
+					$coin_left -= $utxo['amount'];
+					continue;
 				}
 			}
-			else{
-				//construct raw transaction
-				$unsigned = false;
-				$exp_utxo = explode(':', $row->utxo);
-				if(!isset($exp_utxo[1])){
-					Log::error('Malformed utxo entry for distro '.$distro->id.' -> '.$row->destination);
-					continue;
+			
+			if($coin_left > 0){
+				Log::error('Not enough inputs available for Distro #'.$distro->id.' transaction to '.$row->address);
+				if($distro->use_fuel == 1){
+					//pump a bit of fuel to give this a kick
+					try{
+						$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $default_miner, 'BTC', $default_miner);
+						$spent = intval(UserMeta::getMeta($distro->user_id, 'fuel_spent'));
+						$spent = $spent + ($default_miner*2);
+						UserMeta::setMeta($distro->user_id, 'fuel_spent', $spent);
+						Log::info('Extra fuel pumped for distro '.$distro->id.' utxo prepping '.$pump['txid']);
+					}
+					catch(Exception $e){
+						Log::error('Error pumping extra fuel for distro '.$distro->id.' utxo prepping: '.$e->getMessage());
+					}
+					
 				}
-				$custom_inputs = array(array('txid' => $exp_utxo[0], 'n' => intval($exp_utxo[1])));
-				$quantity_float = round($row->quantity/100000000, 8, PHP_ROUND_HALF_DOWN);
-				try{
-					$unsigned = $xchain->unsignedSend($distro->address_uuid, $row->destination, $quantity_float, $distro->asset, $fee_float, $dust_size_float, $custom_inputs);
-				}
-				catch(Exception $e){
-					Log::error('Error constructing Distro '.$distro->id.' transaction to '.$row->destination.': '.$e->getMessage());
-					continue;
-				}
-				if(!$unsigned){
-					Log::error('Unknown error constructing Distro '.$distro->id.' transaction to '.$row->destination);
-					continue;
-				}
-				if(!isset($unsigned['unsignedTx']) OR trim($unsigned['unsignedTx']) == '' OR trim($unsigned['unsignedTx']) == 'NULL'){
-					Log::error('Failed constructing unsignedTx for Distro '.$distro->id.' transaction to '.$row->destination);
-					continue;
-				}
-				$row->raw_tx = $unsigned['unsignedTx'];
+				break; //nothing else can be prepped 
+			}
+
+			if(count($row_utxos) > 0){
+				$new_utxo = join(',', $row_utxos);
+				$row->utxo = $new_utxo;
 				$save = $row->save();
 				if(!$save){
-					Log::error('Error saving raw tx for Distro '.$distro->id.' transaction to '.$row->destination);
+					Log::error('Error assigning utxo to Distro #'.$distro->id.' -> '.$row->destination.' '.$new_utxo);
+					continue;
 				}
 				else{
-					Log::info('Raw tx generated for Distro '.$distro->id.' transaction to '.$row->destination);
+					Log::info('Distro #'.$distro->id.' UTXO assigned to '.$row->destination.' '.$new_utxo);
+					continue;
 				}
 			}
 		}

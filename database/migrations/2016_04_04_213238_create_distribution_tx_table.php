@@ -22,8 +22,6 @@ class CreateDistributionTxTable extends Migration
 			$table->string('destination');
 			$table->bigInteger('quantity');
 			$table->text('utxo')->nullable();
-			$table->text('raw_tx')->nullable();
-			$table->text('signed_tx')->nullable();
 			$table->string('txid')->nullable();
 			$table->index('txid');
 			$table->boolean('confirmed')->default(0);
