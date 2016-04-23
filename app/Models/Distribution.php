@@ -40,6 +40,7 @@ class Distribution extends Model
 	public function incrementStage()
 	{
 		$this->stage = $this->stage+1;
+		$this->stage_message = '';
 		return $this->save();
 	}
 	
