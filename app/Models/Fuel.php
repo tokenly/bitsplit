@@ -58,9 +58,11 @@ class Fuel
 			}
 		}
 		else{
-			$distro = Distribution::where('id', intval($address))->first();
-			if($distro){
-				$address = $distro->deposit_address;
+			if(is_int($address)){
+				$distro = Distribution::where('id', $address)->first();
+				if($distro){
+					$address = $distro->deposit_address;
+				}
 			}
 		}
 		$xchain = xchain();
