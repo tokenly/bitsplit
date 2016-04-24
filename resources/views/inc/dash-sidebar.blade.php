@@ -10,7 +10,13 @@
 					({{ rtrim(rtrim(number_format($dash_info['fuel_pending']/100000000,8),"0"),".") }} pending)
 				@endif
 			</li>
-			<li><strong>BTC Fuel Address:</strong> <a href="https://blocktrail.com/BTC/address/{{ $dash_info['fuel_address'] }}" target="_blank">{{ $dash_info['fuel_address'] }}</a></li>
+			<li><strong>BTC Fuel Address:</strong><br>
+				<a href="https://blocktrail.com/BTC/address/{{ $dash_info['fuel_address'] }}" target="_blank">{{ $dash_info['fuel_address'] }}</a>
+				<?php
+					$fuel_token_list = array_keys(Config::get('settings.valid_fuel_tokens'));
+				?><br>
+				<span class="dynamic-payment-button" data-label="BitSplit Fuel Address" data-address="{{ $dash_info['fuel_address'] }}" data-tokens="{{ join(',', $fuel_token_list) }}"></span>
+			</li>
 			<li><strong>Fuel Spent:</strong> {{ rtrim(rtrim(number_format($dash_info['fuel_spent']/100000000,8),"0"),".") }}</li>
 		</ul>
 		<hr>
