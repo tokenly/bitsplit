@@ -100,12 +100,17 @@ class WebhookController extends Controller {
 						//see if this is a priming transaction
 						$getTx = DB::table('distribution_primes')->where('txid', $input['txid'])->first();
 						if($getTx AND $input['confirmations'] >= $min_conf){
-							$save = DB::table('distribution_primes')->where('id', $getTx->id)->update(array('confirmed' => 1, 'updated_at' => $time));
-							if(!$save){
-								Log::error('Error saving distribution '.$getDistro->id.' prime tx');
+							if($getTx->confirmed == 1){
+								Log::info('Prime tx '.$input['txid'].' for distro '.$getDistro->id.' already confirmed');
 							}
 							else{
-								Log::info('Prime tx '.$input['txid'].' for distro '.$getDistro->id.' confirmed');
+								$save = DB::table('distribution_primes')->where('id', $getTx->id)->update(array('confirmed' => 1, 'updated_at' => $time));
+								if(!$save){
+									Log::error('Error saving distribution '.$getDistro->id.' prime tx');
+								}
+								else{
+									Log::info('Prime tx '.$input['txid'].' for distro '.$getDistro->id.' confirmed');
+								}
 							}
 						}
 						else{
@@ -115,6 +120,40 @@ class WebhookController extends Controller {
 					}
 					elseif($input['asset'] == $getDistro->asset){
 						//see if this matches up to an outgoing token distribution tx
+						if(isset($input['destinations'][0])){
+							$getTx = DistributionTx::where('distribution_id', $getDistro->id)->where('destination', $input['destinations'][0])->first();
+							if($getTx){
+								if($getTx->confirmed == 1){
+									Log::info('Prime tx '.$input['txid'].' for distro '.$getDistro->id.' already confirmed');
+								}
+								else{
+									//also make sure quantity matches up
+									if($input['quantitySat'] == $getTx->quantity){
+										//now check for confirms
+										if($input['confirmations'] >= $min_conf){
+											$getTx->txid = $input['txid'];
+											$getTx->confirmed = 1;
+											$save = $getTx->save();
+											if(!$save){
+												Log::error('Error saving distribution '.$getDistro->id.' tx to '.$getTx->destination);
+											}
+											else{
+												Log::info('Distribution'.$getDistro->id.' tx to '.$getTx->destination.' confirmed: '.$getTx->txid);
+											}
+										}
+									}
+								}
+							}
+							else{
+								Log::error('Distro '.$getDistro->id.' tx not found '.$input['txid']);
+							}
+						}
+						else{
+							Log::error('Distro '.$getDistro->id.' tx incorrect destinations '.$input['txid']);
+						}
+					}
+					else{
+						Log::error('Distro '.$getDistro->id.' tx incorrect asset '.$input['txid']);
 					}
 				}
 			}

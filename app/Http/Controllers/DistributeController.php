@@ -284,6 +284,7 @@ class DistributeController extends Controller {
 				}
 			}
 		}
+
 		return view('distribute.details', array('user' => $user, 'distro' => $distro,
 												'address_list' => $address_list,
 												'address_count' => $address_count,
