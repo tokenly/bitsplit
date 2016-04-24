@@ -15,7 +15,7 @@ class Fuel
 		}
 		elseif(strpos($userId, 'distro:') === 0){
 			$userId = substr($userId, 7);
-			$get = Distribution::where('id', $userId)->orWhere('address', $userId)->first();
+			$get = Distribution::where('id', $userId)->orWhere('deposit_address', $userId)->first();
 			if(!$get){
 				Log::error('Fuel pump - distro not found '.$userId);
 				throw new Exception($userId.' distribution not found');
