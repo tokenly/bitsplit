@@ -5,6 +5,6 @@
 	"4": "PrepareTxs",
 	"5": "BroadcastTxs",
 	"6": "ConfirmBroadcasts",
-	"7": "ConsoldateTxs",
+	"7": "ConsolidateTxs",
 	"8": "ConfirmCleanup"
 }
