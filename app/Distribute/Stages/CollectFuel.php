@@ -23,7 +23,7 @@ class CollectFuel extends Stage
 			$diff = $distro->fee_total - $pending;
 			if($diff > 0){
 				try{
-					$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $diff);
+					$pump = Fuel::pump($distro->user_id, $distro->id, $diff);
 					if($pump){
 						$time = timestamp();
 						$tx_data = array('created_at' => $time, 'updated_at' => $time,

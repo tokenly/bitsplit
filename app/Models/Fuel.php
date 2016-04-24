@@ -58,13 +58,14 @@ class Fuel
 			}
 		}
 		else{
-			$distro = Distribution::find($address);
+			$distro = Distribution::where('id', intval($address))->first();
 			if($distro){
 				$address = $distro->deposit_address;
 			}
 		}
 		$xchain = xchain();
 		if(strtolower($amount) == 'sweep'){
+			Log::info('Sweeping assets from '.$uuid.' to '.$address);
 			return $xchain->sweepAllAssets($uuid, $address);
 		}
 		if($amount_satoshis){
@@ -73,6 +74,7 @@ class Fuel
 				$fee = round(Config::get('settings.miner_fee')/100000000,8);
 			}			
 		}
+		Log::info('Pumping '.$amount.' '.$asset.' from '.$uuid.' to '.$address.' (fee: '.$fee.')');
 		return $xchain->send($uuid, $address, $amount, $asset, $fee);
 	}
 	
