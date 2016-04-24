@@ -32,7 +32,7 @@ Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'Distribute
 Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
 Route::post('distribute/{address}', array('as' => 'distribute.details.update', 'uses' => 'DistributeController@updateDetails'));
 Route::get('distribute/delete/{id}', array('as' => 'distribute.delete', 'uses' => 'DistributeController@deleteDistribution'));
-		
+Route::get('distribute/duplicate/{address}', array('as' => 'distribute.duplicate', 'uses' => 'DistributeController@duplicateDistribution'));	
 
 //tokenly accounts stuff
 // The welcome page for the user that requires a logged in user

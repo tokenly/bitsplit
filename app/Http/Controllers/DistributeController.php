@@ -340,4 +340,71 @@ class DistributeController extends Controller {
 		}
 		return $this->return_success('home', 'Distribution deleted!');
 	}
+	
+	public function duplicateDistribution($address)
+	{
+		$user = Auth::user();
+		if(!$user){
+			return Redirect::route('account.auth');
+		}
+		$distro = Distro::where('deposit_address', $address)->where('user_id', $user->id)->first();
+		if(!$distro){
+			return $this->return_error('home', 'Distribution not found');
+		}
+		
+		$distro_list = DistroTx::where('distribution_id', $distro->id)->get();
+		$xchain = xchain();
+		
+		//generate deposit address
+		$deposit_address = false;
+		$address_uuid = false;
+		try{
+			$get_address = $xchain->newPaymentAddress();
+			if($get_address AND isset($get_address['address'])){
+				$deposit_address = $get_address['address'];
+				$address_uuid = $get_address['id'];
+			}
+		}
+		catch(Exception $e){
+			Log::error('Error getting distro deposit address: '.$e->getMessage());
+		}
+		if(!$deposit_address){
+			return $this->return_error('home', 'Error generating deposit address');
+		}		
+		
+		$new = new Distro;
+		$new->user_id = $user->id;
+		$new->deposit_address = $deposit_address;
+		$new->address_uuid = $address_uuid;
+		$new->network = $distro->network;
+		$new->asset = $distro->asset;
+		$new->asset_total = $distro->asset_total;
+		$new->fee_total = $distro->fee_total;
+		$new->label = $distro->label;
+		if(trim($new->label) != ''){
+			$new->label .= ' (copy)';
+		}
+		$new->use_fuel = $distro->use_fuel;
+		$new->webhook = $distro->webhook;
+		$save = $new->save();
+		
+		if(!$save){
+			return $this->return_error('home', 'Error saving distribution');			
+		}
+		$id = $new->id;
+		if($distro_list AND count($distro_list) > 0){
+			foreach($distro_list as $row){
+				$tx = new DistroTx;
+				$tx->distribution_id = $id;
+				$tx->destination = $row->destination;
+				$tx->quantity = $row->quantity;
+				$tx->save();
+			}
+		}
+		
+		$initializer = new DistroInit;
+		$initializer->init($new);		
+		
+		return $this->return_success(array('distribute.details', $deposit_address), 'Distribution #'.$distro->id.' duplicated!');
+	}
 }
