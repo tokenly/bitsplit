@@ -6,5 +6,5 @@
 	"5": "BroadcastTxs",
 	"6": "ConfirmBroadcasts",
 	"7": "ConsolidateTxs",
-	"8": "ConfirmCleanup"
+	"8": "CompleteCleanup"
 }

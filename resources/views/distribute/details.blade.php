@@ -69,7 +69,7 @@
 							echo '<span class="text-success">Performing Cleanup</span>';
 							break;
 						case 8:
-							echo '<span class="text-success">Confirming Cleanup</span>';
+							echo '<span class="text-success">Finalizing Cleanup</span>';
 							break;
 						default:
 							echo '(unknown)';
