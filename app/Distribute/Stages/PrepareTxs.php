@@ -14,7 +14,7 @@ class PrepareTxs extends Stage
 		$average_size = Config::get('settings.average_tx_bytes');
 		$dust_size = Config::get('settings.default_dust');
 		$default_miner = Config::get('settings.miner_fee');
-		$base_txo_cost = ($average_size * $per_byte) + ($dust_size * 2);
+		$base_txo_cost = ($average_size * $per_byte) + $dust_size;
 		$float_cost = round($base_txo_cost/100000000,8);
 		$fee_float = round(($average_size*$per_byte)/100000000,8);
 		$dust_size_float = round($dust_size/100000000,8);
