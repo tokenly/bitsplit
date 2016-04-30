@@ -135,7 +135,7 @@ class Fuel
 		$max_txos = Config::get('settings.max_tx_outputs');
 		$dust_size = Config::get('settings.default_dust');
 		//base cost for # of transactions they are making
-		$base_cost = intval((($per_byte * $average_size) + ($dust_size*2)) * $tx_count);
+		$base_cost = intval((($per_byte * $average_size) + $dust_size) * $tx_count);
 		//cost for priming transactions
 		$prime_cost = 0;
 		$num_primes = ceil($tx_count / $max_txos);

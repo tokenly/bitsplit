@@ -15,7 +15,7 @@ class PrimeUtxos extends Stage
 		$txo_size = Config::get('settings.average_txo_bytes');
 		$dust_size = Config::get('settings.default_dust');
 		$default_miner = Config::get('settings.miner_fee');
-		$base_txo_cost = ($average_size * $per_byte) + ($dust_size * 2);
+		$base_txo_cost = ($average_size * $per_byte) + $dust_size;
 		$base_cost = ($average_size * $per_byte);
 		
 		//check if any primes waiting on confirmations
