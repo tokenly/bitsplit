@@ -98,4 +98,10 @@ class Distribution extends Model
 		return $this->save();
 	}
 	
+	public function markComplete()
+	{
+		$this->complete = 1;
+		return $this->save();
+	}
+	
 }
