@@ -379,7 +379,7 @@ class DistributeController extends Controller {
 		$new->network = $distro->network;
 		$new->asset = $distro->asset;
 		$new->asset_total = $distro->asset_total;
-		$new->fee_total = $distro->fee_total;
+		$new->fee_total = Fuel::estimateFuelCost(count($distro_list));
 		$new->label = $distro->label;
 		if(trim($new->label) != ''){
 			$new->label .= ' (copy)';
