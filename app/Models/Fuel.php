@@ -134,6 +134,7 @@ class Fuel
 		$average_txo = Config::get('settings.average_txo_bytes');
 		$max_txos = Config::get('settings.max_tx_outputs');
 		$dust_size = Config::get('settings.default_dust');
+		$default_miner_fee = Config::get('settings.miner_fee');
 		//base cost for # of transactions they are making
 		$base_cost = intval((($per_byte * $average_size) + $dust_size) * $tx_count);
 		//cost for priming transactions
@@ -152,6 +153,8 @@ class Fuel
 			$pre_prime_cost = $pre_prime_size * $per_byte;
 		}
 		$cost = intval($base_cost + $prime_cost + $pre_prime_cost);
+		$cost += $default_miner_fee; //add one additional miner fee which will pay for the final cleanup tx
+		$cost += $default_miner_fee + $dust_size; //one more fee w/ dust to cleanup any spare tokens
 		return $cost;
 	}
 }
