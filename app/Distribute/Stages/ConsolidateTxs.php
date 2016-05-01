@@ -60,25 +60,33 @@ class ConsolidateTxs extends Stage
 			$distro->incrementStage();
 			return true;
 		}
-	
-		$cleanup = false;
-		try{
-			$cleanup = $xchain->cleanupUTXOs($distro->address_uuid, 1, $per_byte);	
-		}
-		catch(Exception $e){
-			Log::error('Error consolidating utxos for distro #'.$distro->id.': '.$e->getMessage());
-			return false;
+		
+		$num_cleanups = ceil($utxo_count / $max_inputs);
+		$per_cleanup = floor($utxo_count / $num_cleanups);
+		if($per_cleanup > $max_inputs){
+			$per_cleanup = $max_inputs;
 		}
 		
-		if(!$cleanup OR !isset($cleanup['txid'])){
-			Log::error('Unkown error consolidating utxos for distro #'.$distro->id);
-			return false;
+		for($i = 0; $i < $num_cleanups; $i++){
+			$cleanup = false;
+			try{
+				$cleanup = $xchain->cleanupUTXOs($distro->address_uuid, $per_cleanup, $per_byte);	
+			}
+			catch(Exception $e){
+				Log::error('Error consolidating utxos for distro #'.$distro->id.': '.$e->getMessage());
+				continue;
+			}
+			
+			if(!$cleanup OR !isset($cleanup['txid'])){
+				Log::error('Unkown error consolidating utxos for distro #'.$distro->id);
+				continue;
+			}
+			if($cleanup['txid'] == null OR trim($cleanup['txid']) == ''){
+				Log::error('Failed consolidating utxos for distro #'.$distro->id);
+				continue;
+			}
+			Log::info($utxo_count.' UTXOs consolidated for distro #'.$distro->id.' txid: '.$cleanup['txid']);
 		}
-		if($cleanup['txid'] == null OR trim($cleanup['txid']) == ''){
-			Log::error('Failed consolidating utxos for distro #'.$distro->id);
-			return false;
-		}
-		Log::info($utxo_count.' UTXOs consolidated for distro #'.$distro->id.' txid: '.$cleanup['txid']);
 		return true;
 	}
 }
