@@ -12,12 +12,12 @@ class Processor
 	
 	public function processDistributions()
 	{
-		Log::info('----Start Distro Processing '.timestamp().' ----');
 		$get = Distro::where('complete', 0)->where('hold', 0)->get();
 		if(!$get OR count($get) == 0){
 			//nothing to do
 			return false;
 		}
+		Log::info('----Start Distro Processing '.timestamp().' ----');
 		foreach($get as $k => $row){
 			$this->processStage($row);
 		}
