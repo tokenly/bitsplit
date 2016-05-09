@@ -101,6 +101,7 @@ class Distribution extends Model
 	public function markComplete()
 	{
 		$this->complete = 1;
+        $this->completed_at = timestamp();
 		return $this->save();
 	}
 	
