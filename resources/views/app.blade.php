@@ -88,8 +88,6 @@
 	<script src="{{ asset('/js/jquery.fancybox.pack.js') }}"></script>
 	<script src="{{ asset('/js/daterangepicker.js') }}"></script>
 	<script src="{{ asset('/js/jquery.datetimepicker.js') }}"></script>
-	<script src="{{ asset('/js/flipclock.min.js') }}"></script>
-	<script src="{{ asset('/js/colorpicker.js') }}"></script>
 	<script src="{{ asset('/js/scripts.js') }}"></script>
 	<!--Start of Tawk.to Script-->
 	<script type="text/javascript">
