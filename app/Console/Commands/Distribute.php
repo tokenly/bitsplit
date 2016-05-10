@@ -13,7 +13,7 @@ class Distribute extends Command
      *
      * @var string
      */
-    protected $signature = 'distribute';
+    protected $signature = 'bitsplit:distribute';
 
     /**
      * The console command description.

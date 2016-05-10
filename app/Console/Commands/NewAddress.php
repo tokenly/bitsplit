@@ -11,7 +11,7 @@ class NewAddress extends Command
      *
      * @var string
      */
-    protected $signature = 'newAddress';
+    protected $signature = 'bitsplit:newAddress';
 
     /**
      * The console command description.

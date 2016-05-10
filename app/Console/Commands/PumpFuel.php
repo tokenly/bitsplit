@@ -15,7 +15,7 @@ class PumpFuel extends Command
      *
      * @var string
      */
-    protected $signature = 'pumpFuel {username} {address} {amount} {--sweep=false}';
+    protected $signature = 'bitsplit:pumpFuel {username} {address} {amount} {--sweep=false}';
 
     /**
      * The console command description.

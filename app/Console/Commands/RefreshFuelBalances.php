@@ -12,7 +12,7 @@ class RefreshFuelBalances extends Command
      *
      * @var string
      */
-    protected $signature = 'refreshFuelBalances';
+    protected $signature = 'bitsplit:refreshFuelBalances';
 
     /**
      * The console command description.

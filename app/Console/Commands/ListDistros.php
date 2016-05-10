@@ -12,7 +12,7 @@ class ListDistros extends Command
      *
      * @var string
      */
-    protected $signature = 'listDistros';
+    protected $signature = 'bitsplit:listDistros';
 
     /**
      * The console command description.
