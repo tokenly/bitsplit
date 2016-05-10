@@ -1,4 +1,4 @@
-	<div class="col-lg-5 col-lg-offset-1">
+	<div class="col-lg-5 col-lg-offset-1" id="distro-dashboard">
 		<?php
 		$dash_info = User::getDashInfo();
 		?>
@@ -27,9 +27,9 @@
 			</p>
 		@else
 			<p>
-				<strong>Count:</strong> {{ number_format($dash_info['distribution_count']) }}<br>
-				<strong>Completed:</strong> {{ number_format($dash_info['distributions_complete']) }}<br>
-				<strong># Txs:</strong> {{ number_format($dash_info['distribution_txs']) }}
+				<strong>Count:</strong> <span id="distro-total-count">{{ number_format($dash_info['distribution_count']) }}</span><br>
+				<strong>Completed:</strong> <span id="distro-total-completed">{{ number_format($dash_info['distributions_complete']) }}</span><br>
+				<strong># Txs:</strong> <span id="distro-total-txs">{{ number_format($dash_info['distribution_txs']) }}</span>
 			</p>
 			<table class="table table-bordered table-striped distro-history-table" style="font-size: 12px;">
 				<thead>
@@ -56,7 +56,7 @@
 								{{ rtrim(rtrim(number_format($row->asset_total / 100000000, 8),"0"),".") }}
 								{{ $row->asset }}							
 							</td>
-							<td>
+                            <td class="distro-{{ $row->id }}-status-text">
 							<?php
 							if($row->complete == 1){
 								echo '<span class="text-success">Complete</span>';
@@ -101,7 +101,7 @@
 							}
 							?>
 							</td>
-							<td>
+							<td id="distro-{{ $row->id }}-table-complete-count-cont">
 								<?php
 								$num_tx = $row->addressCount();
 								$num_complete = $row->countComplete();
@@ -109,11 +109,11 @@
 									echo '<i class="fa fa-check text-success" title="Complete"></i> '.number_format($num_tx);
 								}
 								else{
-									echo number_format($num_complete).'/'.number_format($num_tx);
+									echo '<span class="distro-'.$row->id.'-complete-count">'.number_format($num_complete).'</span>/'.number_format($num_tx);
 								}
 								?>
 							</td>
-							<td>
+							<td id="distro-{{ $row->id }}-table-actions">
 								<a href="{{ route('distribute.details', $row->deposit_address) }}" class="btn btn-info btn-sm" title="View details"><i class="fa fa-info"></i></a>
 								<a href="{{ route('distribute.duplicate', $row->deposit_address) }}" class="btn btn-warning btn-sm" title="Duplicate this distribution"><i class="fa fa-clone"></i></a>
 								@if($row->complete == 1 OR ($row->asset_received == 0 AND $row->fee_received == 0))

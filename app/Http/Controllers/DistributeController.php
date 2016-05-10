@@ -290,6 +290,54 @@ class DistributeController extends Controller {
 												'address_count' => $address_count,
 												'num_complete' => $num_complete,));
 	}
+    
+    public function getDetailsInfo($address){
+        $output = array();
+		$user = Auth::user();
+		if(!$user){
+            $output['error'] = 'Not logged in';
+			return Response::json($output, 403);
+		}
+		$distro = Distro::where('deposit_address', $address)->where('user_id', $user->id)
+                ->select('id', 'updated_at', 'completed_at', 'stage', 'stage_message', 'complete', 'hold', 'asset_received', 'asset_total', 'fee_received', 'fee_total')
+                ->first();
+		if(!$distro){
+            $output['error'] = 'Distribution not found';
+			return Response::json($output, 404);            
+		}
+		
+		$address_list = DistroTx::where('distribution_id', $distro->id)
+                    ->select('id', 'txid', 'confirmed', 'utxo')
+                    ->orderBy('quantity', 'desc')->get();
+		
+		$address_count = 0;
+		$num_complete = 0;
+		if($address_list){
+			foreach($address_list as &$row){
+				$address_count++;
+				if($row->confirmed == 1){
+					$num_complete++;
+				}
+                if(trim($row->utxo) != ''){
+                    $row->utxo = true;
+                }
+                else{
+                    $row->utxo = false;
+                }
+			}
+		}
+        $update_time = strtotime($distro->updated_at);
+        $complete_time = strtotime($distro->completed_at);
+        $distro->last_update = date('F j\, Y \a\t g:i A', $update_time);
+        $distro->complete_date = date('F j\, Y \a\t g:i A', $complete_time);
+        unset($distro->updated_at);
+        unset($distro->completed_at);
+        $output['distro'] = $distro;
+        $output['tx_count'] = $address_count;
+        $output['tx_complete'] = $num_complete;
+        $output['txs'] = $address_list;
+        return Response::json($output);
+    }
 	
 	public function updateDetails($address)
 	{
@@ -407,4 +455,53 @@ class DistributeController extends Controller {
 		
 		return $this->return_success(array('distribute.details', $deposit_address), 'Distribution #'.$distro->id.' duplicated!');
 	}
+    
+    public function getStatusInfo()
+    {
+        $output = array('stats' => array());
+        $user = Auth::user();
+        if(!$user){
+            $output['error'] = 'Not logged in';
+            return Response::json($output, 403);
+        }
+
+         $distros = Distro::where('user_id', $user->id)
+                    ->select('id', 'updated_at', 'completed_at', 'stage', 'stage_message', 'hold', 'complete', 'asset_received', 'asset_total', 'fee_received', 'fee_total')
+                    ->get();
+         
+         $output['stats']['distro_count'] = 0;
+         $output['stats']['distro_complete'] = 0;
+         $output['stats']['distro_txs_complete'] = 0;
+         $output['stats']['distros'] = array();
+         
+         if($distros){
+             foreach($distros as $distro){
+                 $output['stats']['distro_count']++;
+                 if($distro->complete == 1){
+                    $output['stats']['distro_complete']++;
+                }
+                $txs = DistroTx::where('distribution_id', $distro->id)
+                        ->select('id', 'txid', 'confirmed')->get();
+                $distro->tx_total = 0;
+                $distro->tx_confirmed = 0;
+                $update_time = strtotime($distro->updated_at);
+                $complete_time = strtotime($distro->completed_at);
+                $distro->last_update = date('F j\, Y \a\t g:i A', $update_time);
+                $distro->complete_date = date('F j\, Y \a\t g:i A', $complete_time);
+                unset($distro->updated_at);
+                unset($distro->completed_at);
+                if($txs){
+                    $distro->tx_total = count($txs);
+                    foreach($txs as $tx){
+                        if($tx->confirmed == 1){
+                            $distro->tx_confirmed ++;
+                            $output['stats']['distro_txs_complete']++;
+                        }
+                    }
+                }
+                $output['stats']['distros'][$distro->id] = $distro;
+             }
+         }
+         return Response::json($output);
+    }
 }

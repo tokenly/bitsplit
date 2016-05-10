@@ -25,7 +25,7 @@ class CompleteCleanup extends Stage
 		if(!$balances OR !isset($balances['confirmed'])){
 			Log::error('Failed getting current balances for distro #'.$distro->id.' final cleanup');
 			return false;
-		}		
+		}	
 		
 		if($balances['confirmed']['BTC'] < ($default_dust_float + $default_miner_float)){
 			Log::info('Not enough BTC to bother sweeping for distro #'.$distro->id.' - marking complete');

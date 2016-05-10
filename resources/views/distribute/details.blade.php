@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="row">
-	<div class="col-lg-6">
+	<div class="col-lg-6" id="distro-details" data-address="{{ $distro->deposit_address }}">
 		<h2>Distribution #{{ $distro->id }}</h2>
 		@if(trim($distro->label) != '')
 			<h3>{{ $distro->label }}</h3>
@@ -38,9 +38,10 @@
 			</li>
 			<li>
 				<strong>Status:</strong>
+                <span class="distro-{{ $distro->id }}-status-text">
 				<?php
 				if($distro->complete == 1){
-					echo '<span class="text-success">COMPLETE</span>';
+					echo '<span class="text-success">Complete</span>';
 				}
 				else{
 					switch($distro->stage){
@@ -81,17 +82,22 @@
 					}
 				}
 				?>
+                </span>
 			</li>
 			@if(trim($distro->stage_message) != '')
-				<li><strong class="text-info">Status Message:</strong> {{ $distro->stage_message }}</li>
-			@endif
+				<li class="status-message-cont"><strong class="text-info">Status Message:</strong> <span id="distro-{{ $distro->id }}-stage-message">{{ $distro->stage_message }}</span></li>
+			@else
+                <li class="status-message-cont" style="display: none;"><strong class="text-info">Status Message:</strong> <span id="distro-{{ $distro->id }}-stage-message"></span></li>
+            @endif
 			<li><strong>Date Created:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->created_at)) }} </li>
-			<li><strong>Last Updated:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->updated_at)) }}</li>
+			<li><strong>Last Updated:</strong> <span id="distro-{{ $distro->id }}-last-update">{{ date('F j\, Y \a\t g:i A', strtotime($distro->updated_at)) }}</span></li>
 			@if($distro->complete == 1)
-				<li><strong>Completed:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->completed_at)) }}</li>
-			@endif
+				<li id="distro-complete-cont"><strong>Completed:</strong> <span id="distro-{{ $distro->id }}-complete-date">{{ date('F j\, Y \a\t g:i A', strtotime($distro->completed_at)) }}</span></li>
+			@else
+				<li id="distro-complete-cont" style="display: none;"><strong>Completed:</strong> <span id="distro-{{ $distro->id }}-complete-date"></span></li> 
+            @endif
 			@if($distro->complete == 0)
-			<li>
+			<li id="distro-hold-input-cont">
 				<div class="checkbox">
 					<label><input type="checkbox" name="hold" id="hold" value="1" style="margin-top: 2px;" @if($distro->hold == 1) checked="checked" @endif /> Pause Distribution</label>
 				</div>
@@ -103,12 +109,12 @@
 			</div>
 		</form>
 		<hr>
-		<h4>Transactions ({{ $num_complete }} / {{ $address_count }} complete)</h4>
+		<h4>Transactions (<span class="distro-{{ $distro->id }}-complete-count">{{ $num_complete }}</span> / {{ $address_count }} complete)</h4>
 		<p>
 			<strong>Received:</strong><br>
-			{{ rtrim(rtrim(number_format($distro->asset_received / 100000000, 8),"0"),".") }} / {{ rtrim(rtrim(number_format($distro->asset_total / 100000000, 8),"0"),".") }} {{ $distro->asset }}
+			<span id="distro-{{ $distro->id }}-token-received">{{ rtrim(rtrim(number_format($distro->asset_received / 100000000, 8),"0"),".") }}</span> / {{ rtrim(rtrim(number_format($distro->asset_total / 100000000, 8),"0"),".") }} {{ $distro->asset }}
 			<br>
-			{{ rtrim(rtrim(number_format($distro->fee_received / 100000000, 8),"0"),".") }} / {{ rtrim(rtrim(number_format($distro->fee_total / 100000000, 8),"0"),".") }} BTC
+			<span id="distro-{{ $distro->id }}-fee-received">{{ rtrim(rtrim(number_format($distro->fee_received / 100000000, 8),"0"),".") }}</span> / {{ rtrim(rtrim(number_format($distro->fee_total / 100000000, 8),"0"),".") }} BTC
 		</p>
 		@if(!$address_list OR count($address_list) == 0)
 			<p>
@@ -126,7 +132,7 @@
 						<tr>
 							<td><a href="https://blockscan.com/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a></td>
 							<td>{{ rtrim(rtrim(number_format($row->quantity / 100000000, 8),"0"),".") }}</td>
-							<td>
+							<td id="distro-tx-{{ $row->id }}-status">
 								@if($row->confirmed == 1)
 									<a href="https://blocktrail.com/BTC/tx/{{ $row->txid }}" target="_blank" title="View complete transaction"><i class="fa fa-check text-success"></i></a>
 								@elseif(trim($row->txid) != '')
