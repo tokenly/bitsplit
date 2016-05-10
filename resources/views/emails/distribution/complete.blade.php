@@ -1,5 +1,9 @@
 <p>
-    Hello {{ $user->username }}, your Token distribution #{{ $distro->id }} (<strong>{{ $distro->asset }}</strong>) has been completed.
+    Hello {{ $user->username }}, your Token distribution #{{ $distro->id }} 
+    @if(trim($distro->label) != '')
+        "{{ $distro->label }}"
+    @endif
+    (<strong>{{ $distro->asset }}</strong>) has been completed.
 </p>
 <p>
     <a href="{{ route('distribute.details', $distro->deposit_address) }}">Click here</a> to view the full distribution details,
