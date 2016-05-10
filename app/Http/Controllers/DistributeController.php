@@ -274,6 +274,7 @@ class DistributeController extends Controller {
 		
 		$address_list = DistroTx::where('distribution_id', $distro->id)->orderBy('quantity', 'desc')->get();
 		
+        $tokenpass = new TokenpassAPI;
 		$address_count = 0;
 		$num_complete = 0;
 		if($address_list){
@@ -282,6 +283,18 @@ class DistributeController extends Controller {
 				if($row->confirmed == 1){
 					$num_complete++;
 				}
+                $row->tokenpass_user = false;
+                $lookup = false;
+                try{
+                    $lookup = $tokenpass->lookupUserByAddress($row->destination);
+                }
+                catch(Exception $e){
+                    Log::error('Error looking up address user '.$row->destination.' (distro #'.$distro->id.')');
+                    continue;
+                }
+                if($lookup AND isset($lookup['username'])){
+                    $row->tokenpass_user = $lookup['username'];
+                }
 			}
 		}
 

@@ -3,6 +3,7 @@ namespace Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB, Mail, User;
+use Tokenly\TokenpassClient\TokenpassAPI;
 
 class Distribution extends Model
 {

@@ -130,7 +130,12 @@
 				<tbody>
 					@foreach($address_list as $row)
 						<tr>
-							<td><a href="https://blockscan.com/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a></td>
+							<td>
+                                <a href="https://blockscan.com/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a>
+                                @if($row->tokenpass_user)
+                                   <br> ({{ $row->tokenpass_user }})
+                                @endif
+                            </td>
 							<td>{{ rtrim(rtrim(number_format($row->quantity / 100000000, 8),"0"),".") }}</td>
 							<td id="distro-tx-{{ $row->id }}-status">
 								@if($row->confirmed == 1)
