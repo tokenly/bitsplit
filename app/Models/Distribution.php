@@ -2,7 +2,7 @@
 namespace Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
+use DB, Mail, User;
 
 class Distribution extends Model
 {
@@ -102,7 +102,19 @@ class Distribution extends Model
 	{
 		$this->complete = 1;
         $this->completed_at = timestamp();
+        $this->sendCompleteEmailNotification();
 		return $this->save();
 	}
+    
+    public function sendCompleteEmailNotification()
+    {
+        $user = User::find($this->user_id);
+        $distro_tx = DistributionTx::where('distribution_id', $this->id)->get();
+        Mail::send('emails.distribution.complete', ['user' => $user, 'distro' => $this, 'distro_tx' => $distro_tx],
+            function($m) use ($user) {
+                $m->from(env('MAIL_FROM_ADDRESS'));
+                $m->to($user->email, $user->username)->subject('BitSplit Distribution #'.$this->id.' Complete - '.timestamp());
+        });
+    }
 	
 }
