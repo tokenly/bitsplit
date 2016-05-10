@@ -2,7 +2,7 @@
 namespace Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DB, Mail, User;
+use DB, Mail, User, Log, Exception;
 use Tokenly\TokenpassClient\TokenpassAPI;
 
 class Distribution extends Model
@@ -104,6 +104,7 @@ class Distribution extends Model
 		$this->complete = 1;
         $this->completed_at = timestamp();
         $this->sendCompleteEmailNotification();
+        $this->sendUserReceivedNotifications();
 		return $this->save();
 	}
     
@@ -116,6 +117,47 @@ class Distribution extends Model
                 $m->from(env('MAIL_FROM_ADDRESS'));
                 $m->to($user->email, $user->username)->subject('BitSplit Distribution #'.$this->id.' Complete - '.timestamp());
         });
+    }
+    
+    public function sendUserReceivedNotifications()
+    {
+        $tokenpass = new TokenpassAPI;
+        $distro_tx = DistributionTx::where('distribution_id', $this->id)->get();
+        $notify_list = array();
+        foreach($distro_tx as $tx){
+            $lookup = false;
+            try{
+                $lookup = $tokenpass->lookupUserByAddress($tx->destination);
+            }
+            catch(Exception $e){
+                Log::error('Error looking up user for address '.$tx->destination.' for distro #'.$this->id);
+                continue;
+            }
+            if($lookup AND isset($lookup['email'])){
+                if(!isset($notify_list[$lookup['email']])){
+                    $notify_item = array();
+                    $notify_item['txs'] = array($tx);
+                    $notify_item['username'] = $lookup['username'];
+                    $notify_item['email'] = $lookup['email'];
+                    $notify_list[$lookup['email']] = $notify_item;
+                }
+                else{
+                    $notify_list[$lookup['email']]['txs'][] = $tx;
+                }
+            }
+        }
+        if(count($notify_list) == 0){
+            return false; //no one to notify
+        }
+        foreach($notify_list as $email => $row){
+            Log::info('Notifiying distro #'.$this->id.' recipient '.$email);
+            $username = $row['username'];
+            Mail::send('emails.distribution.recipient', ['notify_data' => $row, 'distro' => $this],
+                function($m) use ($email, $username) {
+                    $m->from(env('MAIL_FROM_ADDRESS'));
+                    $m->to($email, $username)->subject('BitSplit Distribution #'.$this->id.' - '.$this->asset.' Received');
+            });
+        }
     }
 	
 }
