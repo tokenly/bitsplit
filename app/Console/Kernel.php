@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
          Commands\RefreshFuelBalances::class,
          Commands\NewAddress::class,
          Commands\ListDistros::class,
+         Commands\MarkComplete::class,
     ];
 
     /**
