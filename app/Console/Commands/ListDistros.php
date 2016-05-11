@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Models\Distribution as Distro;
+use Models\Distribution as Distro, User;
 
 class ListDistros extends Command
 {
@@ -44,7 +44,8 @@ class ListDistros extends Command
 			return false;
 		}
 		foreach($get as $row){
-			$line = '#'.$row->id.' '.$row->deposit_address.' '.$row->asset;
+            $distro_user = User::where('id', $row->user_id)->first();
+			$line = '#'.$row->id.' ('.$distro_user->username.') '.$row->deposit_address.' '.$row->asset;
 			if(trim($row->label) != ''){
 				$line .= ' "'.$row->label.'"';
 			}
