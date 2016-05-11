@@ -10,11 +10,13 @@ class Initialize
 		$this->startMonitor($distro);
 	}
 	
-	public function startMonitor($distro, $first_stage = true)
+	public function startMonitor($distro, $first_stage = true, $force = false)
 	{
-		if($distro->monitor_uuid != '' OR $distro->hold == 1){
-			return false;
-		}
+        if(!$force){
+            if($distro->monitor_uuid != ''){
+                return false;
+            }
+        }
 		$webhook = route('hooks.distro.deposit').'?nonce='.hash('sha256', $distro->user_id.':'.$distro->address_uuid); 
 		$send_webhook = route('hooks.distro.send').'?nonce='.hash('sha256', $distro->user_id.':'.$distro->address_uuid); 
 		try{
@@ -35,7 +37,7 @@ class Initialize
 			}
 			$distro->save();
 			Log::info('Started distro monitors for #'.$distro->id);
-			return true;
+			return array('send' => $send_monitor['id'], 'receive' => $monitor['id']);
 		}
 		return false;
 	}
