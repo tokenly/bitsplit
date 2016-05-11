@@ -103,7 +103,7 @@ class PrimeUtxos extends Stage
 			}
 			if(!$submit_prime OR trim($submit_prime['txid']) == ''){
 				Log::error('Unkown error priming distro '.$distro->id);
-				if($distro->use_fuel == 1){
+				if($distro->use_fuel == 1 AND Config::get('settings.auto_pump_stuck_distros')){
 					//pump a bit of fuel to give this a kick
 					try{
 						$pump = Fuel::pump($distro->user_id, $distro->id, $default_miner, 'BTC', $default_miner);

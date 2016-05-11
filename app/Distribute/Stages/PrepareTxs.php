@@ -80,7 +80,7 @@ class PrepareTxs extends Stage
 			
 			if($coin_left > 0){
 				Log::error('Not enough inputs available for Distro #'.$distro->id.' transaction to '.$row->address);
-				if($distro->use_fuel == 1){
+				if($distro->use_fuel == 1 AND Config::get('settings.auto_pump_stuck_distros')){
 					//pump a bit of fuel to give this a kick
 					try{
 						$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $default_miner, 'BTC', $default_miner);

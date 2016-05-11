@@ -3,11 +3,6 @@
 return array(
 	'max_tx_outputs' => 150, //max amount of new utxos created per tx, e.g for priming
 	'default_dust' => 5430, 
-	'fee_levels' => array( //amounts used for fees (change these later)
-						'low' => array('miner' => 1000, 'dust' => 1000, 'service' => 1000),
-						'medium' => array('miner' => 1000, 'dust' => 1000, 'service' => 1000),
-						'high' => array('miner' => 1000, 'dust' => 1000, 'service' => 1000),
-						),
 	'broadcast_interval' => 0.5, //number of seconds to wait in between tx broadcasts
 	'amount_decimals' => 8, //# of decimals to round quantities to (e.g for percent value type distros)
 	'min_distribution_addresses' => 3, //no point in creating distributions to less than this amount of addresses
@@ -18,4 +13,5 @@ return array(
 	'miner_satoshi_per_byte' => 25, //satoshis per to pay for miner fees
 	'average_tx_bytes' => 300, //average btc transaction size
 	'average_txo_bytes' => 45, //average amount of bytes per additional transaction output
+    'auto_pump_stuck_distros' => true, //set to true to have 1 miner_fee pumped into a distribution if it gets stuck, set to false if this goes out of wack
 );
