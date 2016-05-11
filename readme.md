@@ -12,7 +12,8 @@ cd bitsplit
 cp .env.example .env
 ```
 
-Create your database and fill in all credentials etc. in the ```.env``` file
+Create your database and fill in all credentials etc. in the ```.env``` file.  
+There is also ```config/settings.php``` with additional options (or leave default)
 
 then
 
