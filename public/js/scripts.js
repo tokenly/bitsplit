@@ -96,6 +96,10 @@ function getStageText(stage){
 $(document).ready(function(){
 	$('.fancy').fancybox();
 	$('.datetimepicker').datetimepicker();
+    
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })    
 	
 	$('select#value_type').change(function(e){
 		var val = $(this).val();
