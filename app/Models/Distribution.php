@@ -4,6 +4,7 @@ namespace Models;
 use Illuminate\Database\Eloquent\Model;
 use DB, Mail, User, Log, Exception;
 use Tokenly\TokenpassClient\TokenpassAPI;
+use Distribute\Initialize;
 
 class Distribution extends Model
 {
@@ -101,10 +102,18 @@ class Distribution extends Model
 	
 	public function markComplete()
 	{
+        //mark complete
 		$this->complete = 1;
         $this->completed_at = timestamp();
+        
+        //send notifications
         $this->sendCompleteEmailNotification();
         $this->sendUserReceivedNotifications();
+        
+        //close the transaction monitors
+        $initer = new Initialize;
+        $initer->stopMonitor($this);        
+        
 		return $this->save();
 	}
     
