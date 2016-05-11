@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
          Commands\UpdateDistroTx::class,
          Commands\ListUsers::class,
          Commands\GetUser::class,
+         Commands\SetAdmin::class,
     ];
 
     /**
