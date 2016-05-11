@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
          Commands\MarkComplete::class,
          Commands\GetDistro::class,
          Commands\GetDistroTxList::class,
+         Commands\DeleteDistro::class,
     ];
 
     /**
