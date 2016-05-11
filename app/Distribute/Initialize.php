@@ -42,7 +42,7 @@ class Initialize
 	
 	public function stopMonitor($distro)
 	{
-		if($distro->monitor_uuid == '' OR $distro->hold == 1){
+		if($distro->monitor_uuid == ''){
 			return false;
 		}
 		$xchain = xchain();
@@ -57,6 +57,5 @@ class Initialize
 		Log::info('Stopped distro receive monitor for #'.$distro->id);
 		return true;
 	}
-	
-	
+    
 }
