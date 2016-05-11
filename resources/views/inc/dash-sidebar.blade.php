@@ -5,10 +5,12 @@
 		<h3>My Account</h3>
 		<ul>
 			<li><strong>User:</strong> {{ $user->username }}</li>
-			<li><strong>BTC Fuel Balance:</strong> {{ rtrim(rtrim(number_format($dash_info['fuel_balance']/100000000,8),"0"),".") }}
+			<li><strong>BTC Fuel Balance </strong>
+                {{ rtrim(rtrim(number_format($dash_info['fuel_balance']/100000000,8),"0"),".") }}
 				@if($dash_info['fuel_pending'] > 0)
 					({{ rtrim(rtrim(number_format($dash_info['fuel_pending']/100000000,8),"0"),".") }} pending)
 				@endif
+                <a href="#" data-toggle="tooltip" data-placement="bottom" title="BTC fees for distributions can be automatically funded from your fuel address. This balance cannot be withdrawn."><i class="fa fa-question-circle-o"></i></a>
 			</li>
 			<li><strong>BTC Fuel Address:</strong><br>
 				<a href="https://blocktrail.com/BTC/address/{{ $dash_info['fuel_address'] }}" target="_blank">{{ $dash_info['fuel_address'] }}</a>
