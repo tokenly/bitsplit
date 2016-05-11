@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
          Commands\DeleteDistroTx::class,
          Commands\ResetDistroMonitor::class,
          Commands\UpdateDistro::class,
+         Commands\UpdateDistroTx::class,
     ];
 
     /**
