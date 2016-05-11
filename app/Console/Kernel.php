@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
          Commands\NewAddress::class,
          Commands\ListDistros::class,
          Commands\MarkComplete::class,
+         Commands\GetDistro::class,
     ];
 
     /**
