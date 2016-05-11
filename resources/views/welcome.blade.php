@@ -1,22 +1,34 @@
 @extends('app')
 
 @section('content')
+    
 	<p class="pull-right">
 		<a href="https://tokenly.com" target="_blank" class="small-tokenly"><img src="{{ asset('img/tokenly-logo.png') }}" alt=""></a>
 	</p>	
-	<h1>Welcome</h1>
-	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-		incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-		exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-		irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-		nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa 
-		qui officia deserunt mollit anim id est laborum
-	</p>
+    <h1>Bitsplit</h1>
+    <div class="row">
+        <div class="col col-lg-6">
+            <h2>Token Distribution</h2>
+            <p>
+                Ever need to get your crypto tokens into the hands of 100's or 1000's of users,
+                without spending your life manually sending each transaction from your wallet?<br>
+                Enter the token distributor, a forwarding service which allows
+                you to make a single transaction, walk away and receive an email notification
+                when your entire distribution list has received their tokens. 
+            </p>
+            <p>
+                <a href="{{ route('home') }}" class="btn btn-lg btn-success"><i class="fa fa-rocket"></i> Get Started</a>
+            </p>
+            <h2>Payment Routing</h2>
+            <p>
+                Coming soon...
+            </p>
+        </div>
+    </div>
 
 @stop
 
 
 @section('title')
-	Token Distributions & Payment Routing
+    Token Distributions & Payment Routing
 @stop
