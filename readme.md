@@ -38,3 +38,8 @@ Almost there. Run the command ```crontab -e```
 #add the following line to activate the distribution processor
 * * * * * php /path/to/bitsplit/artisan schedule:run >> /dev/null 2>&1
 ```
+
+To view other commands for admin or debug purposes, see the ```bitsplit``` section on command  
+```
+php artisan list
+```
