@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
          Commands\GetDistro::class,
          Commands\GetDistroTxList::class,
          Commands\DeleteDistro::class,
+         Commands\DeleteDistroTx::class,
     ];
 
     /**
