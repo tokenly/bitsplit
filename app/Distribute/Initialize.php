@@ -1,7 +1,7 @@
 <?php
 namespace Distribute;
 use Models\Distribution as Distro;
-use Log;
+use Log, Exception;
 
 class Initialize
 {
@@ -46,8 +46,14 @@ class Initialize
 			return false;
 		}
 		$xchain = xchain();
-		$destroy = $xchain->destroyAddressMonitor($distro->monitor_uuid);
-		$destroy_sender = $xchain->destroyAddressMonitor($distro->send_monitor_uuid);
+        try{
+            $destroy = $xchain->destroyAddressMonitor($distro->monitor_uuid);
+            $destroy_sender = $xchain->destroyAddressMonitor($distro->send_monitor_uuid);
+        }
+        catch(Exception $e){
+            Log::info('Error stopping distro monitor: '.$e->getMessage());
+            return false;
+        }
 		Log::info('Stopped distro receive monitor for #'.$distro->id);
 		return true;
 	}
