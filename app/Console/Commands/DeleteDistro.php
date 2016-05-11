@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Models\Distribution as Distro;
 use Distribute\Initialize;
+use Log;
 
 class DeleteDistro extends Command
 {
@@ -52,6 +53,11 @@ class DeleteDistro extends Command
         //stop transaction monitor
         $initer = new Initialize;
         $initer->stopMonitor($get);
+        
+        //echo out / log address + uuid for admin purposes
+        $this->info('Payment address: '.$get->deposit_address);
+        $this->info('Address uuid: '.$get->address_uuid);
+        Log::info('Deleting distro #'.$get->id.' Address: '.$get->deposit_address.' UUID: '.$get->address_uuid);
         
         //delete
         $id = $get->id;
