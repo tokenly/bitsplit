@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
 	<div class="col-lg-6">
-		<h1>BitSplit - Distribute Tokens</h1>
+		<h1>Bitsplit - Distribute Tokens</h1>
 		<p>
 			Use this tool to mass distribute Counterparty tokens to many addresses. <br>
 			Enter in your token name to pay with and either upload a .csv file, or manually
