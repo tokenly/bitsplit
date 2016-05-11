@@ -91,9 +91,11 @@ class PrimeUtxos extends Stage
 			$prime_repeat = $num_primes;
 		}
 		$time = timestamp();
+        $prime_cap = 0;
 		for($i = 0; $i < $prime_repeat; $i++){
 			try{
-				$submit_prime = $xchain->primeUTXOs($distro->address_uuid, round($per_txo/100000000,8), $prime_count, round($prime_fee/100000000,8), true);
+                $prime_cap += $prime_count; //increment the requested # of primes until the desired total is reached
+				$submit_prime = $xchain->primeUTXOs($distro->address_uuid, round($per_txo/100000000,8), $prime_cap, round($prime_fee/100000000,8));
 			}
 			catch(Exception $e){
 				Log::error('Priming error distro '.$distro->id.': '.$e->getMessage());
