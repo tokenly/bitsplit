@@ -17,7 +17,8 @@
         "tokenly/laravel-event-log": "dev-master@dev",
         "simplesoftwareio/simple-qrcode": "1.4.*",        
         "nesbot/carbon": "*",
-        "tokenly/laravel-api-provider": "dev-master@dev"
+        "tokenly/laravel-api-provider": "dev-master@dev",
+        "tokenly/consul-health-daemon": "^0.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

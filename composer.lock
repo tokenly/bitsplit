@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bae2b1860396fb21dab71e4b4769e531",
-    "content-hash": "0a0287245d78bc10ebc37bb28e9e0923",
+    "hash": "27051fb8c62bd260e38cb0b139cb31db",
+    "content-hash": "93ba445a84d76ffc8e03c15d34262a3b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2459,6 +2459,47 @@
             ],
             "description": "A bitcoin currency and quantity value library",
             "time": "2016-02-24 02:17:54"
+        },
+        {
+            "name": "tokenly/consul-health-daemon",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tokenly/consul-health-daemon.git",
+                "reference": "d066e16fc3ecc92bf85bef1f93abb493235de2e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tokenly/consul-health-daemon/zipball/d066e16fc3ecc92bf85bef1f93abb493235de2e3",
+                "reference": "d066e16fc3ecc92bf85bef1f93abb493235de2e3",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~5|~6",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tokenly\\ConsulHealthDaemon\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Devon Weller",
+                    "email": "dweller@devonweller.com",
+                    "homepage": "http://devonweller.com"
+                }
+            ],
+            "description": "A library to monitor services health and report to consul",
+            "time": "2016-05-07 17:06:25"
         },
         {
             "name": "tokenly/hmac-auth",

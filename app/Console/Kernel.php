@@ -29,6 +29,9 @@ class Kernel extends ConsoleKernel
          Commands\ListUsers::class,
          Commands\GetUser::class,
          Commands\SetAdmin::class,
+
+        // vendor commands
+        \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
     ];
 
     /**

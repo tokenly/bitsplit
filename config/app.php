@@ -162,6 +162,8 @@ return [
 		Tokenly\LaravelEventLog\EventLogServiceProvider::class,
 		Tokenly\LaravelApiProvider\APIServiceProvider::class,
 		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
+        Tokenly\ConsulHealthDaemon\ServiceProvider\ConsulHealthDaemonServiceProvider::class,
+
 
     ],
 
