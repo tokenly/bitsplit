@@ -14,7 +14,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'consul-health.console.check' => [
-            'App\Handlers\Monitoring@handleConsoleHealthCheck',
+            'App\Handlers\Monitoring\MonitoringHandler@handleConsoleHealthCheck',
         ],
     ];
 
