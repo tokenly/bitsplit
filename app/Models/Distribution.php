@@ -130,17 +130,13 @@ class Distribution extends Model
     
     public function sendUserReceivedNotifications()
     {
-        $tokenpass = new TokenpassAPI;
+        $extra = json_decode($this->extra, true);
         $distro_tx = DistributionTx::where('distribution_id', $this->id)->get();
         $notify_list = array();
         foreach($distro_tx as $tx){
             $lookup = false;
-            try{
-                $lookup = $tokenpass->lookupUserByAddress($tx->destination);
-            }
-            catch(Exception $e){
-                Log::error('Error looking up user for address '.$tx->destination.' for distro #'.$this->id);
-                continue;
+            if(isset($extra['user_list'][$tx->destination])){
+                $lookup = $extra['user_list'][$tx->destination];
             }
             if($lookup AND isset($lookup['email'])){
                 if(!isset($notify_list[$lookup['email']])){
