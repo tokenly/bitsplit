@@ -301,7 +301,7 @@ class DistributeController extends Controller {
                     $lookup = $tokenpass->lookupUserByAddress($lookup_addresses);
                 }
                 catch(Exception $e){
-                    Log::error('Error looking up address users (distro #'.$distro->id.')');
+                    Log::error('Error looking up address users (distro #'.$distro->id.'): '.$e->getMessage());
                 }
                 if($lookup AND isset($lookup['users']) AND is_array($lookup['users']) AND count($lookup['users']) > 0){
                     foreach($address_list as $row){
