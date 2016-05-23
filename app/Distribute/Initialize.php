@@ -66,7 +66,7 @@ class Initialize
     {
         $tokenpass = new TokenpassAPI;
         try{
-            $register = $tokenpass->registerProvisionalSourceWithProof($distro->address_uuid, $distro->asset);
+            $register = $tokenpass->registerProvisionalSourceWithProof($distro->deposit_address, $distro->asset);
         }
         catch(Exception $e){
             Log::error('Error registering distro #'.$distro->id.' to Tokenpass provisional source whitelist: '.$e->getMessage());
