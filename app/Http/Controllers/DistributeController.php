@@ -413,6 +413,9 @@ class DistributeController extends Controller {
 		if($distro->complete == 0 AND ($distro->fee_received > 0 OR $distro->asset_received > 0)){
 			return $this->return_error('home', 'You cannot delete a distribution in progress');
 		}
+        $init = new DistroInit;
+        $init->stopMonitor($distro);
+        $init->deleteFromTokenpassProvisionalWhitelist($distro);
 		$delete = $distro->delete();
 		if(!$delete){
 			return $this->return_error('home', 'Error deleting distribution');

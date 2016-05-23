@@ -80,4 +80,22 @@ class Initialize
         return true;
     }
     
+    public function deleteFromTokenpassProvisionalWhitelist($distro)
+    {
+        $tokenpass = new TokenpassAPI;
+        try{
+            $delete = $tokenpass->deleteProvisionalSource($distro->deposit_address);
+        }
+        catch(Exception $e){
+            Log::error('Error deleting distro #'.$distro->id.' from Tokenpass provisional source whitelist: '.$e->getMessage());
+            return false;
+        }
+        if(!$delete){
+            Log::error('Failed deleting distro #'.$distro->id.' from Tokenpass provisional source whitelist');
+            return false;
+        }
+        Log::info('Deleted distro #'.$distro->id.' from Tokenpass provisional whitelist');
+        return true; 
+    }
+    
 }
