@@ -2,12 +2,14 @@
 namespace Distribute;
 use Models\Distribution as Distro;
 use Log, Exception;
+use Tokenly\TokenpassClient\TokenpassAPI;
 
 class Initialize
 {
 	public function init($distro)
 	{
 		$this->startMonitor($distro);
+        $this->registerToTokenpassProvisionalWhitelist($distro);
 	}
 	
 	public function startMonitor($distro, $first_stage = true, $force = false)
@@ -59,5 +61,23 @@ class Initialize
 		Log::info('Stopped distro receive monitor for #'.$distro->id);
 		return true;
 	}
+    
+    public function registerToTokenpassProvisionalWhitelist($distro)
+    {
+        $tokenpass = new TokenpassAPI;
+        try{
+            $register = $tokenpass->registerProvisionalSourceWithProof($distro->address_uuid, $distro->asset);
+        }
+        catch(Exception $e){
+            Log::error('Error registering distro #'.$distro->id.' to Tokenpass provisional source whitelist: '.$e->getMessage());
+            return false;
+        }
+        if(!$register){
+            Log::error('Failed registering distro #'.$distro->id.' to Tokenpass provisional source whitelist');
+            return false;
+        }
+        Log::info('Registered distro #'.$distro->id.' to Tokenpass provisional whitelist');
+        return true;
+    }
     
 }
