@@ -2683,12 +2683,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/tokenpass-client.git",
-                "reference": "4eaaef415b63029d4b192026c200c75b2c8544cd"
+                "reference": "e7e11e07ee3b3cb50fa7d14dc27b6b5e44935bdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/tokenpass-client/zipball/4eaaef415b63029d4b192026c200c75b2c8544cd",
-                "reference": "4eaaef415b63029d4b192026c200c75b2c8544cd",
+                "url": "https://api.github.com/repos/tokenly/tokenpass-client/zipball/e7e11e07ee3b3cb50fa7d14dc27b6b5e44935bdf",
+                "reference": "e7e11e07ee3b3cb50fa7d14dc27b6b5e44935bdf",
                 "shasum": ""
             },
             "require": {
@@ -2723,7 +2723,7 @@
                 "tokenly",
                 "tokenpass"
             ],
-            "time": "2016-05-21 05:48:17"
+            "time": "2016-05-23 02:50:41"
         },
         {
             "name": "tokenly/tokenslot-client",
