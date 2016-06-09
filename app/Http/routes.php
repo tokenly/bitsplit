@@ -53,7 +53,18 @@ $router->get('/account/sync', 'AccountController@sync');
 $router->get('/account/authorize', array('as' => 'account.authorize', 'uses' => 'AccountController@redirectToProvider'));
 $router->get('/account/authorize/callback', array('as' => 'account.authcallback', 'uses' => 'AccountController@handleProviderCallback'));
 
+//API key management
+Route::get('api-keys', array('as' => 'account.api-keys', 'uses' => 'APIKeyController@index'));
+Route::get('api-keys/create', array('as' => 'account.api-keys.create', 'uses' => 'APIKeyController@create'));
+Route::get('api-keys/delete/{key}', array('as' => 'account.api-keys.delete', 'uses' => 'APIKeyController@delete'));
 
+//API methods
+Route::post('api/v1/distribute/create', array('as' => 'api.distribute.create', 'uses' => 'APIController@createDistribution'));
+Route::get('api/v1/distribute', array('as' => 'api.distribute.list', 'uses' => 'APIController@getDistributionList'));
+Route::get('api/v1/distribute/{id}', array('as' => 'api.distribute.get', 'uses' => 'APIController@getDistribution'));
+Route::patch('api/v1/distribute/{id}', array('as' => 'api.distribute.update', 'uses' => 'APIController@updateDistribution'));
+Route::delete('api/v1/distribute/{id}', array('as' => 'api.distribute.delete', 'uses' => 'APIController@deleteDistribution'));
+Route::get('api/v1/self', array('as' => 'api.user-info', 'uses' => 'APIController@getLoggedAPIUserInfo'));
 
 Route::get('/', function () {
     return view('welcome');
