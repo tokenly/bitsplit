@@ -135,8 +135,11 @@ class Fuel
 		$max_txos = Config::get('settings.max_tx_outputs');
 		$dust_size = Config::get('settings.default_dust');
 		$default_miner_fee = Config::get('settings.miner_fee');
+		$service_fee = Config::get('settings.distribute_service_fee');
 		//base cost for # of transactions they are making
 		$base_cost = intval((($per_byte * $average_size) + $dust_size) * $tx_count);
+        //tack on platform service fee
+        $base_cost += ($service_fee * $tx_count);
 		//cost for priming transactions
 		$prime_cost = 0;
 		$num_primes = ceil($tx_count / $max_txos);
