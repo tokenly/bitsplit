@@ -251,6 +251,13 @@ class APIController extends Controller
             }
             $distro->hold = $hold;
             
+            //check for webhook
+            if(isset($input['webhook'])){
+                if(strpos('http://', $input['webhook']) === 0 OR strpos('https://', $input['webhook']) === 0){
+                    $distro->webhook = $input['webhook'];
+                }
+            }
+            
             $save = $distro->save();
             if(!$save){
                 $output['error'] = 'Error saving distribution';
