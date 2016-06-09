@@ -76,5 +76,5 @@
 @endsection
 
 @section('title')
-	BitSplit Dashboard
+	Bitsplit Dashboard
 @stop
