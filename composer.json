@@ -15,10 +15,13 @@
 		"guzzlehttp/guzzle": "~6.0",
 		"tokenly/token-generator": "dev-master@dev",
         "tokenly/laravel-event-log": "dev-master@dev",
+        "tokenly/laravel-api-provider": "dev-master@dev",
         "simplesoftwareio/simple-qrcode": "1.4.*",        
         "nesbot/carbon": "*",
-        "tokenly/laravel-api-provider": "dev-master@dev",
-        "tokenly/consul-health-daemon": "^0.2"
+        "tokenly/laravel-api-provider": "0.*",
+        "tokenly/consul-health-daemon": "^0.2",
+        "tokenly/token-generator": "dev-master",
+        "tokenly/bitcoin-currency-lib": "^1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
