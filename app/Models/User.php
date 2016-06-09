@@ -5,6 +5,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Models\Distribution, Models\DistributionTx;
+use Tokenly\CurrencyLib\CurrencyUtil;
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
 	use Authenticatable, CanResetPassword;
@@ -35,7 +36,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return true;
 	}
 	
-	public static function getDashInfo($userId = 0)
+	public static function getDashInfo($userId = 0, $no_history = false)
 	{
 		if($userId == 0){
 			$user = Auth::user();
@@ -51,21 +52,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		$output['fuel_address'] = User::getFuelAddress($user->id);
 		$output['fuel_balance'] = intval(UserMeta::getMeta($user->id, 'fuel_balance'));
 		$output['fuel_pending'] = intval(UserMeta::getMeta($user->id, 'fuel_pending'));
-		$output['fuel_spent'] = intval(UserMeta::getMeta($user->id, 'fuel_spent'));;
+		$output['fuel_spent'] = intval(UserMeta::getMeta($user->id, 'fuel_spent'));
+        $output['fuel_balanceSat'] = CurrencyUtil::satoshisToValue($output['fuel_balance']);
+        $output['fuel_pendingSat'] = CurrencyUtil::satoshisToValue($output['fuel_pending']);;
+        $output['fuel_spentSat'] = CurrencyUtil::satoshisToValue($output['fuel_spent']);;
 		
-		$distros = Distribution::where('user_id', $user->id)->orderBy('id', 'desc')->get();
-		$output['distribution_history'] = $distros;
-		$output['distributions_complete'] = 0;
-		$output['distribution_txs'] = 0;
-		if($distros){
-			$output['distribution_count'] = count($distros);
-			foreach($distros as $distro){
-				if($distro->complete == 1){
-					$output['distributions_complete']++;
-				}
-				$output['distribution_txs'] += $distro->countComplete();
-			}
-		}
+        if(!$no_history){
+            $distros = Distribution::where('user_id', $user->id)->orderBy('id', 'desc')->get();
+            $output['distribution_history'] = $distros;
+            $output['distributions_complete'] = 0;
+            $output['distribution_txs'] = 0;
+            if($distros){
+                $output['distribution_count'] = count($distros);
+                foreach($distros as $distro){
+                    if($distro->complete == 1){
+                        $output['distributions_complete']++;
+                    }
+                    $output['distribution_txs'] += $distro->countComplete();
+                }
+            }
+        }
 
 		return $output;
 	}

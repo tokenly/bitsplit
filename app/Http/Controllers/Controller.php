@@ -11,6 +11,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     
+    function __construct()
+    {
+        
+    }
+    
     protected function return_with_message($route, $message, $class)
     {
 		\Session::flash('message', $message);

@@ -17,5 +17,6 @@ class VerifyCsrfToken extends BaseVerifier
         'hooks/distribution/send',
         'hooks/refuel',
         'hooks/unfuel',
+        'api/v1/*',
     ];
 }

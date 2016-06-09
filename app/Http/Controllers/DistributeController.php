@@ -60,7 +60,7 @@ class DistributeController extends Controller {
 			if(isset($input['cut_head']) AND intval($input['cut_head']) == 1){
 				$cut_head = true;
 			}
-			$csv_list =	$this->processAddressList($get_csv, $value_type, true, $cut_head);
+			$csv_list =	Distro::processAddressList($get_csv, $value_type, true, $cut_head);
 			if(!$csv_list){
 				return $this->return_error('home', 'CSV file empty or contains no valid entries');
 			}
@@ -68,7 +68,7 @@ class DistributeController extends Controller {
 		}
 		
 		if(!$address_list AND isset($input['address_list'])){
-			$get_list = $this->processAddressList($input['address_list'], $value_type);
+			$get_list = Distro::processAddressList($input['address_list'], $value_type);
 			if(!$get_list){
 				return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
 			}
@@ -96,7 +96,7 @@ class DistributeController extends Controller {
 			if(!$use_total OR $use_total <= 0){
 				return $this->return_error('home', 'Invalid amount of tokens to send');
 			}
-			$address_list = $this->divideTotalBetweenList($address_list, $use_total);
+			$address_list = Distro::divideTotalBetweenList($address_list, $use_total);
 			if(count($address_list) < $min_addresses){
 				return $this->return_error('home', 'Please enter at least '.$min_addresses.' addresses to distribute to (some amounts invalid)');
 			}
@@ -172,94 +172,7 @@ class DistributeController extends Controller {
 		return Redirect::route('distribute.details', $deposit_address);
 	}
 	
-	protected function processAddressList($list, $value_type, $csv = false, $cut_csv_head = false)
-	{
-		$xchain = xchain();
-		$list = explode("\n", str_replace("\r", "", trim($list)));
-		if($csv){
-			if($cut_csv_head){
-				if(isset($list[0])){
-					unset($list[0]);
-				}
-			}
-		}
-		$tokenpass = new TokenpassAPI;
-		$address_list = array();
-		foreach($list as $row){
-			if($csv){
-				$parse_row = str_getcsv($row);
-			}
-			else{
-				$parse_row = explode(',', $row);
-			}
-			if(isset($parse_row[0]) AND isset($parse_row[1])){
-				$address = trim($parse_row[0]);
-				try{
-					$valid_address = $xchain->validateAddress($address);
-					if(!$valid_address OR !$valid_address['result']){
-						$address = false;
-					}
-				}
-				catch(Exception $e){
-					Log::error('Error validating distribution address "'.$address.'": '.$e->getMessage());
-					$address = false;
-				}
-				if(!$address){
-					//see if we can lookup address by username
-					try{
-						$lookup_user = $tokenpass->lookupAddressByUser(trim($parse_row[0]));
-						if($lookup_user AND isset($lookup_user['address'])){
-							$address = $lookup_user['address'];
-						}
-					}
-					catch(Exception $e){
-						Log::error('Error looking up address by username "'.$address.'" '.$e->getMessage());
-					}
-					if(!$address){
-						continue;
-					}
-				}
-				if($value_type == 'percent'){
-					$amount = floatval($parse_row[1]) / 100;
-				}
-				else{
-					$amount = intval(bcmul(trim($parse_row[1]), "100000000", "0"));
-				}
-				if($amount <= 0){
-					continue;
-				}
-				if(isset($address_list[$address])){
-					$address_list[$address]['amount'] += $amount;
-				}
-				else{
-					$item = array('address' => $address, 'amount' => $amount);
-					$address_list[$address] = $item;
-				}
-			}
-		}
-		$address_list = array_values($address_list);
-		if(count($address_list) == 0){
-			return false;
-		}
-		return $address_list;
-	}
-	
-	protected function divideTotalBetweenList($list, $total)
-	{
-		$total = intval($total);
-		$used = 0;
-		$max_decimals = Config::get('settings.amount_decimals');
-		foreach($list as $k => $row){
-			$amount = intval(round($row['amount'] * $total, $max_decimals));
-			$used += $amount;
-			if($used > $total){
-				unset($list[$k]);
-				continue;
-			}
-			$list[$k]['amount'] = $amount;
-		}
-		return $list;
-	}
+
 	
 	public function getDetails($address)
 	{

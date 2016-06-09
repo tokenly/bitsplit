@@ -2,13 +2,19 @@
 namespace Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DB, Mail, User, Log, Exception;
+use DB, Mail, User, Log, Exception, Config;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use Distribute\Initialize;
 
 class Distribution extends Model
 {
 	
+    public static $api_fields = array(
+        'id', 'label', 'created_at', 'updated_at', 'stage', 'stage_message', 'complete',
+        'deposit_address', 'network', 'asset', 'asset_total', 
+        'fee_total', 'asset_received', 'fee_received', 'hold', 'use_fuel', 'webhook'
+        );
+    
 	public static function getStageMap()
 	{
 		static $map_cache = false;
@@ -164,5 +170,108 @@ class Distribution extends Model
             });
         }
     }
+    
+    public static function processAddressList($list, $value_type, $csv = false, $cut_csv_head = false)
+    {
+		$xchain = xchain();
+        $array = true;
+        if(!is_array($list)){
+            $array = false;
+            $list = explode("\n", str_replace("\r", "", trim($list)));
+            if($csv){
+                if($cut_csv_head){
+                    if(isset($list[0])){
+                        unset($list[0]);
+                    }
+                }
+            }
+        }
+		$tokenpass = new TokenpassAPI;
+		$address_list = array();
+		foreach($list as $lk => $row){
+            if($array){
+                if(is_array($row) AND isset($row['address']) AND isset($row['amount'])){
+                    $parse_row = array($row['address'], $row['amount']);
+                }
+                else{
+                    $parse_row = array($lk, $row);
+                }
+            }
+            else{
+                if($csv){
+                    $parse_row = str_getcsv($row);
+                }
+                else{
+                    $parse_row = explode(',', $row);
+                }
+            }
+			if(isset($parse_row[0]) AND isset($parse_row[1])){
+				$address = trim($parse_row[0]);
+				try{
+					$valid_address = $xchain->validateAddress($address);
+					if(!$valid_address OR !$valid_address['result']){
+						$address = false;
+					}
+				}
+				catch(Exception $e){
+					Log::error('Error validating distribution address "'.$address.'": '.$e->getMessage());
+					$address = false;
+				}
+				if(!$address){
+					//see if we can lookup address by username
+					try{
+						$lookup_user = $tokenpass->lookupAddressByUser(trim($parse_row[0]));
+						if($lookup_user AND isset($lookup_user['address'])){
+							$address = $lookup_user['address'];
+						}
+					}
+					catch(Exception $e){
+						Log::error('Error looking up address by username "'.$address.'" '.$e->getMessage());
+					}
+					if(!$address){
+						continue;
+					}
+				}
+				if($value_type == 'percent'){
+					$amount = floatval($parse_row[1]) / 100;
+				}
+				else{
+					$amount = intval(bcmul(trim($parse_row[1]), "100000000", "0"));
+				}
+				if($amount <= 0){
+					continue;
+				}
+				if(isset($address_list[$address])){
+					$address_list[$address]['amount'] += $amount;
+				}
+				else{
+					$item = array('address' => $address, 'amount' => $amount);
+					$address_list[$address] = $item;
+				}
+			}
+		}
+		$address_list = array_values($address_list);
+		if(count($address_list) == 0){
+			return false;
+		}
+		return $address_list;
+    }
 	
+	public static function divideTotalBetweenList($list, $total)
+	{
+		$total = intval($total);
+		$used = 0;
+		$max_decimals = Config::get('settings.amount_decimals');
+		foreach($list as $k => $row){
+			$amount = intval(round($row['amount'] * $total, $max_decimals));
+			$used += $amount;
+			if($used > $total){
+				unset($list[$k]);
+				continue;
+			}
+			$list[$k]['amount'] = $amount;
+		}
+		return $list;
+	}    
+    
 }

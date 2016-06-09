@@ -48,5 +48,8 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'cors' => \App\Http\Middleware\CORS::class,
+        'auth.api' => \App\Http\Middleware\AuthenticateAPIKey::class,
+        'auth.api.signed' => \App\Http\Middleware\AuthenticateAPIKeySigned::class,
     ];
 }
