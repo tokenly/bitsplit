@@ -329,10 +329,10 @@ class APIController extends Controller
         $row['fee_received'] = intval($row['fee_received']);
         $row['fee_total'] = intval($row['fee_total']);
         $row['asset_total'] = intval($row['asset_total']);
-        $row['asset_totalSat'] = CurrencyUtil::satoshisToValue($row['asset_total']);
-        $row['fee_totalSat'] = CurrencyUtil::satoshisToValue($row['fee_total']);
-        $row['asset_receivedSat'] = CurrencyUtil::satoshisToValue($row['asset_received']);
-        $row['fee_receivedSat'] = CurrencyUtil::satoshisToValue($row['fee_received']);
+        $row['asset_totalFloat'] = CurrencyUtil::satoshisToValue($row['asset_total']);
+        $row['fee_totalFloat'] = CurrencyUtil::satoshisToValue($row['fee_total']);
+        $row['asset_receivedFloat'] = CurrencyUtil::satoshisToValue($row['asset_received']);
+        $row['fee_receivedFloat'] = CurrencyUtil::satoshisToValue($row['fee_received']);
         $row['stage_name'] = Distro::getStageName($row['stage']);
         $row['hold'] = intval($row['hold']);
         $row['complete'] = intval($row['complete']);
