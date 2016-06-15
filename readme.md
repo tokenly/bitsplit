@@ -44,3 +44,7 @@ To view other commands for admin or debug purposes, see the ```bitsplit``` secti
 ```
 php artisan list
 ```
+
+##API
+
+For API documentation, check out http://apidocs.tokenly.com/bitsplit/
