@@ -325,11 +325,19 @@ class APIController extends Controller
         if(isset($row['user_id'])){
             unset($row['user_id']);
         }
+        $row['asset_received'] = intval($row['asset_received']);
+        $row['fee_received'] = intval($row['fee_received']);
+        $row['fee_total'] = intval($row['fee_total']);
+        $row['asset_total'] = intval($row['asset_total']);
         $row['asset_totalSat'] = CurrencyUtil::satoshisToValue($row['asset_total']);
         $row['fee_totalSat'] = CurrencyUtil::satoshisToValue($row['fee_total']);
         $row['asset_receivedSat'] = CurrencyUtil::satoshisToValue($row['asset_received']);
         $row['fee_receivedSat'] = CurrencyUtil::satoshisToValue($row['fee_received']);
         $row['stage_name'] = Distro::getStageName($row['stage']);
+        $row['hold'] = intval($row['hold']);
+        $row['complete'] = intval($row['complete']);
+        $row['stage'] = intval($row['stage']);
+        $row['use_fuel'] = intval($row['use_fuel']);
         if(!$no_list){
             $row['address_list'] = $this->getDistroTxList($row['id']);
         }
@@ -344,6 +352,8 @@ class APIController extends Controller
         }
         $list = $get->toArray();
         foreach($list as $k => $row){
+            $list[$k]['quantity'] = intval($row['quantity']);
+            $list[$k]['confirmed'] = intval($row['confirmed']);
             $list[$k]['quantity_sat'] = CurrencyUtil::satoshisToValue($row['quantity']);
         }
         return $list;
