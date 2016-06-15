@@ -354,7 +354,7 @@ class APIController extends Controller
         foreach($list as $k => $row){
             $list[$k]['quantity'] = intval($row['quantity']);
             $list[$k]['confirmed'] = intval($row['confirmed']);
-            $list[$k]['quantity_sat'] = CurrencyUtil::satoshisToValue($row['quantity']);
+            $list[$k]['quantity_float'] = CurrencyUtil::satoshisToValue($row['quantity']);
         }
         return $list;
     }

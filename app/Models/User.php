@@ -53,9 +53,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		$output['fuel_balance'] = intval(UserMeta::getMeta($user->id, 'fuel_balance'));
 		$output['fuel_pending'] = intval(UserMeta::getMeta($user->id, 'fuel_pending'));
 		$output['fuel_spent'] = intval(UserMeta::getMeta($user->id, 'fuel_spent'));
-        $output['fuel_balanceSat'] = CurrencyUtil::satoshisToValue($output['fuel_balance']);
-        $output['fuel_pendingSat'] = CurrencyUtil::satoshisToValue($output['fuel_pending']);;
-        $output['fuel_spentSat'] = CurrencyUtil::satoshisToValue($output['fuel_spent']);;
+        $output['fuel_balanceFloat'] = CurrencyUtil::satoshisToValue($output['fuel_balance']);
+        $output['fuel_pendingFloat'] = CurrencyUtil::satoshisToValue($output['fuel_pending']);;
+        $output['fuel_spentFloat'] = CurrencyUtil::satoshisToValue($output['fuel_spent']);;
 		
         if(!$no_history){
             $distros = Distribution::where('user_id', $user->id)->orderBy('id', 'desc')->get();
