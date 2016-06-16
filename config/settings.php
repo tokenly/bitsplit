@@ -14,5 +14,5 @@ return array(
 	'average_tx_bytes' => 300, //average btc transaction size
 	'average_txo_bytes' => 45, //average amount of bytes per additional transaction output
     'auto_pump_stuck_distros' => true, //set to true to have 1 miner_fee pumped into a distribution if it gets stuck, set to false if this goes out of wack
-    'distribute_service_fee' => 500, //amount of satoshis per address to tack on to their fee for service profit
+    'distribute_service_fee' => 2000, //amount of satoshis per address to tack on to their fee for service profit
 );
