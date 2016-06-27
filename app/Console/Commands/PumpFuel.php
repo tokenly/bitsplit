@@ -15,7 +15,7 @@ class PumpFuel extends Command
      *
      * @var string
      */
-    protected $signature = 'bitsplit:pumpFuel {username} {address} {amount} {--sweep=false}';
+    protected $signature = 'bitsplit:pumpFuel {username} {address} {amount} {--sweep=false} {--asset=BTC}';
 
     /**
      * The console command description.
@@ -40,12 +40,13 @@ class PumpFuel extends Command
         $address = $this->argument('address');
         $amount = $this->argument('amount');
         $sweep = $this->option('sweep');
+        $asset = $this->option('asset');
 		try{
 			if($sweep == 'true'){
-				$send = Fuel::pump($username, $address, 'sweep', 'BTC', null, false);
+				$send = Fuel::pump($username, $address, 'sweep', $asset, null, false);
 			}
 			else{
-				$send = Fuel::pump($username, $address, $amount, 'BTC', null, false);
+				$send = Fuel::pump($username, $address, $amount, $asset, null, false);
 			}
 			if($send){
 				$this->info('Success: '.$send['txid']);
