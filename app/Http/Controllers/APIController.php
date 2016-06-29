@@ -27,6 +27,7 @@ class APIController extends Controller
         else{
             $this->middleware('auth.api');
         }
+        $this->middleware('tls');
         $this->middleware('cors');
     }
     

@@ -6,6 +6,11 @@ use Tokenly\TokenpassClient\TokenpassAPI;
 use Distribute\Initialize as DistroInit;
 class DistributeController extends Controller {
 	
+    public function __construct()
+    {
+        $this->middleware('tls');
+    }
+
 	public function submitDistribution()
 	{
 		$input = Input::all();

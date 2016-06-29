@@ -5,6 +5,11 @@ use User, UserMeta, Config, Models\Distribution, Models\DistributionTx, Response
 use Models\Fuel;
 class WebhookController extends Controller {
 
+	public function __construct()
+	{
+        $this->middleware('tls');
+	}
+
 	public function DistributorDeposit(Request $request)
 	{
 		$hook = app('Tokenly\XChainClient\WebHookReceiver');

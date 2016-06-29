@@ -13,7 +13,7 @@ class Controller extends BaseController
     
     function __construct()
     {
-        
+        $this->middleware('tls');
     }
     
     protected function return_with_message($route, $message, $class)

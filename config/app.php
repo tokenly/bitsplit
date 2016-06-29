@@ -156,6 +156,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         
+
+        /*
+         * Vendor Service Providers...
+         */
+        Fideloper\Proxy\TrustedProxyServiceProvider::class,
         Tokenly\TokenpassClient\Provider\TokenpassServiceProvider::class,
 		Tokenly\XChainClient\XChainServiceProvider::class,
 		Tokenly\HmacAuth\ServiceProvider\HmacAuthServiceProvider::class,
