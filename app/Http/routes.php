@@ -66,6 +66,6 @@ Route::patch('api/v1/distribute/{id}', array('as' => 'api.distribute.update', 'u
 Route::delete('api/v1/distribute/{id}', array('as' => 'api.distribute.delete', 'uses' => 'APIController@deleteDistribution'));
 Route::get('api/v1/self', array('as' => 'api.user-info', 'uses' => 'APIController@getLoggedAPIUserInfo'));
 
-Route::get('/', function () {
+Route::get('/', ['middleware' => 'tls', function () {
     return view('welcome');
-});
+}]);
