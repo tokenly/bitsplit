@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9f06b352ad25900ff845ee5f44229ef5",
-    "content-hash": "9780e392622cfff89fbaffd535106c4b",
+    "hash": "c468dfabe6737e9fd8ecb36e46f24d95",
+    "content-hash": "c3148356218f14fd482156b06d5a2508",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -202,6 +202,57 @@
                 "string"
             ],
             "time": "2016-05-12 17:23:41"
+        },
+        {
+            "name": "fideloper/proxy",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fideloper/TrustedProxy.git",
+                "reference": "ec4dd30141e2515e307aea3539ff242e85c3f120"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fideloper/TrustedProxy/zipball/ec4dd30141e2515e307aea3539ff242e85c3f120",
+                "reference": "ec4dd30141e2515e307aea3539ff242e85c3f120",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "illuminate/http": "~5.0",
+                "mockery/mockery": "~0.9.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fideloper\\Proxy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Fidao",
+                    "email": "fideloper@gmail.com"
+                }
+            ],
+            "description": "Set trusted proxies for Laravel",
+            "keywords": [
+                "load balancing",
+                "proxy",
+                "trusted proxy"
+            ],
+            "time": "2015-12-24 15:02:55"
         },
         {
             "name": "guzzle/guzzle",
@@ -2555,23 +2606,23 @@
         },
         {
             "name": "tokenly/laravel-api-provider",
-            "version": "v0.2.0",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/laravel-api-provider.git",
-                "reference": "7558d9c970bcda5c5afe90a3d67e1f47079f7f25"
+                "reference": "63c4e9ca87d625800c08b67d615f660866ac04e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/laravel-api-provider/zipball/7558d9c970bcda5c5afe90a3d67e1f47079f7f25",
-                "reference": "7558d9c970bcda5c5afe90a3d67e1f47079f7f25",
+                "url": "https://api.github.com/repos/tokenly/laravel-api-provider/zipball/63c4e9ca87d625800c08b67d615f660866ac04e6",
+                "reference": "63c4e9ca87d625800c08b67d615f660866ac04e6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.0",
                 "ramsey/uuid": "~2.",
                 "tokenly/hmac-auth": "^1",
-                "tokenly/laravel-event-log": "dev-master",
+                "tokenly/laravel-event-log": "^1",
                 "tokenly/token-generator": "dev-master"
             },
             "require-dev": {
@@ -2595,20 +2646,20 @@
                 }
             ],
             "description": "An API service provider for Laravel",
-            "time": "2016-05-21 17:33:24"
+            "time": "2016-06-21 16:21:21"
         },
         {
             "name": "tokenly/laravel-event-log",
-            "version": "dev-master",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/laravel-event-log.git",
-                "reference": "e5cf37df579d208ca0d8871c332f4e3ae5ea06b6"
+                "reference": "38fbd62d39f354d164e887f997959addbc2ec95c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/laravel-event-log/zipball/e5cf37df579d208ca0d8871c332f4e3ae5ea06b6",
-                "reference": "e5cf37df579d208ca0d8871c332f4e3ae5ea06b6",
+                "url": "https://api.github.com/repos/tokenly/laravel-event-log/zipball/38fbd62d39f354d164e887f997959addbc2ec95c",
+                "reference": "38fbd62d39f354d164e887f997959addbc2ec95c",
                 "shasum": ""
             },
             "require": {
@@ -2636,7 +2687,7 @@
                 }
             ],
             "description": "An event logger provider for Laravel.",
-            "time": "2016-05-24 22:20:02"
+            "time": "2016-06-15 12:42:41"
         },
         {
             "name": "tokenly/token-generator",
@@ -4251,10 +4302,9 @@
         "laravel/socialite": 20,
         "tokenly/tokenslot-client": 20,
         "tokenly/xchain-client": 20,
-        "tokenly/token-generator": 20,
-        "tokenly/laravel-event-log": 20
+        "tokenly/token-generator": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.5.9"

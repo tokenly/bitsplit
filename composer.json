@@ -14,14 +14,13 @@
 		"tokenly/xchain-client": "dev-master@dev",
 		"guzzlehttp/guzzle": "~6.0",
 		"tokenly/token-generator": "dev-master@dev",
-        "tokenly/laravel-event-log": "dev-master@dev",
-        "tokenly/laravel-api-provider": "dev-master@dev",
+        "tokenly/laravel-event-log": "^1",
         "simplesoftwareio/simple-qrcode": "1.4.*",        
         "nesbot/carbon": "*",
-        "tokenly/laravel-api-provider": "0.*",
+        "tokenly/laravel-api-provider": "^0.3",
         "tokenly/consul-health-daemon": "^0.2",
-        "tokenly/token-generator": "dev-master",
-        "tokenly/bitcoin-currency-lib": "^1"
+        "tokenly/bitcoin-currency-lib": "^1",
+        "fideloper/proxy": "^3.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -71,5 +70,6 @@
     },
     "config": {
         "preferred-install": "dist"
-    }
+    },
+    "prefer-stable": true
 }
