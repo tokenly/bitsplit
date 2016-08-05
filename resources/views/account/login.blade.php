@@ -3,7 +3,7 @@
 @section('content')
 
 <p>
-	Sign in using<br> <strong>Tokenly Accounts</strong>:
+	Sign in using<br> <strong>Tokenpass</strong>:
 </p>
 <a href="{{ route('account.authorize') }}" class="btn btn-primary">Login or Register Now</a>
 

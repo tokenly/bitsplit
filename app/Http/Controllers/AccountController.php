@@ -59,7 +59,7 @@ class AccountController extends Controller {
 
 
     /**
-     * Redirect the user to Tokenly Accounts to get authorization
+     * Redirect the user to Tokenpass to get authorization
      */
     public function redirectToProvider()
     {
@@ -71,8 +71,8 @@ class AccountController extends Controller {
     /**
      * Obtain the user information from Accounts.
      * 
-     * This is the route called after Tokenly Accounts has granted (or denied) permission to this application
-     * This application is now responsible for loading the user information from Tokenly Accounts and storing
+     * This is the route called after Tokenpass has granted (or denied) permission to this application
+     * This application is now responsible for loading the user information from Tokenpass and storing
      * it in the local user database.
      *
      * @return Response
@@ -81,13 +81,13 @@ class AccountController extends Controller {
     {
 
         try {
-            // check for an error returned from Tokenly Accounts
+            // check for an error returned from Tokenpass
             $error_description = Tokenpass::checkForError($request);
             if ($error_description) {
                 return view('account.authorization-failed', ['error_msg' => $error_description]);
             }
 			
-            // retrieve the user from Tokenly Accounts
+            // retrieve the user from Tokenpass
             $oauth_user = Socialite::user();
             
             
@@ -146,7 +146,7 @@ class AccountController extends Controller {
 
 
     /**
-     * Obtain the user information from Tokenly Accounts.
+     * Obtain the user information from Tokenpass.
      *
      * And sync it with our local database
      *
