@@ -3,7 +3,7 @@
 @section('content')
     
 	<p class="pull-right">
-		<a href="https://tokenly.com" target="_blank" class="small-tokenly"><img src="{{ asset('img/tokenly-logo.png') }}" alt=""></a>
+		<a href="https://tokenly.com" target="_blank" class="small-tokenly"><img src="{{ asset('img/Tokenly_Logo_BorderlessA_ldpi.png') }}" alt=""></a>
 	</p>	
     <h1>Bitsplit</h1>
     <div class="row">
