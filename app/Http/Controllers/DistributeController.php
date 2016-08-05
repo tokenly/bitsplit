@@ -158,8 +158,7 @@ class DistributeController extends Controller {
 		$distro->network = 'btc';
 		$distro->asset = $asset;
 		$distro->asset_total = $asset_total;
-		$distro->fee_total = $fee_total;
-		$distro->label = $label;
+        $distro->label = $label;
         $distro->use_fuel = $use_fuel;
 		$distro->btc_dust = $btc_dust_satoshis;
 
