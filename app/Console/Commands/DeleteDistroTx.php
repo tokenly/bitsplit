@@ -42,16 +42,16 @@ class DeleteDistroTx extends Command
         //find distro
         $address = $this->argument('address');
         $out_address = $this->argument('out_address');
-        $get = Distro::where('deposit_address', $address)->first();
-        if(!$get){
-            $get = Distro::where('id', intval($address))->first();
+        $distro = Distro::where('deposit_address', $address)->first();
+        if(!$distro){
+            $distro = Distro::where('id', intval($address))->first();
         }
-        if(!$get){
+        if(!$distro){
             $this->error('Distribution not found');
             return false;
         }
         //get tx list
-        $tx_list = DistroTx::where('distribution_id', $get->id)->orderBy('id', 'asc')->get();
+        $tx_list = DistroTx::where('distribution_id', $distro->id)->orderBy('id', 'asc')->get();
         //check for matching entry
         $found = false;
         if($tx_list){
@@ -81,14 +81,14 @@ class DeleteDistroTx extends Command
         }
         
         //update totals;
-        $get->asset_total = intval($get->asset_total) - intval($quantity);
-        $get->fee_total = Fuel::estimateFuelCost($new_count);
-        $save = $get->save();
+        $distro->asset_total = intval($distro->asset_total) - intval($quantity);
+        $distro->fee_total = Fuel::estimateFuelCost($new_count, $distro);
+        $save = $distro->save();
         if(!$save){
-            $this->error('Error updating distribution #'.$get->id.' totals');
+            $this->error('Error updating distribution #'.$distro->id.' totals');
             return false;
         }
-        $this->info('Deleted tx #'.$found->id.' from distro #'.$get->id);
+        $this->info('Deleted tx #'.$found->id.' from distro #'.$distro->id);
         return true;
     }
 }

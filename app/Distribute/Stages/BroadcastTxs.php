@@ -11,7 +11,7 @@ class BroadcastTxs extends Stage
 		$xchain = xchain();
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
 		$average_size = Config::get('settings.average_tx_bytes');
-		$dust_size = Config::get('settings.default_dust');
+		$dust_size = $distro->getBTCDustSatoshis();
 		$fee_float = round(($average_size*$per_byte)/100000000,8);
 		$dust_size_float = round($dust_size/100000000,8);
 				

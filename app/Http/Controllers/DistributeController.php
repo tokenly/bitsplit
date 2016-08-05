@@ -1,10 +1,13 @@
 <?php namespace App\Http\Controllers;
-use User, Auth, Config, UserMeta, Redirect, Response;
-use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
-use Input, Session, Exception, Log;
-use Tokenly\TokenpassClient\TokenpassAPI;
 use Distribute\Initialize as DistroInit;
+use Input, Session, Exception, Log;
+use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
+use Tokenly\CurrencyLib\CurrencyUtil;
+use Tokenly\TokenpassClient\TokenpassAPI;
+use User, Auth, Config, UserMeta, Redirect, Response;
 class DistributeController extends Controller {
+
+    const BTC_DUST_MINIMUM = 5000;
 	
     public function __construct()
     {
@@ -50,6 +53,16 @@ class DistributeController extends Controller {
 			$value_type = 'percent';
 		}
 		$max_fixed_decimals = Config::get('settings.amount_decimals');
+
+        // btc_dust_override
+        $btc_dust_satoshis = Config::get('settings.default_dust');
+        if(isset($input['btc_dust_override'])){
+            $btc_dust_satoshis = CurrencyUtil::valueToSatoshis($input['btc_dust_override']);
+            if ($btc_dust_satoshis < self::BTC_DUST_MINIMUM) {
+                return $this->return_error('home', 'The Custom BTC Dust Size must be at least '.CurrencyUtil::satoshisToFormattedString(self::BTC_DUST_MINIMUM));
+            }
+        }
+
 		
 		//build address list
 		$address_list = false;
@@ -114,10 +127,6 @@ class DistributeController extends Controller {
 			}
 		}
 		
-		//estimate fees
-		$num_tx = count($address_list);
-		$fee_total = Fuel::estimateFuelCost($num_tx);
-		
 		//generate deposit address
 		$deposit_address = false;
 		$address_uuid = false;
@@ -151,8 +160,17 @@ class DistributeController extends Controller {
 		$distro->asset_total = $asset_total;
 		$distro->fee_total = $fee_total;
 		$distro->label = $label;
-		$distro->use_fuel = $use_fuel;
+        $distro->use_fuel = $use_fuel;
+		$distro->btc_dust = $btc_dust_satoshis;
+
+        //estimate fees (AFTER btc_dust is set)
+        $num_tx = count($address_list);
+        $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
+        $distro->fee_total = $fee_total;
+
+        // save
 		$save = $distro->save();
+
 		
 		if(!$save){
 			Log::error('Error saving distribution '.$deposit_address.' for user '.$user->id);
@@ -379,7 +397,7 @@ class DistributeController extends Controller {
 		$new->network = $distro->network;
 		$new->asset = $distro->asset;
 		$new->asset_total = $distro->asset_total;
-		$new->fee_total = Fuel::estimateFuelCost(count($distro_list));
+		$new->fee_total = Fuel::estimateFuelCost(count($distro_list), $distro);
 		$new->label = $distro->label;
 		if(trim($new->label) != ''){
 			$new->label .= ' (copy)';

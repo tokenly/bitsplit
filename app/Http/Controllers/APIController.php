@@ -140,11 +140,7 @@ class APIController extends Controller
         if(isset($input['hold']) AND intval($input['hold']) == 1){
             $hold = 1;
         }
-
-		//estimate fees
-		$num_tx = count($address_list);
-		$fee_total = Fuel::estimateFuelCost($num_tx);
-		
+	
 		//generate deposit address
 		$deposit_address = false;
 		$address_uuid = false;
@@ -169,7 +165,7 @@ class APIController extends Controller
 			$use_fuel = 1;
 		}
 		
-		//save distribution
+		//build the distribution
 		$distro = new Distro;
 		$distro->user_id = $user->id;
 		$distro->stage = 0;
@@ -178,17 +174,25 @@ class APIController extends Controller
 		$distro->network = 'btc';
 		$distro->asset = $asset;
 		$distro->asset_total = $asset_total;
-		$distro->fee_total = $fee_total;
 		$distro->label = $label;
 		$distro->use_fuel = $use_fuel;
         $distro->webhook = $webhook;
         $distro->hold = $hold;
+
+        //estimate fees
+        $num_tx = count($address_list);
+        $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
+        $distro->fee_total = $fee_total;
+
+        // save the distribution
 		$save = $distro->save();
 		if(!$save){
 			Log::error('Error saving distribution (API)  '.$deposit_address.' for user '.$user->id);
 			$output['error'] = 'Error saving distribution';
             return Response::json($output, 500);
 		}
+
+
         
         //get the new ID
         $id = $distro->id;

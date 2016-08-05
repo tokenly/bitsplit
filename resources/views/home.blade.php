@@ -65,6 +65,13 @@
 					<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="use_fuel" id="use_fuel" value="1" checked="checked" />
 					<label for="use_fuel" style="padding-left: 35px; font-size: 13px;" >Use available fuel for BTC fee?</label>
 				</div>				
+				<div class="form-group">
+					<label for="btc_dust_override">Custom BTC Dust Size</label>
+					<input type="text" class="form-control" id="btc_dust_override" name="btc_dust_override" placeholder="0.00005430" />
+					<small>
+						* This is an advanced feature.  Enter a value here to override the standard dust size of 0.00005430 BTC.
+					</small>
+				</div>	
 				<div class="form-submit">
 					<button type="submit" class="btn btn-lg btn-success"><i class="fa fa-check"></i> Initiate Distribution</button>
 				</div>															

@@ -8,7 +8,7 @@ class CompleteCleanup extends Stage
 		$distro = $this->distro;
 		$xchain = xchain();
 		$sweep_destination = env('HOUSE_INCOME_ADDRESS');
-		$default_dust = Config::get('settings.default_dust');
+		$default_dust = $distro->getBTCDustSatoshis();
 		$default_miner = Config::get('settings.miner_fee');
 		$default_dust_float = round($default_dust/100000000,8);
 		$default_miner_float = round($default_miner/100000000,8);

@@ -13,7 +13,7 @@ class PrimeUtxos extends Stage
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
 		$average_size = Config::get('settings.average_tx_bytes');
 		$txo_size = Config::get('settings.average_txo_bytes');
-		$dust_size = Config::get('settings.default_dust');
+		$dust_size = $distro->getBTCDustSatoshis();
 		$default_miner = Config::get('settings.miner_fee');
 		$base_txo_cost = ($average_size * $per_byte) + $dust_size;
 		$base_cost = ($average_size * $per_byte);

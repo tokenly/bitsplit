@@ -73,6 +73,11 @@ class Distribution extends Model
 		}
 		return $decode;
 	}
+
+    public function getBTCDustSatoshis() {
+        if ($this->btc_dust == 0) { return Config::get('settings.default_dust'); }
+        return $this->btc_dust;
+    }
 	
 	public function addressCount()
 	{

@@ -127,13 +127,13 @@ class Fuel
 		return $quote;
 	}
 	
-	public static function estimateFuelCost($tx_count)
+	public static function estimateFuelCost($tx_count, Distribution $distro)
 	{
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
 		$average_size = Config::get('settings.average_tx_bytes');
 		$average_txo = Config::get('settings.average_txo_bytes');
 		$max_txos = Config::get('settings.max_tx_outputs');
-		$dust_size = Config::get('settings.default_dust');
+		$dust_size = $distro->getBTCDustSatoshis();
 		$default_miner_fee = Config::get('settings.miner_fee');
 		$service_fee = Config::get('settings.distribute_service_fee');
 		//base cost for # of transactions they are making
