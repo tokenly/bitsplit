@@ -43,26 +43,11 @@ return [
         ],
 
         'beanstalkd' => [
-            'driver' => 'beanstalkd',
-            'host' => 'localhost',
-            'queue' => 'default',
-            'ttr' => 60,
-        ],
-
-        'sqs' => [
-            'driver' => 'sqs',
-            'key' => 'your-public-key',
-            'secret' => 'your-secret-key',
-            'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
-            'queue' => 'your-queue-name',
-            'region' => 'us-east-1',
-        ],
-
-        'redis' => [
-            'driver' => 'redis',
-            'connection' => 'default',
-            'queue' => 'default',
-            'expire' => 60,
+            'driver' => env('BEANSTALK_DRIVER', 'beanstalkd'),
+            'host'   => env('BEANSTALK_HOST', '127.0.0.1'),
+            'queue'  => null,
+            'port'   => env('BEANSTALK_PORT', 11300),
+            'ttr'    => 60,
         ],
 
     ],
