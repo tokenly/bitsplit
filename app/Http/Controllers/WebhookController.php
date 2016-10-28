@@ -74,6 +74,7 @@ class WebhookController extends Controller {
 							$getDistro->asset_received = $token_total;
 							$getDistro->fee_received = $fuel_total;
 							$save = $getDistro->save();
+                            $getDistro->sendWebhookUpdateNotification();
 							if(!$save){
 								Log::error('Error saving distro received totals #'.$getDistro->id.' - '.$input['txid']);
 								die();
