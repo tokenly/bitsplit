@@ -316,7 +316,7 @@ class Distribution extends Model
         $output['assetTotal'] = $this->asset_total;
         $output['feeTotal'] = $this->fee_total;
         $output['assetReceived'] = $this->asset_received;
-        $output['fuelReceived'] = $this->fuel_received;
+        $output['feeReceived'] = $this->fee_received;
         $output['hold'] = $this->hold;
         $output['use_fuel'] = $this->use_fuel;
         $output['webhook'] = $this->webhook;
