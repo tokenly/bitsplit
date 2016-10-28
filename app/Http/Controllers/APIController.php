@@ -213,7 +213,7 @@ class APIController extends Controller
 		$initializer->init($distro);
         
         //return details
-        return $this->getDistribution($id);
+        return $this->getDistribution($distro->uuid);
     }
     
     public function getDistribution($id)
@@ -271,7 +271,7 @@ class APIController extends Controller
                 return Response::json($output, 500);
             }
             
-            return $this->getDistribution($id);
+            return $this->getDistribution($distro->uuid);
         }
         else{
             $output['error'] = 'Distribution not found';
