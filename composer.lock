@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "be31f39143eb273e6a84a4c2953ca35d",
-    "content-hash": "baa650a3d14b536b1c15be9d4c4bb9ac",
+    "hash": "df491b185b73588f5d8e51bd990ecd32",
+    "content-hash": "adf790af0ea0f95f3c9e85615821893e",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2870,6 +2870,46 @@
                 "issues": "https://github.com/tokenly/tokenslot-client/issues"
             },
             "time": "2016-02-08 01:31:35"
+        },
+        {
+            "name": "tokenly/xcaller-client",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tokenly/xcaller-client.git",
+                "reference": "5205676eff3a3deb99b52d4d54476b7c1d24eea5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tokenly/xcaller-client/zipball/5205676eff3a3deb99b52d4d54476b7c1d24eea5",
+                "reference": "5205676eff3a3deb99b52d4d54476b7c1d24eea5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Tokenly\\XcallerClient": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Devon Weller",
+                    "email": "devon@tokenly.com",
+                    "homepage": "http://tokenly.com"
+                }
+            ],
+            "description": "A library to push webhook notifications to XCaller",
+            "time": "2016-10-19 17:02:49"
         },
         {
             "name": "tokenly/xchain-client",

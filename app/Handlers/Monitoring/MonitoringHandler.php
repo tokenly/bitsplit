@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Tokenly\ConsulHealthDaemon\ServicesChecker;
 
 /**
- * This is invoked when a new block is received
+ * This is invoked regularly to monitor connections
  */
 class MonitoringHandler {
 
@@ -20,6 +20,19 @@ class MonitoringHandler {
     public function handleConsoleHealthCheck() {
         // check MySQL
         $this->services_checker->checkMySQLConnection();
+
+        // check that pending queue sizes aren't too big
+        $this->services_checker->checkQueueSizes([
+            'notifications_out'    => 15,
+            'notifications_return' => 30,
+        ]);
+
+        // check queue velocities
+        // $this->services_checker->checkTotalQueueJobsVelocity([
+        //     'notifications_out'    => [1,  '2 hours'],
+        //     'notifications_return' => [1,  '2 hours'],
+        // ]);
+
     }
 
     ////////////////////////////////////////////////////////////////////////

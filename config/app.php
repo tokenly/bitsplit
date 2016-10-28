@@ -168,6 +168,7 @@ return [
 		Tokenly\LaravelApiProvider\APIServiceProvider::class,
 		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
         Tokenly\ConsulHealthDaemon\ServiceProvider\ConsulHealthDaemonServiceProvider::class,
+        Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
 
 
     ],
