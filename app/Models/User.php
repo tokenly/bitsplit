@@ -1,9 +1,10 @@
 <?php
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Models\Distribution, Models\DistributionTx;
 use Tokenly\CurrencyLib\CurrencyUtil;
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
@@ -109,4 +110,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		}
 		return $get_address;
 	}
+
+    public function firstActiveAPIKey() {
+        return APIKey::where('user_id', $this['id'])
+            ->where('active', 1)
+            ->orderBy('id')
+            ->first();
+    }
 }

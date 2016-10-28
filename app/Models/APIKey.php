@@ -1,5 +1,4 @@
 <?php
-use User;
 use Tokenly\TokenGenerator\TokenGenerator;
 class APIKey extends Eloquent
 {
