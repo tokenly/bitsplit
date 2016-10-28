@@ -12,7 +12,7 @@ class Distribution extends Model
 {
 	
     public static $api_fields = array(
-        'uuid', 'label', 'created_at', 'updated_at', 'stage', 'stage_message', 'complete',
+        'id', 'uuid', 'label', 'created_at', 'updated_at', 'stage', 'stage_message', 'complete',
         'deposit_address', 'network', 'asset', 'asset_total', 
         'fee_total', 'asset_received', 'fee_received', 'hold', 'use_fuel', 'webhook'
         );
