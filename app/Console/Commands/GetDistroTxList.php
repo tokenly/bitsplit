@@ -42,7 +42,7 @@ class GetDistroTxList extends Command
         $address = $this->argument('address');
         $get = Distro::where('deposit_address', $address)->first();
         if(!$get){
-            $get = Distro::where('id', intval($address))->first();
+            $get = Distro::where('id', intval($address))->orWhere('uuid', $address)->first();
         }
         if(!$get){
             $this->error('Distribution not found');
