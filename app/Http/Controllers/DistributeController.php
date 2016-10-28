@@ -5,6 +5,8 @@ use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fue
 use Tokenly\CurrencyLib\CurrencyUtil;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use User, Auth, Config, UserMeta, Redirect, Response;
+use Ramsey\Uuid\Uuid;
+
 class DistributeController extends Controller {
 
     const BTC_DUST_MINIMUM = 5000;
@@ -161,6 +163,7 @@ class DistributeController extends Controller {
         $distro->label = $label;
         $distro->use_fuel = $use_fuel;
 		$distro->btc_dust = $btc_dust_satoshis;
+        $distro->uuid = Uuid::uuid4()->toString();
 
         //estimate fees (AFTER btc_dust is set)
         $num_tx = count($address_list);

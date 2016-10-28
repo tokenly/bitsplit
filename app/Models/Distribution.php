@@ -12,7 +12,7 @@ class Distribution extends Model
 {
 	
     public static $api_fields = array(
-        'id', 'label', 'created_at', 'updated_at', 'stage', 'stage_message', 'complete',
+        'uuid', 'label', 'created_at', 'updated_at', 'stage', 'stage_message', 'complete',
         'deposit_address', 'network', 'asset', 'asset_total', 
         'fee_total', 'asset_received', 'fee_received', 'hold', 'use_fuel', 'webhook'
         );
@@ -302,7 +302,7 @@ class Distribution extends Model
             $output['event'] = 'complete';
         }
         $output['notificationId'] = null; //filled automatically by notification code
-        $output['distributionId'] = $this->id;
+        $output['distributionId'] = $this->uuid;
         $output['label'] = $this->label;
         $output['createdAt'] = $this->created_at;
         $output['updatedAt'] = $this->updated_at;

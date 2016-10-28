@@ -6,6 +6,7 @@ use Input, Session, Exception, Log;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use Tokenly\CurrencyLib\CurrencyUtil;
 use Distribute\Initialize as DistroInit;
+use Ramsey\Uuid\Uuid;
 
 class APIController extends Controller
 {
@@ -178,6 +179,7 @@ class APIController extends Controller
 		$distro->use_fuel = $use_fuel;
         $distro->webhook = $webhook;
         $distro->hold = $hold;
+        $distro->uuid = Uuid::uuid4()->toString();
 
         //estimate fees
         $num_tx = count($address_list);
@@ -318,7 +320,7 @@ class APIController extends Controller
         $user = self::$api_user;
         $fields = Distro::$api_fields;
         $fields[] = 'user_id';        
-        $get = Distro::where('id', $id)->orWhere('deposit_address', $id)->select($fields)->first();
+        $get = Distro::where('uuid', $id)->orWhere('deposit_address', $id)->select($fields)->first();
         if($get AND ($get->user_id == $user->id OR intval($user->admin) == 1)){
             return $get;
         }
@@ -330,6 +332,8 @@ class APIController extends Controller
         if(isset($row['user_id'])){
             unset($row['user_id']);
         }
+        $row['id'] = $row['uuid'];
+        unset($row['uuid']);
         $row['asset_received'] = intval($row['asset_received']);
         $row['fee_received'] = intval($row['fee_received']);
         $row['fee_total'] = intval($row['fee_total']);
