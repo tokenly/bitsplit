@@ -119,6 +119,12 @@ class Distribution extends Model
 		$this->complete = 1;
         $this->completed_at = timestamp();
         
+        $save = $this->save();
+        if(!$save){
+            Log::error('Error marking distro #'.$this->id.' complete');
+            return false;
+        }
+        
         //send notifications
         $this->sendCompleteEmailNotification();
         $this->sendUserReceivedNotifications();
@@ -128,7 +134,7 @@ class Distribution extends Model
         $initer = new Initialize;
         $initer->stopMonitor($this);        
         
-		return $this->save();
+		return true;
 	}
     
     public function sendCompleteEmailNotification()
