@@ -6,6 +6,7 @@ use DB, Mail, User, Log, Exception, Config;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use Distribute\Initialize;
 use App\Jobs\NotificationReturnJob;
+use Tokenly\CurrencyLib\CurrencyUtil;
 
 class Distribution extends Model
 {
@@ -322,7 +323,7 @@ class Distribution extends Model
         $output['feeTotalFloat'] = CurrencyUtil::satoshisToValue($output['fee_total']);
         $output['assetReceivedFloat'] = CurrencyUtil::satoshisToValue($output['asset_received']);
         $output['feeReceivedFloat'] = CurrencyUtil::satoshisToValue($output['fee_received']);
-        $output['stageName'] = Distro::getStageName($output['stage']);
+        $output['stageName'] = self::getStageName($output['stage']);
         
         return $output;
     }
