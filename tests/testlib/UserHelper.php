@@ -89,7 +89,7 @@ class UserHelper
             'apitoken'               => 'TESTAPITOKEN',
             'apisecretkey'           => 'TESTAPISECRET',
 
-            'webhook_url'            => 'http://user.app/webhook'
+            'webhook_url'            => 'http://user.default.app/webhook'
 
             // 'privileges'          => null,
             // 'oauth_token'         => null,

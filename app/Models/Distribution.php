@@ -287,11 +287,12 @@ class Distribution extends Model
         if(trim($this->webhook) == ''){
             return;
         }
-        Log::info('Sending webhook status update notification for distro #'.$this->id.' to '.$this->webhook);
+
         $payload = $this->getWebhookNotificationPayload();
-        $payload = app('App\Repositories\NotificationRepository')->completePayloadAndStoreNotification($payload, $this->user_id);
-        app('Tokenly\XcallerClient\Client')
-        ->sendWebhookWithReturn($payload, $this->webhook, $payload['notificationId'], null, null, NotificationReturnJob::class);
+        Log::info('Sending webhook status update ('.$this->stageName().') notification for distro #'.$this->id.' to '.$this->webhook);
+
+        $user = User::find($this->user_id);
+        app('App\Distribute\WebhookCaller')->sendWebhook($payload['event'], $user, $this->webhook, $payload);
     }
     
     protected function getWebhookNotificationPayload()

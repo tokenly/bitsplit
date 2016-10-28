@@ -14,7 +14,7 @@ class WebhookCallerTest extends TestCase
 
         // send a fake webhook
         $webhook_caller = app('App\Distribute\WebhookCaller');
-        $webhook_caller->sendWebhook('fooevent', $user, ['foo' => 'bar',]);
+        $webhook_caller->sendWebhook('fooevent', $user, 'http://user.app/webhook', ['foo' => 'bar',]);
 
         // check the sent notifications
         $xcaller_notifications = $getXCallerNotifications_fn();
