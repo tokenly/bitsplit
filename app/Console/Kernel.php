@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
          Commands\GetUser::class,
          Commands\SetAdmin::class,
          Commands\ShowBalances::class,
+         Commands\ResendWebhook::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
