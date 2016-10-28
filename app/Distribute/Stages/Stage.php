@@ -16,6 +16,6 @@ class Stage
 		
 		
 	}
-	
+    
 	
 }

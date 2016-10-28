@@ -12,6 +12,7 @@ class CollectFuel extends Stage
 			$distro->incrementStage();
 			$distro->setMessage(); //clear message
 			Log::info('Distro Fuel collected - #'.$distro->id);
+            $distro->sendWebhookUpdateNotification();
 			return true;		
 		}
 		

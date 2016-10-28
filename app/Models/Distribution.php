@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB, Mail, User, Log, Exception, Config;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use Distribute\Initialize;
+use App\Jobs\NotificationReturnJob;
 
 class Distribution extends Model
 {
@@ -120,6 +121,7 @@ class Distribution extends Model
         //send notifications
         $this->sendCompleteEmailNotification();
         $this->sendUserReceivedNotifications();
+        $this->sendWebhookUpdateNotification();
         
         //close the transaction monitors
         $initer = new Initialize;
@@ -278,5 +280,53 @@ class Distribution extends Model
 		}
 		return $list;
 	}    
+    
+    public function sendWebhookUpdateNotification()
+    {
+        if(trim($this->webhook) == ''){
+            return;
+        }
+        Log::info('Sending webhook status update notification for distro #'.$this->id.' to '.$this->webhook);
+        $payload = $this->getWebhookNotificationPayload();
+        $payload = app('App\Repositories\NotificationRepository')->completePayloadAndStoreNotification($payload, $this->user_id);
+        app('Tokenly\XcallerClient\Client')
+        ->sendWebhookWithReturn($payload, $this->webhook, $payload['notificationId'], null, null, NotificationReturnJob::class);
+    }
+    
+    protected function getWebhookNotificationPayload()
+    {
+        $output = array();
+        $output['event'] = 'update';
+        if($this->complete == 1){
+            $output['event'] = 'complete';
+        }
+        $output['notificationId'] = null; //filled automatically by notification code
+        $output['distributionId'] = $this->id;
+        $output['label'] = $this->label;
+        $output['createdAt'] = $this->created_at;
+        $output['updatedAt'] = $this->updated_at;
+        $output['stage'] = $this->stage;
+        $output['stageMessage'] = $this->stage_message;
+        $output['complete'] = $this->complete;
+        $output['depositAddress'] = $this->deposit_address;
+        $output['network'] = $this->network;
+        $output['asset'] = $this->asset;
+        $output['assetTotal'] = $this->asset_total;
+        $output['feeTotal'] = $this->fee_total;
+        $output['assetReceived'] = $this->asset_received;
+        $output['fuelReceived'] = $this->fuel_received;
+        $output['hold'] = $this->hold;
+        $output['use_fuel'] = $this->use_fuel;
+        $output['webhook'] = $this->webhook;
+        $output['assetTotalFloat'] = CurrencyUtil::satoshisToValue($output['asset_total']);
+        $output['feeTotalFloat'] = CurrencyUtil::satoshisToValue($output['fee_total']);
+        $output['assetReceivedFloat'] = CurrencyUtil::satoshisToValue($output['asset_received']);
+        $output['feeReceivedFloat'] = CurrencyUtil::satoshisToValue($output['fee_received']);
+        $output['stageName'] = Distro::getStageName($output['stage']);
+        
+        return $output;
+    }
+    
+    
     
 }

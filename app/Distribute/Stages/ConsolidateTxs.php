@@ -58,6 +58,7 @@ class ConsolidateTxs extends Stage
 		if($utxo_count <= $reasonable_count){
 			Log::info('No more tx consolidation needed for distro #'.$distro->id);
 			$distro->incrementStage();
+            $distro->sendWebhookUpdateNotification();
 			return true;
 		}
 		

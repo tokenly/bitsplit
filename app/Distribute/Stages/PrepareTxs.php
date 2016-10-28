@@ -43,6 +43,7 @@ class PrepareTxs extends Stage
 			//all utxos assigned
 			Log::info('All Transactions prepared for distro '.$distro->id);
 			$distro->incrementStage();
+            $distro->sendWebhookUpdateNotification();
 			return true;
 		}
 		

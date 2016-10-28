@@ -13,6 +13,7 @@ class CollectTokens extends Stage
 			$distro->incrementStage();
 			$distro->setMessage(); //clear message
 			Log::info('Distro Tokens collected - #'.$distro->id);
+            $distro->sendWebhookUpdateNotification();
 			return true;		
 		}
 		return false;

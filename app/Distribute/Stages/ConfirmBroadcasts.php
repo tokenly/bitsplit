@@ -12,6 +12,7 @@ class ConfirmBroadcasts extends Stage
 		if($complete_count == $address_count){
 			Log::info('All transactions confirmed for distro '.$distro->id);
 			$distro->incrementStage();
+            $distro->sendWebhookUpdateNotification();
 			return true;
 		}
 		else{

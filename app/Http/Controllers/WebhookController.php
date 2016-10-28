@@ -41,6 +41,7 @@ class WebhookController extends Controller {
 								die();
 							}
 							$getDistro->setMessage('receiving');
+                            $getDistro->sendWebhookUpdateNotification();
 						}
 						else{
 							if($getTx->confirmed == 1){

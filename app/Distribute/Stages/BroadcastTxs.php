@@ -29,6 +29,7 @@ class BroadcastTxs extends Stage
 		if(count($send_list) == 0){
 			//all transactions signed, proceed
 			$distro->incrementStage();
+            $distro->sendWebhookUpdateNotification();
 			return true;
 		}
 		

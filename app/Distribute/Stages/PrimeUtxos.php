@@ -47,6 +47,7 @@ class PrimeUtxos extends Stage
 		if($checkPrimes['primedCount'] >= $tx_count){
 			Log:info('Inputs finished priming for distro #'.$distro->id);
 			$distro->incrementStage();
+            $distro->sendWebhookUpdateNotification();
 			return true;
 		}		
 				
