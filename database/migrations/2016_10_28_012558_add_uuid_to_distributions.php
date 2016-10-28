@@ -14,7 +14,7 @@ class AddUuidToDistributions extends Migration
     {
         Schema::table('distributions', function(Blueprint $table)
         {
-            $table->char('uuid', 36)->unique();
+            $table->char('uuid', 36)->unique()->nullable();
             $table->index('uuid');
         });
     }
