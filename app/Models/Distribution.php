@@ -320,10 +320,10 @@ class Distribution extends Model
         $output['hold'] = $this->hold;
         $output['use_fuel'] = $this->use_fuel;
         $output['webhook'] = $this->webhook;
-        $output['assetTotalFloat'] = CurrencyUtil::satoshisToValue($output['asset_total']);
-        $output['feeTotalFloat'] = CurrencyUtil::satoshisToValue($output['fee_total']);
-        $output['assetReceivedFloat'] = CurrencyUtil::satoshisToValue($output['asset_received']);
-        $output['feeReceivedFloat'] = CurrencyUtil::satoshisToValue($output['fee_received']);
+        $output['assetTotalFloat'] = CurrencyUtil::satoshisToValue($output['assetTotal']);
+        $output['feeTotalFloat'] = CurrencyUtil::satoshisToValue($output['feeTotal']);
+        $output['assetReceivedFloat'] = CurrencyUtil::satoshisToValue($output['assetReceived']);
+        $output['feeReceivedFloat'] = CurrencyUtil::satoshisToValue($output['feeReceived']);
         $output['stageName'] = self::getStageName($output['stage']);
         
         return $output;
