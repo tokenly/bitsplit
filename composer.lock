@@ -2627,7 +2627,7 @@
         },
         {
             "name": "tokenly/laravel-api-provider",
-            "version": "v1.0.0-rc2",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/laravel-api-provider.git",
