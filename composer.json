@@ -17,13 +17,13 @@
         "tokenly/laravel-event-log": "^1",
         "simplesoftwareio/simple-qrcode": "1.4.*",        
         "nesbot/carbon": "*",
-        "tokenly/laravel-api-provider": "^0.3",
+        "tokenly/laravel-api-provider": "^1.0.0-rc2",
         "tokenly/consul-health-daemon": "^0.2",
         "tokenly/bitcoin-currency-lib": "^1",
         "fideloper/proxy": "^3.1",
         "pda/pheanstalk": "~3.0",
         "tokenly/xcaller-client": "^0.3",
-        "ramsey/uuid": "^2"
+        "ramsey/uuid": "^3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -46,6 +46,7 @@
     },
     "autoload-dev": {
         "classmap": [
+            "tests/testlib/",
             "tests/TestCase.php"
         ]
     },

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "96d3c33fbbd3425c2f8712fa85f2b037",
-    "content-hash": "00dd701d0f8f219f679a4d17979070a5",
+    "hash": "c0136ddf082e4af5038c0d6e241fae2e",
+    "content-hash": "8e9da3a556deac214e1f38d1c41953a7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1434,46 +1434,54 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "2.9.0",
+            "version": "3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "b2ef4dd9584268d73f92f752a62bc24cd534dc9a"
+                "reference": "a07797b986671b0dc823885a81d5e3516b931599"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/b2ef4dd9584268d73f92f752a62bc24cd534dc9a",
-                "reference": "b2ef4dd9584268d73f92f752a62bc24cd534dc9a",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/a07797b986671b0dc823885a81d5e3516b931599",
+                "reference": "a07797b986671b0dc823885a81d5e3516b931599",
                 "shasum": ""
             },
             "require": {
                 "paragonie/random_compat": "^1.0|^2.0",
-                "php": ">=5.3.3"
+                "php": ">=5.4"
             },
             "replace": {
                 "rhumsaa/uuid": "self.version"
             },
             "require-dev": {
-                "doctrine/dbal": ">=2.3",
+                "apigen/apigen": "^4.1",
+                "codeception/aspect-mock": "1.0.0",
+                "goaop/framework": "1.0.0-alpha.2",
+                "ircmaxell/random-lib": "^1.1",
                 "jakub-onderka/php-parallel-lint": "^0.9.0",
-                "moontoast/math": "~1.1",
-                "phpunit/phpunit": "~4.1|~5.0",
-                "satooshi/php-coveralls": "~0.6",
-                "squizlabs/php_codesniffer": "^2.3",
-                "symfony/console": "~2.3|~3.0"
+                "mockery/mockery": "^0.9.4",
+                "moontoast/math": "^1.1",
+                "phpunit/phpunit": "^4.7|>=5.0 <5.4",
+                "satooshi/php-coveralls": "^0.6.1",
+                "squizlabs/php_codesniffer": "^2.3"
             },
             "suggest": {
-                "doctrine/dbal": "Allow the use of a UUID as doctrine field type.",
-                "moontoast/math": "Support for converting UUID to 128-bit integer (in string form).",
-                "symfony/console": "Support for use of the bin/uuid command line tool."
+                "ext-libsodium": "Provides the PECL libsodium extension for use with the SodiumRandomGenerator",
+                "ext-uuid": "Provides the PECL UUID extension for use with the PeclUuidTimeGenerator and PeclUuidRandomGenerator",
+                "ircmaxell/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
+                "moontoast/math": "Provides support for converting UUID to 128-bit integer (in string form).",
+                "ramsey/uuid-console": "A console application for generating UUIDs with ramsey/uuid",
+                "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
             },
-            "bin": [
-                "bin/uuid"
-            ],
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "Rhumsaa\\Uuid\\": "src/"
+                    "Ramsey\\Uuid\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1486,18 +1494,23 @@
                     "email": "marijn.huizendveld@gmail.com"
                 },
                 {
+                    "name": "Thibaud Fabre",
+                    "email": "thibaud@aztech.io"
+                },
+                {
                     "name": "Ben Ramsey",
-                    "homepage": "http://benramsey.com"
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
                 }
             ],
-            "description": "A PHP 5.3+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
+            "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
             "homepage": "https://github.com/ramsey/uuid",
             "keywords": [
                 "guid",
                 "identifier",
                 "uuid"
             ],
-            "time": "2016-03-22 18:20:19"
+            "time": "2016-10-02 15:51:17"
         },
         {
             "name": "rmccue/requests",
@@ -2614,21 +2627,21 @@
         },
         {
             "name": "tokenly/laravel-api-provider",
-            "version": "v0.3.2",
+            "version": "v1.0.0-rc2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/laravel-api-provider.git",
-                "reference": "3fc154e0090efe97501a3f615ba2d1f0f5638d77"
+                "reference": "31d4ababa79767471bfdfbc77e8c65f8da6f9a5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/laravel-api-provider/zipball/3fc154e0090efe97501a3f615ba2d1f0f5638d77",
-                "reference": "3fc154e0090efe97501a3f615ba2d1f0f5638d77",
+                "url": "https://api.github.com/repos/tokenly/laravel-api-provider/zipball/31d4ababa79767471bfdfbc77e8c65f8da6f9a5f",
+                "reference": "31d4ababa79767471bfdfbc77e8c65f8da6f9a5f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.0",
-                "ramsey/uuid": "~2.",
+                "ramsey/uuid": "^3",
                 "tokenly/hmac-auth": "^1",
                 "tokenly/laravel-event-log": "^1",
                 "tokenly/token-generator": "dev-master"
@@ -2654,7 +2667,7 @@
                 }
             ],
             "description": "An API service provider for Laravel",
-            "time": "2016-07-22 02:27:50"
+            "time": "2016-09-30 17:15:39"
         },
         {
             "name": "tokenly/laravel-event-log",

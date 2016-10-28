@@ -23,6 +23,8 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
-        <env name="APP_KEY" value="SomeRandomStringWith32Characters"/>
+        <env name="APP_KEY" value="base64:LG787oR5OlescEBJp22HBJppmKiUJmrm13SfdZ1UT30="/>
+
+        <env name="DATABASE_DRIVER" value="testing"/>
     </php>
 </phpunit>
