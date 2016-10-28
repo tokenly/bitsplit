@@ -131,7 +131,7 @@ class APIController extends Controller
         //check for webhook field
         $webhook = null;
         if(isset($input['webhook'])){
-            if(strpos('http://', $input['webhook']) === 0 OR strpos('https://', $input['webhook']) === 0){
+            if(strpos($input['webhook'], 'http://') === 0 OR strpos($input['webhook'], 'https://') === 0){
                 $webhook = $input['webhook'];
             }
         }
@@ -260,7 +260,7 @@ class APIController extends Controller
             
             //check for webhook
             if(isset($input['webhook'])){
-                if(strpos('http://', $input['webhook']) === 0 OR strpos('https://', $input['webhook']) === 0){
+                if(strpos($input['webhook'], 'http://') === 0 OR strpos($input['webhook'], 'https://') === 0){
                     $distro->webhook = $input['webhook'];
                 }
             }
@@ -332,6 +332,7 @@ class APIController extends Controller
         if(isset($row['user_id'])){
             unset($row['user_id']);
         }
+        $id = $row['id'];
         $row['id'] = $row['uuid'];
         unset($row['uuid']);
         $row['asset_received'] = intval($row['asset_received']);
@@ -348,7 +349,7 @@ class APIController extends Controller
         $row['stage'] = intval($row['stage']);
         $row['use_fuel'] = intval($row['use_fuel']);
         if(!$no_list){
-            $row['address_list'] = $this->getDistroTxList($row['id']);
+            $row['address_list'] = $this->getDistroTxList($id);
         }
         return $row;
     }
