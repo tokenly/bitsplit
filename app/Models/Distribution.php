@@ -125,14 +125,26 @@ class Distribution extends Model
             return false;
         }
         
-        //send notifications
-        $this->sendCompleteEmailNotification();
-        $this->sendUserReceivedNotifications();
+        //ping webhook
         $this->sendWebhookUpdateNotification();
         
-        //close the transaction monitors
-        $initer = new Initialize;
-        $initer->stopMonitor($this);        
+        try{
+            //send notifications
+            $this->sendCompleteEmailNotification();
+            $this->sendUserReceivedNotifications();
+        }
+        catch(Exception $e){
+            Log::error('Error sending email notifications when completing distro #'.$this->id.': '.$e->getMessage());
+        }
+        
+        try{
+            //close the transaction monitors
+            $initer = new Initialize;
+            $initer->stopMonitor($this);            
+        }
+        catch(Exception $e){
+            Log::error('Error closing xchain monitor when completing distro #'.$this->id.': '.$e->getMessage()); 
+        }
         
 		return true;
 	}
