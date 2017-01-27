@@ -29,7 +29,7 @@ class Processor
 	{
 		Log::info('Processing stage '.$distro->stage.' for distro #'.$distro->id);
 		if($distro->stage == 0){
-			$this->initializer->init($distro);
+			//$this->initializer->init($distro);
 			return true;
 		}
 		$stage = $distro->stageName();
