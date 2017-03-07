@@ -13,7 +13,7 @@ class ExampleTest extends TestCase
      */
     public function testBasicExample()
     {
-        $this->visit('/')
-             ->see('Bitsplit');
+        $this->get('/')
+             ->assertSee('Bitsplit');
     }
 }
