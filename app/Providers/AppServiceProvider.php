@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // make all URLs use https
         if (env('USE_SSL', false)) {
-            URL::forceSchema('https');
+            //URL::forceSchema('https');
         }
     }
 
