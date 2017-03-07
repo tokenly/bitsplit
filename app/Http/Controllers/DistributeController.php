@@ -406,6 +406,7 @@ class DistributeController extends Controller {
 		}
 		$new->use_fuel = $distro->use_fuel;
 		$new->webhook = $distro->webhook;
+        $new->uuid = Uuid::uuid4()->toString();
 		$save = $new->save();
 		
 		if(!$save){
