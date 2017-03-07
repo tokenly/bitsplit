@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Models\Distribution as Distro, User, Log, Fuel;
+use Models\Distribution as Distro, User, Log, Models\Fuel;
 
 class UpdateDistro extends Command
 {
