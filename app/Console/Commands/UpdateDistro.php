@@ -12,7 +12,7 @@ class UpdateDistro extends Command
      *
      * @var string
      */
-    protected $signature = 'bitsplit:updateDistro {address} {--user_id=} {--stage=} {--label=} {--hold=} {--use_fuel=}';
+    protected $signature = 'bitsplit:updateDistro {address} {--user_id=} {--stage=} {--label=} {--hold=} {--use_fuel=} {--recalculate_fuel=}';
 
     /**
      * The console command description.
@@ -52,6 +52,7 @@ class UpdateDistro extends Command
         $label = $this->option('label');
         $hold = $this->option('hold');
         $use_fuel = $this->option('use_fuel');
+        $recalc_fuel = $this->option('recalculate_fuel');
         $changed = false;
         if($user_id != null){
             $get_user = User::find($user_id);
@@ -91,6 +92,12 @@ class UpdateDistro extends Command
                 $get->use_fuel = 0;
             }
             $changed = true; 
+        }
+        
+        if($recalc_fuel){
+            $num_tx = $get->addressCount();
+            $get->fee_total = Fuel::estimateFuelCost($num_tx, $get);
+            $changed = true;
         }
         
         if(!$changed){
