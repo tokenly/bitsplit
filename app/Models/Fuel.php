@@ -77,6 +77,8 @@ class Fuel
 			}			
 		}
 		Log::info('Pumping '.$amount.' '.$asset.' from '.$uuid.' to '.$address.' (fee: '.$fee.')');
+        $per_byte = Config::get('settings.miner_satoshi_per_byte');
+        return $xchain->sendFromAccount($uuid, $address, $amount, $asset, 'default', false, null, null, null, null, $per_bye);
 		return $xchain->send($uuid, $address, $amount, $asset, $fee);
 	}
 	
@@ -129,6 +131,61 @@ class Fuel
 	
 	public static function estimateFuelCost($tx_count, Distribution $distro)
 	{
+        //load settings
+        $per_byte = Config::get('settings.miner_satoshi_per_byte');
+		$max_txos = Config::get('settings.max_tx_outputs');        
+        $dust_size = $distro->getBTCDustSatoshis();
+        $extra_bytes = Config::get('settings.tx_extra_bytes');
+        $input_bytes = Config::get('settings.tx_input_bytes');
+        $xcp_tx_bytes = Config::get('settings.xcp_tx_bytes');
+        $average_txo_bytes = Config::get('settings.average_txo_bytes');
+        $service_fee = Config::get('settings.distribute_service_fee');
+        
+		//base cost for # of transactions they are making
+		$base_cost = ceil(($per_byte * $xcp_tx_bytes) * $tx_count); //get base amount of satoshis that will be used for distro fees
+        $base_cost += ceil($tx_count * $dust_size); //add on dust output values
+        
+        //tack on platform service fee
+        $base_cost += ($service_fee * $tx_count);
+        
+        //figure out how many utxos we need to make
+        $num_primes = ceil($tx_count / $max_txos);
+		$txos_per_prime = floor($tx_count / $num_primes);
+        if($num_primes == 1){
+            $txos_per_prime += 1; //+1 for change output in single stage priming
+        }
+        
+        //calculate base prime cost
+        $prime_size = $input_bytes + $extra_bytes + ($txos_per_prime * $average_txo_bytes); 
+        $prime_cost = 0;  
+		for($i = 1; $i <= $num_primes; $i++){
+			$prime_cost += $prime_size * $per_byte;
+		}
+    
+		//cost for priming the priming transactions (if applicable)
+		$pre_prime_cost = 0;
+        $pre_prime_size = 0;
+		if($num_primes > 1){
+			$pre_prime_size = $input_bytes + $extra_bytes + (($num_primes+1) * $average_txo_bytes);
+			$pre_prime_cost = $pre_prime_size * $per_byte;
+		}
+
+        //add up total BTC fuel costs
+		$cost = intval($base_cost + $prime_cost + $pre_prime_cost);   
+        
+        //add a little bit extra to cover cleanup transactions
+        $btc_cleanup = ($input_bytes + $extra_bytes + $average_txo_bytes) * $per_byte;
+        $xcp_cleanup = ($xcp_tx_bytes * $per_byte) + $dust_size;
+        
+        $cost += $btc_cleanup;
+        $cost += $xcp_cleanup;
+
+        return $cost;
+
+
+        /*
+        
+        return null;
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
 		$average_size = Config::get('settings.average_tx_bytes');
 		$average_txo = Config::get('settings.average_txo_bytes');
@@ -159,5 +216,6 @@ class Fuel
 		$cost += $default_miner_fee; //add one additional miner fee which will pay for the final cleanup tx
 		$cost += $default_miner_fee + $dust_size; //one more fee w/ dust to cleanup any spare tokens
 		return $cost;
+        */
 	}
 }

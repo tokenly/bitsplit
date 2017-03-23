@@ -13,10 +13,14 @@ class PrimeUtxos extends Stage
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
 		$average_size = Config::get('settings.average_tx_bytes');
 		$txo_size = Config::get('settings.average_txo_bytes');
+		$xcp_tx_bytes = Config::get('settings.xcp_tx_bytes');
+        $extra_bytes = Config::get('settings.tx_extra_bytes');
+        $input_bytes = Config::get('settings.tx_input_bytes');        
 		$dust_size = $distro->getBTCDustSatoshis();
 		$default_miner = Config::get('settings.miner_fee');
-		$base_txo_cost = ($average_size * $per_byte) + $dust_size;
-		$base_cost = ($average_size * $per_byte);
+        
+		$base_txo_cost = ($xcp_tx_bytes * $per_byte) + $dust_size;
+		$base_cost = ($input_bytes + $extra_bytes) * $per_byte;
 		
 		//check if any primes waiting on confirmations
 		$unconf_primes = DB::table('distribution_primes')->where('distribution_id', $distro->id)->where('confirmed', 0)->get();
@@ -53,9 +57,12 @@ class PrimeUtxos extends Stage
 				
 		$txos_needed = $tx_count - $checkPrimes['primedCount'];
 		$num_primes = intval(ceil($txos_needed  / $max_txos));
-		$per_prime = intval(floor($txos_needed / $num_primes)) + 1;
+		$per_prime = intval(floor($txos_needed / $num_primes));
+        if($num_primes == 1){
+            $per_prime += 1; //+1 for change output
+        }
+        
 		$pre_prime_txo = ($base_txo_cost * $per_prime) + $base_cost + ($per_prime * $txo_size * $per_byte);
-		
 		$prime_stage = 2;
 		if($num_primes > 1){
 			//possible two-stage priming needed
@@ -81,8 +88,8 @@ class PrimeUtxos extends Stage
 		if($prime_stage == 1){
 			//perform 1st-stage priming (priming the primes)
 			$per_txo = $pre_prime_txo;
-			$prime_fee = $base_cost + ($num_primes * $txo_size * $per_byte);
-			$prime_count = $num_primes + 1;
+			$prime_fee = $base_cost + (($num_primes+1) * $txo_size * $per_byte);
+			$prime_count = $num_primes;
 		}
 		else{
 			//perform second-stage priming
@@ -96,7 +103,7 @@ class PrimeUtxos extends Stage
 		for($i = 0; $i < $prime_repeat; $i++){
 			try{
                 $prime_cap += $prime_count; //increment the requested # of primes until the desired total is reached
-				$submit_prime = $xchain->primeUTXOs($distro->address_uuid, round($per_txo/100000000,8), $prime_cap, round($prime_fee/100000000,8));
+				$submit_prime = $xchain->primeUTXOsWithFeeRate($distro->address_uuid, round($per_txo/100000000,8), $prime_cap, $per_byte);
 			}
 			catch(Exception $e){
 				Log::error('Priming error distro '.$distro->id.': '.$e->getMessage());
