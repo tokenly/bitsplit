@@ -78,7 +78,7 @@ class Fuel
 		}
 		Log::info('Pumping '.$amount.' '.$asset.' from '.$uuid.' to '.$address.' (fee: '.$fee.')');
         $per_byte = Config::get('settings.miner_satoshi_per_byte');
-        return $xchain->sendFromAccount($uuid, $address, $amount, $asset, 'default', false, null, null, null, null, $per_bye);
+        return $xchain->sendFromAccount($uuid, $address, $amount, $asset, 'default', false, null, null, null, null, $per_byte);
 		return $xchain->send($uuid, $address, $amount, $asset, $fee);
 	}
 	
