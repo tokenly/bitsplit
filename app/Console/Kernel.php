@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
          Commands\SetAdmin::class,
          Commands\ShowBalances::class,
          Commands\ResendWebhook::class,
+         Commands\CloneDistro::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
