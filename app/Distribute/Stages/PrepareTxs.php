@@ -14,9 +14,14 @@ class PrepareTxs extends Stage
 		$average_size = Config::get('settings.average_tx_bytes');
 		$dust_size = $distro->getBTCDustSatoshis();
 		$default_miner = Config::get('settings.miner_fee');
-		$base_txo_cost = ($average_size * $per_byte) + $dust_size;
+		$xcp_tx_bytes = Config::get('settings.xcp_tx_bytes');
+        $extra_bytes = Config::get('settings.tx_extra_bytes');
+        $input_bytes = Config::get('settings.tx_input_bytes'); 
+        $txo_bytes = Config::get('settings.average_txo_bytes');
+        
+        $base_txo_cost = ($xcp_tx_bytes * $per_byte) + $dust_size;
 		$float_cost = round($base_txo_cost/100000000,8);
-		$fee_float = round(($average_size*$per_byte)/100000000,8);
+		$fee_float = round(($xcp_tx_bytes*$per_byte)/100000000,8);
 		$dust_size_float = round($dust_size/100000000,8);
 		
 		$address_list = DistroTx::where('distribution_id', $distro->id)->get();
@@ -84,9 +89,10 @@ class PrepareTxs extends Stage
 				if($distro->use_fuel == 1 AND Config::get('settings.auto_pump_stuck_distros')){
 					//pump a bit of fuel to give this a kick
 					try{
-						$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $default_miner, 'BTC', $default_miner);
+                        $miner_fee = (($input_bytes + $extra_bytes + ($txo_bytes*2)) * $per_byte);
+						$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $base_txo_cost, 'BTC', $miner_fee);
 						$spent = intval(UserMeta::getMeta($distro->user_id, 'fuel_spent'));
-						$spent = $spent + ($default_miner*2);
+						$spent = $spent + $base_txo_cost + $miner_fee;
 						UserMeta::setMeta($distro->user_id, 'fuel_spent', $spent);
 						Log::info('Extra fuel pumped for distro '.$distro->id.' utxo prepping '.$pump['txid']);
 					}
