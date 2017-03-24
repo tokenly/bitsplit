@@ -10,8 +10,11 @@ class BroadcastTxs extends Stage
 		$distro = $this->distro;
 		$xchain = xchain();
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
+		$xcp_tx_bytes = Config::get('settings.xcp_tx_bytes');        
 		$dust_size = $distro->getBTCDustSatoshis();
 		$dust_size_float = round($dust_size/100000000,8);
+        $tx_fee = $xcp_tx_bytes * $per_byte;
+        $fee_float = round($tx_fee/100000000,8);
 				
 		$address_list = DistroTx::where('distribution_id', $distro->id)->get();
 		if(!$address_list OR count($address_list) == 0){
@@ -46,7 +49,8 @@ class BroadcastTxs extends Stage
 				}
 				
 				$quantity_float = round($row->quantity/100000000, 8, PHP_ROUND_HALF_DOWN);
-                $send = $xchain->sendFromAccount($distro->address_uuid, $row->destination, $quantity_float, $distro->asset, 'default', false, null, $dust_size_float, null, $utxos, $per_byte);
+                $send = $xchain->send($distro->address_uuid, $row->destination, $quantity_float, $distro->asset, $fee_float, $dust_size_float, null, $utxos);
+                //$send = $xchain->sendFromAccount($distro->address_uuid, $row->destination, $quantity_float, $distro->asset, 'default', false, null, $dust_size_float, null, $utxos, $per_byte);
 			}
 			catch(Exception $e){
 				Log::error('Error sending tx for distro '.$distro->id.' to address '.$row->destination.': '.$e->getMessage());
