@@ -76,7 +76,7 @@ class PrepareTxs extends Stage
 			$coin_left = $float_cost;
 			foreach($utxo_list as $utxo){
 				$txo_id = $utxo['txid'].':'.$utxo['n'];
-				if(!in_array($txo_id, $used_txos) AND $coin_left > 0){
+				if(!in_array($txo_id, $used_txos) AND $coin_left > 0 AND $utxo['amount'] == $float_cost){
 					$row_utxos[] = $txo_id;
 					$used_txos[] = $txo_id;
 					$coin_left -= $utxo['amount'];
