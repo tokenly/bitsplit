@@ -17,7 +17,6 @@ class PrimeUtxos extends Stage
         $extra_bytes = Config::get('settings.tx_extra_bytes');
         $input_bytes = Config::get('settings.tx_input_bytes');        
 		$dust_size = $distro->getBTCDustSatoshis();
-		$default_miner = Config::get('settings.miner_fee');
         
 		$base_txo_cost = ($xcp_tx_bytes * $per_byte) + $dust_size;
 		$base_cost = ($input_bytes + $extra_bytes) * $per_byte;
@@ -57,10 +56,7 @@ class PrimeUtxos extends Stage
 				
 		$txos_needed = $tx_count - $checkPrimes['primedCount'];
 		$num_primes = intval(ceil($txos_needed  / $max_txos));
-		$per_prime = intval(floor($txos_needed / $num_primes));
-        if($num_primes == 1){
-            $per_prime += 1; //+1 for change output
-        }
+		$per_prime = intval(floor($txos_needed / $num_primes)) +1;
         
 		$pre_prime_txo = ($base_txo_cost * $per_prime) + $base_cost + ($per_prime * $txo_size * $per_byte);
 		$prime_stage = 2;
@@ -114,9 +110,11 @@ class PrimeUtxos extends Stage
 				if($distro->use_fuel == 1 AND Config::get('settings.auto_pump_stuck_distros')){
 					//pump a bit of fuel to give this a kick
 					try{
-						$pump = Fuel::pump($distro->user_id, $distro->id, $default_miner, 'BTC', $default_miner);
+                        $miner_fee = (($input_bytes + $extra_bytes + ($txo_bytes*2)) * $per_byte);
+						$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $base_txo_cost, 'BTC', $miner_fee);
 						$spent = intval(UserMeta::getMeta($distro->user_id, 'fuel_spent'));
-						$spent = $spent + ($default_miner*2);
+						$spent = $spent + $base_txo_cost + $miner_fee;
+                                                
 						UserMeta::setMeta($distro->user_id, 'fuel_spent', $spent);
 						Log::info('Extra fuel pumped for distro '.$distro->id.' priming '.$pump['txid']);
 					}

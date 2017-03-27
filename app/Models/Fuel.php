@@ -72,7 +72,7 @@ class Fuel
 		}
 		if($amount_satoshis){
 			$amount = round($amount / 100000000, 8); 
-			if($fee !== null){
+			if($fee === null){
 				$fee = round(Config::get('settings.miner_fee')/100000000,8);
 			}			
 		}
