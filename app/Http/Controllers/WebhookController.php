@@ -214,8 +214,12 @@ class WebhookController extends Controller {
 						try{
 							$balances = $xchain->getAccountBalances($uuid, 'default');
 							if($balances){
-								UserMeta::setMeta($userId, 'fuel_balance', round($balances['confirmed']['BTC']*100000000));
-								UserMeta::setMeta($userId, 'fuel_pending', round($balances['unconfirmed']['BTC']*100000000));
+                                if(isset($balances['confirmed']['BTC'])){
+                                    UserMeta::setMeta($userId, 'fuel_balance', round($balances['confirmed']['BTC']*100000000));
+                                }
+                                if(isset($balances['unconfirmed']['BTC'])){
+                                    UserMeta::setMeta($userId, 'fuel_pending', round($balances['unconfirmed']['BTC']*100000000));
+                                }
 								Log::info('User '.$userId.' fuel balances - '.json_encode($balances));
 							}
 						}
