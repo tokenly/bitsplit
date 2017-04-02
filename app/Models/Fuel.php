@@ -149,10 +149,7 @@ class Fuel
         
         //figure out how many utxos we need to make
         $num_primes = ceil($tx_count / $max_txos);
-		$txos_per_prime = floor($tx_count / $num_primes);
-        if($num_primes == 1){
-            $txos_per_prime += 1; //+1 for change output in single stage priming
-        }
+		$txos_per_prime = floor($tx_count / $num_primes)+1;
         
         //calculate base prime cost
         $prime_size = $input_bytes + $extra_bytes + ($txos_per_prime * $average_txo_bytes); 

@@ -90,7 +90,7 @@ class PrimeUtxos extends Stage
 		else{
 			//perform second-stage priming
 			$per_txo = $base_txo_cost;
-			$prime_fee = $base_cost + ($per_prime * $txo_size * $per_byte);
+			$prime_fee = $base_cost + (($per_prime+1) * $txo_size * $per_byte);
 			$prime_count = $per_prime;
 			$prime_repeat = $num_primes;
 		}
@@ -99,7 +99,7 @@ class PrimeUtxos extends Stage
 		for($i = 0; $i < $prime_repeat; $i++){
 			try{
                 $prime_cap += $prime_count; //increment the requested # of primes until the desired total is reached
-				$submit_prime = $xchain->primeUTXOsWithFeeRate($distro->address_uuid, round($per_txo/100000000,8), $prime_cap, $per_byte);
+				$submit_prime = $xchain->primeUTXOs($distro->address_uuid, round($per_txo/100000000,8), $prime_cap, $prime_fee);
 			}
 			catch(Exception $e){
 				Log::error('Priming error distro '.$distro->id.': '.$e->getMessage());
