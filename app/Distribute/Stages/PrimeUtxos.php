@@ -110,7 +110,7 @@ class PrimeUtxos extends Stage
 				if($distro->use_fuel == 1 AND Config::get('settings.auto_pump_stuck_distros')){
 					//pump a bit of fuel to give this a kick
 					try{
-                        $miner_fee = (($input_bytes + $extra_bytes + ($txo_bytes*2)) * $per_byte);
+                        $miner_fee = (($input_bytes + $extra_bytes + ($txo_size*2)) * $per_byte);
 						$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $base_txo_cost, 'BTC', $miner_fee);
 						$spent = intval(UserMeta::getMeta($distro->user_id, 'fuel_spent'));
 						$spent = $spent + $base_txo_cost + $miner_fee;
