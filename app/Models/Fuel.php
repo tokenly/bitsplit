@@ -145,7 +145,7 @@ class Fuel
         $base_cost += ceil($tx_count * $dust_size); //add on dust output values
         
         //tack on platform service fee
-        $service_cost += ($service_fee * $tx_count);
+        $service_cost = ($service_fee * $tx_count);
         
         //figure out how many utxos we need to make
         $num_primes = ceil($tx_count / $max_txos);
