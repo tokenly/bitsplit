@@ -16,6 +16,6 @@ return array(
     'tx_input_bytes' => (181 - 32),
     'tx_extra_bytes' => 10,
     'xcp_tx_bytes' => 231,
-    'auto_pump_stuck_distros' => true, //set to true to have 1 miner_fee pumped into a distribution if it gets stuck, set to false if this goes out of wack
+    'auto_pump_stuck_distros' => false, //set to true to have 1 miner_fee pumped into a distribution if it gets stuck, set to false if this goes out of wack
     'distribute_service_fee' => 2000, //amount of satoshis per address to tack on to their fee for service profit
 );
