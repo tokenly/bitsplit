@@ -11,6 +11,9 @@ class PrimeUtxos extends Stage
 		$tx_count = $distro->addressCount();
 		$max_txos = Config::get('settings.max_tx_outputs');
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
+        if($distro->fee_rate != null){
+            $per_byte = $distro->fee_rate;
+        }
 		$average_size = Config::get('settings.average_tx_bytes');
 		$txo_size = Config::get('settings.average_txo_bytes');
 		$xcp_tx_bytes = Config::get('settings.xcp_tx_bytes');

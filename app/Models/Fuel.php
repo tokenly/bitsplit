@@ -132,6 +132,9 @@ class Fuel
 	{
         //load settings
         $per_byte = Config::get('settings.miner_satoshi_per_byte');
+        if($distro->fee_rate != null){
+            $per_byte = $distro->fee_rate;
+        }
 		$max_txos = Config::get('settings.max_tx_outputs');        
         $dust_size = $distro->getBTCDustSatoshis();
         $extra_bytes = Config::get('settings.tx_extra_bytes');

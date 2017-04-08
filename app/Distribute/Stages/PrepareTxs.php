@@ -11,6 +11,9 @@ class PrepareTxs extends Stage
 		$xchain = xchain();
 		$tx_count = $distro->addressCount();
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
+        if($distro->fee_rate != null){
+            $per_byte = $distro->fee_rate;
+        }
 		$average_size = Config::get('settings.average_tx_bytes');
 		$dust_size = $distro->getBTCDustSatoshis();
 		$default_miner = Config::get('settings.miner_fee');

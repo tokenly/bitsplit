@@ -72,6 +72,14 @@
 						* This is an advanced feature.  Enter a value here to override the standard dust size of 0.00005430 BTC.
 					</small>
 				</div>	
+				<div class="form-group">
+					<label for="btc_fee_rate">Custom Miner Fee Rate</label>
+					<input type="text" class="form-control" id="btc_fee_rate" name="btc_fee_rate" placeholder="{{ Config::get('settings.miner_satoshi_per_byte') }}" />
+					<small>
+						* This is an advanced feature. Rates are defined in <em>satoshis per byte</em>, enter a number between {{ Config::get('settings.min_fee_per_byte') }} and {{ Config::get('settings.max_fee_per_byte') }}.<br>
+                        See <a href="https://bitcoinfees.21.co/" target="_blank">https://bitcoinfees.21.co/</a> for help determining a rate.
+					</small>
+				</div>	                
 				<div class="form-submit">
 					<button type="submit" class="btn btn-lg btn-success"><i class="fa fa-check"></i> Initiate Distribution</button>
 				</div>															

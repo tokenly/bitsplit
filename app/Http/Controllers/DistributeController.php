@@ -64,6 +64,17 @@ class DistributeController extends Controller {
                 return $this->return_error('home', 'The Custom BTC Dust Size must be at least '.CurrencyUtil::satoshisToFormattedString(self::BTC_DUST_MINIMUM));
             }
         }
+        
+        //fee rate override
+        $btc_fee_rate = null;
+        if(isset($input['btc_fee_rate']) AND trim($input['btc_fee_rate']) != ''){
+            $btc_fee_rate = intval($input['btc_fee_rate']);
+            $min_rate = Config::get('settings.min_fee_per_byte');
+            $max_rate = Config::get('settings.max_fee_per_byte');
+            if($btc_fee_rate < $min_rate OR $btc_fee_rate > $max_rate){
+                return $this->return_error('home', 'Invalid custom miner fee rate. Enter a number between '.$min_rate.' and '.$max_rate);
+            }
+        }
 
 		
 		//build address list
@@ -164,6 +175,7 @@ class DistributeController extends Controller {
         $distro->use_fuel = $use_fuel;
 		$distro->btc_dust = $btc_dust_satoshis;
         $distro->uuid = Uuid::uuid4()->toString();
+        $distro->fee_rate = $btc_fee_rate;
 
         //estimate fees (AFTER btc_dust is set)
         $num_tx = count($address_list);
@@ -399,6 +411,7 @@ class DistributeController extends Controller {
 		$new->network = $distro->network;
 		$new->asset = $distro->asset;
 		$new->asset_total = $distro->asset_total;
+        $new->fee_rate = $distro->fee_rate;
 		$new->fee_total = Fuel::estimateFuelCost(count($distro_list), $distro);
 		$new->label = $distro->label;
 		if(trim($new->label) != ''){

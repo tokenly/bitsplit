@@ -32,6 +32,14 @@
 				<strong>BTC Fuel Cost:</strong> {{ rtrim(rtrim(number_format($distro->fee_total / 100000000, 8),"0"),".") }} BTC
 			</li>
 			<li>
+				<strong>BTC Dust Size:</strong> {{ rtrim(rtrim(number_format($distro->btc_dust / 100000000, 8),"0"),".") }} BTC
+			</li>
+            @if($distro->fee_rate != null)
+			<li>
+				<strong>Miner Fee Rate:</strong> {{ $distro->fee_rate }} satoshis per byte
+			</li>
+            @endif
+			<li>
 				<strong>Deposit Address:</strong> 
 				<a href="https://blocktrail.com/BTC/address/{{ $distro->deposit_address }}" target="_blank">{{ $distro->deposit_address }}</a>
 				<span class="dynamic-payment-button" data-label="BitSplit Distribution #{{ $distro->id }} @if(trim($distro->label) != '') '{{ $distro->label }}' @endif" data-amount="{{ round($distro->asset_total / 100000000, 8) }}" data-address="{{ $distro->deposit_address }}" data-tokens="{{ $distro->asset }}"></span>

@@ -10,6 +10,9 @@ class ConsolidateTxs extends Stage
 		$xchain = xchain();
 		$max_inputs = Config::get('settings.max_tx_outputs');
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
+        if($distro->fee_rate != null){
+            $per_byte = $distro->fee_rate;
+        }
 		$reasonable_count = 10; //number of inputs this address is allowed before cleanup required
 		$get_utxos = false;
 		

@@ -88,6 +88,7 @@ class CloneDistro extends Command
 		$new->network = $distro->network;
 		$new->asset = $distro->asset;
 		$new->asset_total = $distro->asset_total;
+        $new->fee_rate = $distro->fee_rate;
 		$new->fee_total = Fuel::estimateFuelCost(count($distro_list), $distro);
 		$new->label = $distro->label;
 		if(trim($new->label) != ''){
