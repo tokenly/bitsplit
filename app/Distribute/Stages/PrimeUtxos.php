@@ -56,9 +56,10 @@ class PrimeUtxos extends Stage
 				
 		$txos_needed = $tx_count - $checkPrimes['primedCount'];
 		$num_primes = intval(ceil($txos_needed  / $max_txos));
-		$per_prime = intval(floor($txos_needed / $num_primes)) +1;
+		$per_prime = intval(floor($txos_needed / $num_primes));
         
 		$pre_prime_txo = ($base_txo_cost * $per_prime) + $base_cost + ($per_prime * $txo_size * $per_byte);
+        $pre_prime_txo += Config::get('settings.miner_fee'); //add buffer for fee variations
 		$prime_stage = 2;
 		if($num_primes > 1){
 			//possible two-stage priming needed
@@ -81,16 +82,19 @@ class PrimeUtxos extends Stage
 		}
 		$submit_prime = false;
 		$prime_repeat = 1;
-		if($prime_stage == 1){
+		if($prime_stage === 1){
 			//perform 1st-stage priming (priming the primes)
 			$per_txo = $pre_prime_txo;
 			$prime_fee = $base_cost + (($num_primes+1) * $txo_size * $per_byte);
 			$prime_count = $num_primes;
 		}
 		else{
-			//perform second-stage priming
+			//perform second-stage priming (utxos for the actual token sends)
 			$per_txo = $base_txo_cost;
-			$prime_fee = $base_cost + (($per_prime+1) * $txo_size * $per_byte);
+			$prime_fee = $base_cost + ($per_prime * $txo_size * $per_byte);
+            if($num_primes === 1){
+                $prime_fee += $per_prime * $txo_size * $per_byte; //extra change output
+            }
 			$prime_count = $per_prime;
 			$prime_repeat = $num_primes;
 		}
@@ -99,7 +103,8 @@ class PrimeUtxos extends Stage
 		for($i = 0; $i < $prime_repeat; $i++){
 			try{
                 $prime_cap += $prime_count; //increment the requested # of primes until the desired total is reached
-				$submit_prime = $xchain->primeUTXOs($distro->address_uuid, round($per_txo/100000000,8), $prime_cap, round($prime_fee/100000000,8));
+				//$submit_prime = $xchain->primeUTXOs($distro->address_uuid, round($per_txo/100000000,8), $prime_cap, round($prime_fee/100000000,8));
+				$submit_prime = $xchain->primeUTXOsWithFeeRate($distro->address_uuid, round($per_txo/100000000,8), $prime_cap, $per_byte);
 			}
 			catch(Exception $e){
 				Log::error('Priming error distro '.$distro->id.': '.$e->getMessage());
