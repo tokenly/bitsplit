@@ -57,7 +57,8 @@ class PrimeUtxos extends Stage
 			return true;
 		}		
 				
-		$txos_needed = $tx_count - $checkPrimes['primedCount'];
+		//$txos_needed = $tx_count - $checkPrimes['primedCount'];
+        $txos_needed = $tx_count;
 		$num_primes = intval(ceil($txos_needed  / $max_txos));
 		$per_prime = intval(floor($txos_needed / $num_primes));
         
