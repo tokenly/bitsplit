@@ -118,22 +118,7 @@ class PrimeUtxos extends Stage
 			}
 			if(!$submit_prime OR trim($submit_prime['txid']) == ''){
 				Log::error('Unkown error priming distro '.$distro->id);
-				if($distro->use_fuel == 1 AND Config::get('settings.auto_pump_stuck_distros')){
-					//pump a bit of fuel to give this a kick
-					try{
-                        $miner_fee = (($input_bytes + $extra_bytes + ($txo_size*2)) * $per_byte);
-						$pump = Fuel::pump($distro->user_id, $distro->deposit_address, $base_txo_cost, 'BTC', $miner_fee);
-						$spent = intval(UserMeta::getMeta($distro->user_id, 'fuel_spent'));
-						$spent = $spent + $base_txo_cost + $miner_fee;
-                                                
-						UserMeta::setMeta($distro->user_id, 'fuel_spent', $spent);
-						Log::info('Extra fuel pumped for distro '.$distro->id.' priming '.$pump['txid']);
-					}
-					catch(Exception $e){
-						Log::error('Error pumping extra fuel for distro '.$distro->id.' priming: '.$e->getMessage());
-					}
-				}
-				return false;
+				continue;
 			}			
 			$tx_data = array('created_at' => $time, 'updated_at' => $time, 'distribution_id' => $distro->id,
 							'quantity' => $prime_fee + ($per_txo*$per_prime), 'txid' => $submit_prime['txid'],
