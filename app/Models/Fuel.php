@@ -152,7 +152,7 @@ class Fuel
         
         //figure out how many utxos we need to make
         $num_primes = ceil($tx_count / $max_txos);
-		$txos_per_prime = floor($tx_count / $num_primes);
+		$txos_per_prime = ceil($tx_count / $num_primes);
         if($num_primes === 1){
             $txos_per_prime++; //add 1 for change output that has service fee
         }

@@ -60,7 +60,7 @@ class PrimeUtxos extends Stage
 		//$txos_needed = $tx_count - $checkPrimes['primedCount'];
         $txos_needed = $tx_count;
 		$num_primes = intval(ceil($txos_needed  / $max_txos));
-		$per_prime = intval(floor($txos_needed / $num_primes));
+		$per_prime = intval(ceil($txos_needed / $num_primes));
         
 		$pre_prime_txo = ($base_txo_cost * $per_prime) + $base_cost + ($per_prime * $txo_size * $per_byte);
         $pre_prime_txo += Config::get('settings.miner_fee'); //add buffer for fee variations
