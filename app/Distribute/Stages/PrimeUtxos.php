@@ -57,15 +57,17 @@ class PrimeUtxos extends Stage
 			return true;
 		}		
 				
-		//$txos_needed = $tx_count - $checkPrimes['primedCount'];
-        $txos_needed = $tx_count;
+		$txos_needed = $tx_count;
+		$txos_left = $tx_count - $checkPrimes['primedCount'];
 		$num_primes = intval(ceil($txos_needed  / $max_txos));
+        $primes_left = intval(ceil($txos_left  / $max_txos));
 		$per_prime = intval(ceil($txos_needed / $num_primes));
+        $per_prime_left = intval(ceil($txos_left / $primes_left));
         
-		$pre_prime_txo = ($base_txo_cost * $per_prime) + $base_cost + ($per_prime * $txo_size * $per_byte);
+		$pre_prime_txo = ($base_txo_cost * $per_prime_left) + $base_cost + ($per_prime_left * $txo_size * $per_byte);
         $pre_prime_txo += Config::get('settings.miner_fee'); //add buffer for fee variations
 		$prime_stage = 2;
-		if($num_primes > 1){
+		if($primes_left > 1){
 			//possible two-stage priming needed
 			$checkPrePrimes = false;
 			try{
@@ -89,15 +91,15 @@ class PrimeUtxos extends Stage
 		if($prime_stage === 1){
 			//perform 1st-stage priming (priming the primes)
 			$per_txo = $pre_prime_txo;
-			$prime_fee = $base_cost + (($num_primes+1) * $txo_size * $per_byte);
-			$prime_count = $num_primes;
+			$prime_fee = $base_cost + (($primes_left+1) * $txo_size * $per_byte);
+			$prime_count = $primes_left;
 		}
 		else{
 			//perform second-stage priming (utxos for the actual token sends)
 			$per_txo = $base_txo_cost;
-			$prime_fee = $base_cost + ($per_prime * $txo_size * $per_byte);
+			$prime_fee = $base_cost + ($per_prime_left * $txo_size * $per_byte);
             if($num_primes === 1){
-                $prime_fee += $per_prime * $txo_size * $per_byte; //extra change output
+                $prime_fee += $txo_size * $per_byte; //extra change output
             }
 			$prime_count = $per_prime;
 			$prime_repeat = $num_primes;
