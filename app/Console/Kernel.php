@@ -32,6 +32,7 @@ class Kernel extends ConsoleKernel
          Commands\ShowBalances::class,
          Commands\ResendWebhook::class,
          Commands\CloneDistro::class,
+         Commands\EstimateFuelCost::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,

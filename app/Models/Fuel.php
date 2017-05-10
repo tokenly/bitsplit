@@ -130,13 +130,20 @@ class Fuel
 	
 	public static function estimateFuelCost($tx_count, Distribution $distro)
 	{
+        return self::calculateFuel($tx_count, $distro->fee_rate, $distro->getBTCDustSatoshis());
+	}
+    
+    public static function calculateFuel($tx_count, $fee_rate = null, $dust_size = null)
+    {
         //load settings
         $per_byte = Config::get('settings.miner_satoshi_per_byte');
-        if($distro->fee_rate != null){
-            $per_byte = $distro->fee_rate;
+        if($fee_rate != null){
+            $per_byte = $fee_rate;
         }
-		$max_txos = Config::get('settings.max_tx_outputs');        
-        $dust_size = $distro->getBTCDustSatoshis();
+		$max_txos = Config::get('settings.max_tx_outputs');
+        if($dust_size == null){        
+            $dust_size = Config::get('settings.default_dust');
+        }
         $extra_bytes = Config::get('settings.tx_extra_bytes');
         $input_bytes = Config::get('settings.tx_input_bytes');
         $xcp_tx_bytes = Config::get('settings.xcp_tx_bytes');
@@ -186,5 +193,5 @@ class Fuel
         $cost += $xcp_cleanup;
 
         return $cost;
-	}
+    }
 }
