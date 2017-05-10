@@ -10,7 +10,7 @@ return array(
 	'min_distribution_confirms' => 2, //how long before accepting distribution deposits
 	'valid_fuel_tokens' => array('BTC' => 0, 'TOKENLY' => 5), //things you can use to pay your fuel with. # is in $$
 	'miner_fee' => 15000, //standard miner fee for basic transactions
-	'miner_satoshi_per_byte' => 85, //satoshis per to pay for miner fees
+	'miner_satoshi_per_byte' => 120, //satoshis per to pay for miner fees
     'min_fee_per_byte' => 25,
     'max_fee_per_byte' => 200,
 	'average_tx_bytes' => 300, //average btc transaction size
