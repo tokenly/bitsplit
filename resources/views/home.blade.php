@@ -19,6 +19,15 @@
 			or sourced from your account <em>fuel address</em>. Once confirmed, your tokens will enter
 			the distribution process.
 		</p>
+        <p class="text-danger">
+            <strong>Attention:</strong> Transaction capacity on the Bitcoin network is at high levels of congestion.
+            If your distribution is time sensitive at all, please make sure to double check that your miner fee rate
+            is set appropriately, otherwise you may be stuck with a several day wait time.<br>
+            You can use <a href="https://bitcoinfees.21.co/" target="_blank">https://bitcoinfees.21.co/</a> to help
+            with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.<br>
+            
+            This will be the status quo at least until bitcoin hard forks to a larger block size.
+        </p>
 		<hr>
 		<div id="new-distro-form">
 			<form action="{{ route('distribute.post') }}" method="post" enctype="multipart/form-data">
