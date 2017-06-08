@@ -11,8 +11,8 @@ return array(
 	'valid_fuel_tokens' => array('BTC' => 0, 'TOKENLY' => 5), //things you can use to pay your fuel with. # is in $$
 	'miner_fee' => 15000, //standard miner fee for basic transactions
 	'miner_satoshi_per_byte' => 120, //satoshis per to pay for miner fees
-    'min_fee_per_byte' => 25,
-    'max_fee_per_byte' => 200,
+    'min_fee_per_byte' => 50,
+    'max_fee_per_byte' => 600,
 	'average_tx_bytes' => 300, //average btc transaction size
 	'average_txo_bytes' => 34, //average amount of bytes per additional transaction output
     'tx_input_bytes' => (181 - 32),
