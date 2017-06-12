@@ -76,24 +76,6 @@ class DistributeController extends Controller {
 		
 		//build address list
 		$address_list = false;
-		if(Input::hasFile('csv_list')){
-			$get_csv = false;
-			if(Input::file('csv_list')->isValid()){
-				$get_csv = @file_get_contents(Input::file('csv_list')->getRealPath());
-			}
-			if(!$get_csv){
-				return $this->return_error('home', 'Invalid .csv file');
-			}
-			$cut_head = false;
-			if(isset($input['cut_head']) AND intval($input['cut_head']) == 1){
-				$cut_head = true;
-			}
-			$csv_list =	Distro::processAddressList($get_csv, $value_type, true, $cut_head);
-			if(!$csv_list){
-				return $this->return_error('home', 'CSV file empty or contains no valid entries');
-			}
-			$address_list = $csv_list;
-		}
 		
 		if(!$address_list AND isset($input['address_list'])){
 			$get_list = Distro::processAddressList($input['address_list'], $value_type);
