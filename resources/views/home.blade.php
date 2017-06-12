@@ -36,7 +36,7 @@
 					<label for="asset">Token Name</label>
 					<input type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" required />
 				</div>
-				<div class="form-group" id="percent_asset_total" style="display: none;">
+				<div class="form-group" id="percent_asset_total">
 					<label for="asset_total">Total Tokens to Send</label>
 					<input type="text" class="form-control numeric-only" id="asset_total" name="asset_total" placeholder="" />
 				</div>

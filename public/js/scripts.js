@@ -101,18 +101,7 @@ $(document).ready(function(){
       $('[data-toggle="tooltip"]').tooltip()
     })    
 	
-	$('select#value_type').change(function(e){
-		var val = $(this).val();
-		if(val == 'percent'){
-			$('#percent_asset_total').slideDown();
-		}
-		else{
-			$('#percent_asset_total').slideUp();
-		}
-		
-	});
-	
-	
+
 	$('body').delegate('.delete', 'click', function(e){
 		var check = confirm('Are you sure you want to delete?');
 		if(!check || check == null){
