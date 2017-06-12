@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 class DownloadFoldingStats extends Command
 {
@@ -37,6 +39,10 @@ class DownloadFoldingStats extends Command
      */
     public function handle()
     {
-
+        //$stats = file_get_contents('http://fah-web.stanford.edu/daily_user_summary.txt');
+        $stats = file_get_contents('https://www.wikipedia.org/');
+        //Storage::put('/../LOL.txt', $stats);
+        Storage::disk('dailyfolders')->put('LOL.txt', $stats);
+        //file_put_contents("/storage/LOL.txt", fopen(".bz2", 'r'));
     }
 }

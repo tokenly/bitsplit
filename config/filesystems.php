@@ -62,6 +62,10 @@ return [
             'bucket' => 'your-bucket',
         ],
 
+        'dailyfolders' => [
+            'driver' => 'local',
+            'root'   => storage_path('dailyfolders'),
+        ],
     ],
 
 ];
