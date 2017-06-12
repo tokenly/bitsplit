@@ -48,12 +48,9 @@ class DistributeController extends Controller {
 		if(isset($input['label'])){
 			$label = htmlentities(trim($input['label']));
 		}
-		
-		//check value type
-		$value_type = 'fixed';
-		if(isset($input['value_type']) AND $input['value_type'] == 'percent'){
-			$value_type = 'percent';
-		}
+
+		$value_type = 'percent';
+
 		$max_fixed_decimals = Config::get('settings.amount_decimals');
 
         // btc_dust_override

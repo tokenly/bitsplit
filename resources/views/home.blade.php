@@ -36,17 +36,6 @@
 					<label for="asset">Token Name</label>
 					<input type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" required />
 				</div>
-				<div class="form-group">
-					<label for="value_type">Input Value Type</label>
-					<select name="value_type" id="value_type" class="form-control">
-						<option value="fixed">Fixed</option>
-						<option value="percent">Percentage</option>
-					</select>
-					<small>
-						*fixed = must define exact amount per address<br>
-						*percentage = set a total to send and define percents per address
-					</small>
-				</div>
 				<div class="form-group" id="percent_asset_total" style="display: none;">
 					<label for="asset_total">Total Tokens to Send</label>
 					<input type="text" class="form-control numeric-only" id="asset_total" name="asset_total" placeholder="" />
