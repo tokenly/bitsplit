@@ -76,18 +76,10 @@ class DistributeController extends Controller {
 		
 		//build address list
 		$address_list = false;
-		
-		if(!$address_list AND isset($input['address_list'])){
-			$get_list = Distro::processAddressList($input['address_list'], $value_type);
-			if(!$get_list){
-				return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
-			}
-			$address_list = $get_list;
-		}
-		
-		if(!$address_list){
-			return $this->return_error('home', 'List of distribution addresses required');
-		}
+
+        //TODO: Get address list
+
+
 		$min_addresses = Config::get('settings.min_distribution_addresses');
 		if(count($address_list) < $min_addresses){
 			return $this->return_error('home', 'Please enter at least '.$min_addresses.' addresses to distribute to');

@@ -41,17 +41,6 @@
 					<input type="text" class="form-control numeric-only" id="asset_total" name="asset_total" placeholder="" />
 				</div>
 				<div class="form-group checkbox">
-					<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="cut_head" id="cut_head" value="1" checked="checked" />
-					<label for="cut_head" style="padding-left: 35px; font-size: 13px;" >Remove heading line from csv?</label>
-				</div>
-				<p>
-					<strong class="text-info">OR</strong>
-				</p>
-				<div class="form-group">
-					<label for="address_list">Manually Enter Address List:</label>
-					<textarea id="address_list" style="height: 150px;" name="address_list" class="form-control" placeholder="&lt;address&gt;,&lt;amount&gt;"></textarea>
-				</div>	
-				<div class="form-group checkbox">
 					<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="use_fuel" id="use_fuel" value="1" checked="checked" />
 					<label for="use_fuel" style="padding-left: 35px; font-size: 13px;" >Use available fuel for BTC fee?</label>
 				</div>				
