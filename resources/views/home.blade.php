@@ -58,7 +58,13 @@
 						* This is an advanced feature. Rates are defined in <em>satoshis per byte</em>, enter a number between {{ Config::get('settings.min_fee_per_byte') }} and {{ Config::get('settings.max_fee_per_byte') }}.<br>
                         See <a href="https://bitcoinfees.21.co/" target="_blank">https://bitcoinfees.21.co/</a> for help determining a rate.
 					</small>
-				</div>	                
+				</div>
+				<div class="form-group">
+					<label for="folding_start_date">Folding Start Date</label>
+					<input type="text" id="folding_start_date" name="folding_start_date" class="form-control datetimepicker_folding" />
+					<label for="folding_end_date">Folding End Date</label>
+					<input type="text" id="folding_end_date" name="folding_end_date" class="form-control datetimepicker_folding" />
+				</div>
 				<div class="form-submit">
 					<button type="submit" class="btn btn-lg btn-success"><i class="fa fa-check"></i> Initiate Distribution</button>
 				</div>															

@@ -218,4 +218,16 @@ $(document).ready(function(){
             });
         }
     }, 10000);
+
+    //Folding dates
+
+    $('#folding_start_date').datepicker({
+        maxDate: '-1D',
+        onSelect: function() {
+            $('#folding_end_date').datepicker('option', 'minDate', $(this).val());
+        }
+    })
+    $('#folding_end_date').datepicker({
+        maxDate: '-1D',
+    })
 });
