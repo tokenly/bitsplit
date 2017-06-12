@@ -37,10 +37,6 @@
 					<input type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" required />
 				</div>
 				<div class="form-group">
-					<label for="label">Distribution Label</label>
-					<input type="text" class="form-control" id="label" name="label" placeholder="(optional)" />
-				</div>
-				<div class="form-group">
 					<label for="value_type">Input Value Type</label>
 					<select name="value_type" id="value_type" class="form-control">
 						<option value="fixed">Fixed</option>
