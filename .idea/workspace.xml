@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b5c6918f-ee9d-4cba-9000-2260b5225d1b" name="Default" comment="" />
+    <list default="true" id="b5c6918f-ee9d-4cba-9000-2260b5225d1b" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/DistributeController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/DistributeController.php" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,11 +14,21 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="home.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/home.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="307">
+              <caret line="64" column="48" lean-forward="false" selection-start-line="64" selection-start-column="32" selection-end-line="64" selection-end-column="48" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="DistributeController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DistributeController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1043">
-              <caret line="91" column="40" lean-forward="false" selection-start-line="91" selection-start-column="29" selection-end-line="91" selection-end-column="40" />
+            <state relative-caret-position="1295">
+              <caret line="167" column="60" lean-forward="false" selection-start-line="167" selection-start-column="60" selection-end-line="167" selection-end-column="60" />
               <folding />
             </state>
           </provider>
@@ -26,19 +38,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>TOKENPASS_CLIENT_SECRET</find>
-      <find>Site</find>
-      <find>XCHAIN_CONNECTION_URL</find>
-      <find>Invalid token name</find>
-      <find>distribute</find>
-      <find>Xchain</find>
-      <find>token</find>
-      <find>foldingcoin</find>
-      <find>D</find>
-      <find>Dis</find>
-      <find>Dist</find>
-      <find>Distri</find>
-      <find>Distrib</find>
       <find>Distribu</find>
       <find>Distribut</find>
       <find>Distributi</find>
@@ -56,6 +55,19 @@
       <find>#percent_asset_total</find>
       <find>asset_total</find>
       <find>datetimepicker</find>
+      <find>Please enter at least 3 addresses to distribute to</find>
+      <find>Please enter at least 3 addresses to distribute t</find>
+      <find>Please enter at least 3 addresses to distribute</find>
+      <find>Please enter at least 3 addresses to distribute</find>
+      <find>Please enter at least 3 addresses to distribut</find>
+      <find>Please enter at least 3 addresses to</find>
+      <find>Please enter at least  addresses to</find>
+      <find>Please enter at least addresses to</find>
+      <find>Please enter at least  to</find>
+      <find>Please enter at least to</find>
+      <find>Please enter at least</find>
+      <find>Please enter at least</find>
+      <find>Please enter at least 3</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/resources/views/vendor</dir>
@@ -71,11 +83,11 @@
         <option value="$PROJECT_DIR$/vendor/tokenly/xchain-client/src/Client.php" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/config/tokenpass.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/DistributeController.php" />
         <option value="$PROJECT_DIR$/database/migrations/2017_04_08_174709_add_fee_rate_to_distributions.php" />
         <option value="$PROJECT_DIR$/database/migrations/2017_06_12_124849_add_folding_dates_to_distributions.php" />
         <option value="$PROJECT_DIR$/resources/views/home.blade.php" />
         <option value="$PROJECT_DIR$/public/js/scripts.js" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/DistributeController.php" />
       </list>
     </option>
   </component>
@@ -133,11 +145,7 @@
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
+              <option name="myItemId" value="app" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
@@ -151,7 +159,11 @@
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
@@ -165,25 +177,15 @@
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitsplit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitsplit" />
+              <option name="myItemId" value="app" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
+              <option name="myItemId" value="Http" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
+              <option name="myItemId" value="Controllers" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
@@ -301,7 +303,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13148000" />
+    <option name="totallyTimeSpent" value="15325000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -526,8 +528,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DistributeController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1043">
-          <caret line="91" column="40" lean-forward="false" selection-start-line="91" selection-start-column="29" selection-end-line="91" selection-end-column="40" />
+        <state relative-caret-position="1295">
+          <caret line="167" column="60" lean-forward="false" selection-start-line="167" selection-start-column="60" selection-end-line="167" selection-end-column="60" />
           <folding />
         </state>
       </provider>

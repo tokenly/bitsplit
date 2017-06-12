@@ -81,13 +81,15 @@ class DistributeController extends Controller {
 
 
 		$min_addresses = Config::get('settings.min_distribution_addresses');
-		if(count($address_list) < $min_addresses){
+		//TODO: remove
+		if(count($address_list) < $min_addresses && false){
 			return $this->return_error('home', 'Please enter at least '.$min_addresses.' addresses to distribute to');
 		}
 		
 		//figure out total to send
 		$asset_total = 0;
-		if($value_type == 'percent'){
+		//TODO: remove
+		if($value_type == 'percent' && false){
 			$use_total = false;
 			if(isset($input['asset_total'])){
 				if(!$getAsset['divisible']){
@@ -104,7 +106,8 @@ class DistributeController extends Controller {
 			}
 			$asset_total = $use_total;
 		}
-		else{
+		//TODO: Remove
+		elseif(false){
 			$asset_total = 0;
 			foreach($address_list as $row){
 				$asset_total += $row['amount'];
@@ -132,7 +135,21 @@ class DistributeController extends Controller {
 		if(isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
 			$use_fuel = 1;
 		}
-		
+
+		//Validate folding dates
+        if(empty($input['folding_start_date'])) {
+            return $this->return_error('home', 'Please enter a Folding Start Date');
+        }
+        if(empty($input['folding_end_date'])) {
+            return $this->return_error('home', 'Please enter a Folding End Date');
+        }
+        if(strtotime($input['folding_start_date']) > time() || strtotime($input['folding_end_date']) > time()) {
+            return $this->return_error('home', 'Both folding dates should be set before the current day');
+        }
+        if(strtotime($input['folding_start_date']) > strtotime($input['folding_end_date'])) {
+            return $this->return_error('home', 'Folding end date should be set after the start');
+        }
+
 		//save distribution
 		$distro = new Distro;
 		$distro->user_id = $user->id;
@@ -147,6 +164,8 @@ class DistributeController extends Controller {
 		$distro->btc_dust = $btc_dust_satoshis;
         $distro->uuid = Uuid::uuid4()->toString();
         $distro->fee_rate = $btc_fee_rate;
+        $distro->folding_start_date = $input['folding_start_date'];
+        $distro->folding_end_date = $input['folding_end_date'];
 
         //estimate fees (AFTER btc_dust is set)
         $num_tx = count($address_list);
