@@ -164,18 +164,18 @@ class DistributeController extends Controller {
 		$distro->btc_dust = $btc_dust_satoshis;
         $distro->uuid = Uuid::uuid4()->toString();
         $distro->fee_rate = $btc_fee_rate;
-        $distro->folding_start_date = $input['folding_start_date'];
-        $distro->folding_end_date = $input['folding_end_date'];
+        $distro->folding_start_date = date("Y-m-d H:i:s", strtotime($input['folding_start_date']));
+        $distro->folding_end_date = date("Y-m-d H:i:s", strtotime($input['folding_end_date']));
 
+        //TODO: remove comment
         //estimate fees (AFTER btc_dust is set)
-        $num_tx = count($address_list);
+         /* $num_tx = count($address_list);
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
-        $distro->fee_total = $fee_total;
-
+        $distro->fee_total = $fee_total; */
+        $distro->fee_total = 12;
         // save
 		$save = $distro->save();
 
-		
 		if(!$save){
 			Log::error('Error saving distribution '.$deposit_address.' for user '.$user->id);
 			return $this->return_error('home', 'Error saving distribution');
