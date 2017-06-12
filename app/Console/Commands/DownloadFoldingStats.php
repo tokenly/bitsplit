@@ -39,10 +39,8 @@ class DownloadFoldingStats extends Command
      */
     public function handle()
     {
-        //$stats = file_get_contents('http://fah-web.stanford.edu/daily_user_summary.txt');
-        $stats = file_get_contents('https://www.wikipedia.org/');
-        //Storage::put('/../LOL.txt', $stats);
-        Storage::disk('dailyfolders')->put('LOL.txt', $stats);
-        //file_put_contents("/storage/LOL.txt", fopen(".bz2", 'r'));
+        $stats = file_get_contents('http://fah-web.stanford.edu/daily_user_summary.txt');
+        $filename = date('Y') . '/' . date( 'm'). '/'. date('d') .'.txt';
+        Storage::disk('dailyfolders')->put($filename, $stats);
     }
 }

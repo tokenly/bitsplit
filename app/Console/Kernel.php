@@ -48,5 +48,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('bitsplit:distribute')->everyMinute();
+         $schedule->command('bitsplit:stats')->daily();
     }
 }
