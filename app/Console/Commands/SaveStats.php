@@ -14,14 +14,14 @@ class SaveStats extends Command
      *
      * @var string
      */
-    protected $signature = 'bitsplit:save_stats';
+    protected $signature = 'bitsplit:save_stats  {date? : Optional argument to scan a specific date or range of dates}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Scans the current day\'s saved Folding@Home stats and saves any entries that we care about to the database';
+    protected $description = 'Scans the current day\'s saved Folding@Home stats and saves any entries that we care about to the database.';
 
     /**
      * Create a new command instance.
@@ -40,8 +40,18 @@ class SaveStats extends Command
      */
     public function handle()
     {
-        $date = date('Y') . '/' . date( 'm'). '/'. date('d');
+        if(!empty($this->argument('date'))) {
+            if (($datetime = \DateTime::createFromFormat('Y/m/d', $this->argument('date'))) === FALSE) {
+                die("Please write the date or range of dates in this format: YYYY/MM/DD \n");
+            }
+            $date = $datetime->format('Y/m/d');
+        } else {
+            $date = date('Y') . '/' . date( 'm'). '/'. date('d');
+        }
         $filename = $date .'.txt';
+        if(!Storage::disk('dailyfolders')->exists($filename)) {
+            die("That date hasn\'t been downloaded yet \n");
+        }
         $stats = storage_path('dailyfolders/' . $filename);
         $fp = fopen($stats,'r');
         while ( !feof($fp) ) {
