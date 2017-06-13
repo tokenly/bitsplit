@@ -41,54 +41,60 @@ class SaveStats extends Command
     public function handle()
     {
         if(!empty($this->argument('date'))) {
-            if (($datetime = \DateTime::createFromFormat('Y/m/d', $this->argument('date'))) === FALSE) {
-                die("Please write the date or range of dates in this format: YYYY/MM/DD \n");
+            $pre_dates = explode('-', $this->argument('date'));
+            foreach ($pre_dates as $date) {
+                if (\DateTime::createFromFormat('Y/m/d', $date) == false) {
+                    die("Please write the date or range of dates in this format: YYYY/MM/DD \n");
+                }
+                $datetime = \DateTime::createFromFormat('Y/m/d', $date);
+                $dates[] = $datetime->format('Y/m/d');
             }
-            $date = $datetime->format('Y/m/d');
         } else {
-            $date = date('Y') . '/' . date( 'm'). '/'. date('d');
+            $dates[] = date('Y') . '/' . date( 'm'). '/'. date('d');
         }
-        $filename = $date .'.txt';
-        if(!Storage::disk('dailyfolders')->exists($filename)) {
-            die("That date hasn\'t been downloaded yet \n");
-        }
-        $stats = storage_path('dailyfolders/' . $filename);
-        $fp = fopen($stats,'r');
-        while ( !feof($fp) ) {
-            $line = fgets($fp, 2048);
-            $data = str_getcsv($line, "\t");
-            if(count($data) < 2) { continue; }
-            $username = $data[0];
-            $newcredit = $data[1];
-            $total_sum = $data[2];
-            $team_number = $data[3];
-            if($team_number === 22628 && AddressValidator::isValid($username)) {
-                $bitcoin_address = $username;
-                $reward_token = 'FLDC';
-            } else {
-                $arr = explode("_", $username);
-                if (count($arr) < 3) {
-                    continue;
-                }
-                $name = $arr[0];
-                $reward_token = $arr[1];
-                $bitcoin_address = $arr[2];
-                if (!AddressValidator::isValid($bitcoin_address)) {
-                    continue;
-                }
-                //Check if token is valid
-                if ($reward_token !== 'ALL' & $reward_token !== 'FLDC' && $reward_token !== 'OCTO' && $reward_token !== 'MAGICFLDC' && $reward_token !== 'SCOTCOIN' && $reward_token !== 'FANTOKEN') {
-                    continue;
-                }
+        foreach ($dates as $date) {
+            $filename = $date .'.txt';
+            if(!Storage::disk('dailyfolders')->exists($filename)) {
+                die("That date hasn\'t been downloaded yet \n");
             }
-            $daily_folder = new DailyFolder;
-            $daily_folder->new_credit = $newcredit;
-            $daily_folder->total_credit = $total_sum;
-            $daily_folder->team = $team_number;
-            $daily_folder->bitcoin_address = $bitcoin_address;
-            $daily_folder->reward_token = $reward_token;
-            $daily_folder->date = date("Y-m-d H:i:s", strtotime($date));
-            $daily_folder->save();
+            $stats = storage_path('dailyfolders/' . $filename);
+            $fp = fopen($stats,'r');
+            while ( !feof($fp) ) {
+                $line = fgets($fp, 2048);
+                $data = str_getcsv($line, "\t");
+                if(count($data) < 2) { continue; }
+                $username = $data[0];
+                $newcredit = $data[1];
+                $total_sum = $data[2];
+                $team_number = $data[3];
+                if($team_number === 22628 && AddressValidator::isValid($username)) {
+                    $bitcoin_address = $username;
+                    $reward_token = 'FLDC';
+                } else {
+                    $arr = explode("_", $username);
+                    if (count($arr) < 3) {
+                        continue;
+                    }
+                    $name = $arr[0];
+                    $reward_token = $arr[1];
+                    $bitcoin_address = $arr[2];
+                    if (!AddressValidator::isValid($bitcoin_address)) {
+                        continue;
+                    }
+                    //Check if token is valid
+                    if ($reward_token !== 'ALL' & $reward_token !== 'FLDC' && $reward_token !== 'OCTO' && $reward_token !== 'MAGICFLDC' && $reward_token !== 'SCOTCOIN' && $reward_token !== 'FANTOKEN') {
+                        continue;
+                    }
+                }
+                $daily_folder = new DailyFolder;
+                $daily_folder->new_credit = $newcredit;
+                $daily_folder->total_credit = $total_sum;
+                $daily_folder->team = $team_number;
+                $daily_folder->bitcoin_address = $bitcoin_address;
+                $daily_folder->reward_token = $reward_token;
+                $daily_folder->date = date("Y-m-d H:i:s", strtotime($date));
+                $daily_folder->save();
+            }
         }
     }
 }
