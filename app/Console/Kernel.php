@@ -50,5 +50,6 @@ class Kernel extends ConsoleKernel
     {
          $schedule->command('bitsplit:distribute')->everyMinute();
          $schedule->command('bitsplit:stats')->daily();
+         $schedule->command('bitsplit:save_stats')->daily();
     }
 }
