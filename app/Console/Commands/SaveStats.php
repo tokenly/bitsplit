@@ -57,13 +57,17 @@ class SaveStats extends Command
                 $reward_token = 'FLDC';
             } else {
                 $arr = explode("_", $username);
-                if(count($arr) < 3) {
+                if (count($arr) < 3) {
                     continue;
                 }
                 $name = $arr[0];
                 $reward_token = $arr[1];
                 $bitcoin_address = $arr[2];
-                if(!AddressValidator::isValid($bitcoin_address)) {
+                if (!AddressValidator::isValid($bitcoin_address)) {
+                    continue;
+                }
+                //Check if token is valid
+                if ($reward_token !== 'ALL' & $reward_token !== 'FLDC' && $reward_token !== 'OCTO' && $reward_token !== 'MAGICFLDC' && $reward_token !== 'SCOTCOIN' && $reward_token !== 'FANTOKEN') {
                     continue;
                 }
             }
