@@ -21,6 +21,7 @@ class CreateDailyFoldersTable extends Migration
             $table->integer('team');
             $table->string('bitcoin_address', 40);
             $table->string('reward_token');
+            $table->timestamps();
         });
     }
 
