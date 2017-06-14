@@ -3,78 +3,110 @@
 @section('content')
     <div class="row">
         <div class="col-lg-6">
-            <h1>Bitsplit - Distribute Tokens</h1>
+            <h3>Distribution History</h3>
+            @if(empty($distros))
             <p>
-                Use this tool to mass distribute Counterparty tokens to many addresses. <br>
-                Enter in your token name to pay with and either upload a .csv file, or manually
-                enter in addresses in the following format:
+                You have made no distributions yet.
             </p>
-            <blockquote style="font-size: 14px;">
-                &lt;Bitcoin Address&gt;, &lt;Amount&gt;<br>
-                <small>(one per line) </small>
-            </blockquote>
-            <p>
-                A deposit address will be generated for you along with a total amount of tokens +
-                total amount of <em>fuel</em> (bitcoin) it will cost. Fuel can be paid directly,
-                or sourced from your account <em>fuel address</em>. Once confirmed, your tokens will enter
-                the distribution process.
-            </p>
-            <p class="text-danger">
-                <strong>Attention:</strong> Transaction capacity on the Bitcoin network is at high levels of congestion.
-                If your distribution is time sensitive at all, please make sure to double check that your miner fee rate
-                is set appropriately, otherwise you may be stuck with a several day wait time.<br>
-                You can use <a href="https://bitcoinfees.21.co/" target="_blank">https://bitcoinfees.21.co/</a> to help
-                with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.<br>
+            @else
+                <table class="table table-bordered table-striped distro-history-table" style="font-size: 12px;">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Token Total</th>
+                        <th>Status</th>
+                        <th>TX</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($distros as $row)
+                        <tr>
+                            <td>
+                                <strong>#{{ $row->id }}</strong>
+                                @if($row->label != '')
+                                    {{ $row->label }}
+                                @endif
+                                <br>
+                                <small>Address: {{ substr($row->deposit_address, 0, 7) }}..</small>
+                            </td>
+                            <td>
+                                {{ rtrim(rtrim(number_format($row->asset_total / 100000000, 8),"0"),".") }}
+                                {{ $row->asset }}
+                            </td>
+                            <td class="distro-{{ $row->id }}-status-text">
+                                <?php
+                                if($row->complete == 1){
+                                    echo '<span class="text-success">Complete</span>';
+                                }
+                                elseif($row->hold == 1){
+                                    echo '<strong>HOLD</strong>';
+                                }
+                                else{
+                                    switch($row->stage){
+                                        case 0:
+                                            echo '<span class="text-warning">Initializing</span>';
+                                            break;
+                                        case 1:
+                                            echo '<span class="text-warning">Collecting Tokens</span>';
+                                            break;
+                                        case 2:
+                                            echo '<span class="text-warning">Collecting Fuel</span>';
+                                            break;
+                                        case 3:
+                                            echo '<span class="text-info">Priming Inputs</span>';
+                                            break;
+                                        case 4:
+                                            echo '<span class="text-info">Preparing Transactions</span>';
+                                            break;
+                                        case 5:
+                                            echo '<span class="text-info">Broadcasting Transactions</span>';
+                                            break;
+                                        case 6:
+                                            echo '<span class="text-info">Confirming Broadcasts</span>';
+                                            break;
+                                        case 7:
+                                            echo '<span class="text-success">Performing Cleanup</span>';
+                                            break;
+                                        case 8:
+                                            echo '<span class="text-success">Finalizing Cleanup</span>';
+                                            break;
+                                        default:
+                                            echo '(unknown)';
+                                            break;
 
-                This will be the status quo at least until bitcoin hard forks to a larger block size.
-            </p>
-            <hr>
-            <div id="new-distro-form">
-                <form action="{{ route('distribute.post') }}" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                    <div class="form-group">
-                        <label for="asset">Token Name</label>
-                        <input type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" required />
-                    </div>
-                    <div class="form-group" id="percent_asset_total">
-                        <label for="asset_total">Total Tokens to Send</label>
-                        <input type="text" class="form-control numeric-only" id="asset_total" name="asset_total" placeholder="" />
-                    </div>
-                    <div class="form-group checkbox">
-                        <input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="use_fuel" id="use_fuel" value="1" checked="checked" />
-                        <label for="use_fuel" style="padding-left: 35px; font-size: 13px;" >Use available fuel for BTC fee?</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="btc_dust_override">Custom BTC Dust Size</label>
-                        <input type="text" class="form-control" id="btc_dust_override" name="btc_dust_override" placeholder="0.00005430" />
-                        <small>
-                            * This is an advanced feature.  Enter a value here to override the standard dust size of 0.00005430 BTC.
-                        </small>
-                    </div>
-                    <div class="form-group">
-                        <label for="btc_fee_rate">Custom Miner Fee Rate</label>
-                        <input type="text" class="form-control" id="btc_fee_rate" name="btc_fee_rate" placeholder="{{ Config::get('settings.miner_satoshi_per_byte') }}" />
-                        <small>
-                            * This is an advanced feature. Rates are defined in <em>satoshis per byte</em>, enter a number between {{ Config::get('settings.min_fee_per_byte') }} and {{ Config::get('settings.max_fee_per_byte') }}.<br>
-                            See <a href="https://bitcoinfees.21.co/" target="_blank">https://bitcoinfees.21.co/</a> for help determining a rate.
-                        </small>
-                    </div>
-                    <div class="form-group">
-                        <label for="folding_start_date">Folding Start Date</label>
-                        <input type="text" id="folding_start_date" name="folding_start_date" class="form-control datetimepicker_folding" />
-                        <label for="folding_end_date">Folding End Date</label>
-                        <input type="text" id="folding_end_date" name="folding_end_date" class="form-control datetimepicker_folding" />
-                    </div>
-                    <div class="form-submit">
-                        <button type="submit" class="btn btn-lg btn-success"><i class="fa fa-check"></i> Initiate Distribution</button>
-                    </div>
-                </form>
-            </div>
+                                    }
+                                }
+                                ?>
+                            </td>
+                            <td id="distro-{{ $row->id }}-table-complete-count-cont">
+                                <?php
+                                $num_tx = $row->addressCount();
+                                $num_complete = $row->countComplete();
+                                if($num_complete >= $num_tx){
+                                    echo '<i class="fa fa-check text-success" title="Complete"></i> '.number_format($num_tx);
+                                }
+                                else{
+                                    echo '<span class="distro-'.$row->id.'-complete-count">'.number_format($num_complete).'</span>/'.number_format($num_tx);
+                                }
+                                ?>
+                            </td>
+                            <td id="distro-{{ $row->id }}-table-actions">
+                                <a href="{{ route('distribute.details', $row->deposit_address) }}" class="btn btn-info btn-sm" title="View details"><i class="fa fa-info"></i></a>
+                                <a href="{{ route('distribute.duplicate', $row->deposit_address) }}" class="btn btn-warning btn-sm" title="Duplicate this distribution"><i class="fa fa-clone"></i></a>
+                                @if($row->complete == 1 OR ($row->asset_received == 0 AND $row->fee_received == 0))
+                                    <a href="{{ route('distribute.delete', $row->id) }}" class="btn btn-sm btn-danger delete" title="Delete"><i class="fa fa-close"></i></a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            @endif
         </div>
-        @include('inc.dash-sidebar')
     </div>
 @endsection
 
 @section('title')
-    Bitsplit Dashboard
+    Bitsplit Distributions History
 @stop
