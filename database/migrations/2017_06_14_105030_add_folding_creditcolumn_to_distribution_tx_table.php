@@ -15,7 +15,7 @@ class AddFoldingCreditcolumnToDistributionTxTable extends Migration
     {
         Schema::table('distribution_tx', function(Blueprint $table)
         {
-            $table->date('folding_credit');
+            $table->bigInteger('folding_credit');
         });
     }
 

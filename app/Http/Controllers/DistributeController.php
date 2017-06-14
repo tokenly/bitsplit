@@ -104,19 +104,29 @@ class DistributeController extends Controller {
         }
 
         $folding_list = array();
+        $list_new_credits = array();
         foreach ($folding_address_list as $daily_folder) {
             if(isset($folding_list[$daily_folder->bitcoin_address])) {
                 $folding_list[$daily_folder->bitcoin_address] += ($daily_folder->new_credit * 100) / $total;
             } else {
                 $folding_list[$daily_folder->bitcoin_address] = ($daily_folder->new_credit * 100) / $total;
             }
+
+            //Array to store new credits for each address
+            if(isset($list_new_credits[$daily_folder->bitcoin_address])) {
+                $list_new_credits[$daily_folder->bitcoin_address] += $daily_folder->new_credit;
+            } else {
+                $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
+            }
         }
+
         $get_list = Distro::processAddressList($folding_list, $value_type);
 
         if(!$get_list){
             return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
         }
 		$address_list = $get_list;
+
 
 		$min_addresses = Config::get('settings.min_distribution_addresses');
 
@@ -205,6 +215,7 @@ class DistributeController extends Controller {
 			$tx->distribution_id = $id;
 			$tx->destination = $row['address'];
 			$tx->quantity = $row['amount'];
+			$tx->folding_credit = $list_new_credits[$row['address']];
 			$tx->save();
 		}
 		
