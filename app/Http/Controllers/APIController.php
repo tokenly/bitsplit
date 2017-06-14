@@ -40,7 +40,7 @@ class APIController extends Controller
         $output = array('result' => false);
         $fields = Distro::$api_fields;
         if(isset($input['all']) && $input['all'] == 1) {
-            $get = Distro::where('user_id', $user->id)->select($fields)->orderBy('id', 'desc')->get();
+            $get = Distro::where('complete', 1)->select($fields)->orderBy('id', 'desc')->get();
         } else {
             $get = Distro::where('user_id', $user->id)->select($fields)->orderBy('id', 'desc')->get();
         }
