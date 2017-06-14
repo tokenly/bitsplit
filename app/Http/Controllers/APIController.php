@@ -35,10 +35,15 @@ class APIController extends Controller
     
     public function getDistributionList()
     {
+        $input = \Illuminate\Support\Facades\Input::all();
         $user = self::$api_user;
         $output = array('result' => false);
         $fields = Distro::$api_fields;
-        $get = Distro::where('user_id', $user->id)->select($fields)->orderBy('id', 'desc')->get();
+        if(isset($input['all']) && $input['all'] == 1) {
+            $get = Distro::where('user_id', $user->id)->select($fields)->orderBy('id', 'desc')->get();
+        } else {
+            $get = Distro::where('user_id', $user->id)->select($fields)->orderBy('id', 'desc')->get();
+        }
         if($get){
             $get = $get->toArray();
             foreach($get as $k => $row){

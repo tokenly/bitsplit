@@ -517,58 +517,12 @@ class DistributeController extends Controller {
 
     function getDistributionsHistory()
     {
-        $distros = Distro::all();
-        if(!$distro){
+        $user = \Illuminate\Support\Facades\Auth::user();
+
+        $distros = Distro::where('complete', 1)->get();
+        if(!$distros){
             return $this->return_error('home', 'Distribution not found');
         }
-        $extra = json_decode($distro->extra, true);
-
-        $address_list = DistroTx::where('distribution_id', $distro->id)->orderBy('quantity', 'desc')->get();
-
-        $address_count = 0;
-        $num_complete = 0;
-        if($address_list){
-            $lookup_addresses = array();
-            foreach($address_list as $row){
-                $address_count++;
-                if($row->confirmed == 1){
-                    $num_complete++;
-                }
-                $lookup_addresses[] = $row->destination;
-                $row->tokenpass_user = false;
-            }
-            if(isset($distro->extra['user_list'])){
-                foreach($address_list as $row){
-                    if(isset($distro->extra['user_list'][$row->destination])){
-                        $row->tokenpass_user = $distro->extra['user_list'][$row->destination]['username'];
-                    }
-                }
-            }
-            else{
-                $tokenpass = new TokenpassAPI;
-                $lookup = false;
-                try{
-                    $lookup = $tokenpass->lookupUserByAddress($lookup_addresses);
-                }
-                catch(Exception $e){
-                    Log::error('Error looking up address users (distro #'.$distro->id.'): '.$e->getMessage());
-                }
-                if($lookup AND isset($lookup['users']) AND is_array($lookup['users']) AND count($lookup['users']) > 0){
-                    foreach($address_list as $row){
-                        if($lookup AND isset($lookup['users'][$row->destination])){
-                            $row->tokenpass_user = $lookup['users'][$row->destination]['username'];
-                        }
-                    }
-                    $extra['user_list'] = $lookup;
-                    $distro->extra = json_encode($extra);
-                    $distro->save();
-                }
-            }
-        }
-
-        return view('distribute.details', array('user' => $user, 'distro' => $distro,
-            'address_list' => $address_list,
-            'address_count' => $address_count,
-            'num_complete' => $num_complete,));
+        return view('distribute.public_history', array('user' => $user, 'distros' => $distros));
     }
 }
