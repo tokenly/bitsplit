@@ -62,12 +62,14 @@ class SaveStats extends Command
             while ( !feof($fp) ) {
                 $line = fgets($fp, 2048);
                 $data = str_getcsv($line, "\t");
-                if(count($data) < 2) { continue; }
+                if (count($data) < 2) {
+                    continue;
+                }
                 $username = $data[0];
                 $newcredit = $data[1];
                 $total_sum = $data[2];
                 $team_number = $data[3];
-                if($team_number === 22628 && AddressValidator::isValid($username)) {
+                if ($team_number === 22628 && AddressValidator::isValid($username)) {
                     $bitcoin_address = $username;
                     $reward_token = 'FLDC';
                 } else {
@@ -86,14 +88,20 @@ class SaveStats extends Command
                         continue;
                     }
                 }
-                $daily_folder = new DailyFolder;
+                $daily_folder = DailyFolder::where('team', $team_number)->where('bitcoin_address', $bitcoin_address)
+                    ->where('date', date("Y-m-d", strtotime($date)))
+                    ->first();
+                if (!$daily_folder) {
+                    $daily_folder = new DailyFolder;
+                }
                 $daily_folder->new_credit = $newcredit;
                 $daily_folder->total_credit = $total_sum;
                 $daily_folder->team = $team_number;
                 $daily_folder->bitcoin_address = $bitcoin_address;
                 $daily_folder->reward_token = $reward_token;
-                $daily_folder->date = date("Y-m-d H:i:s", strtotime($date));
+                $daily_folder->date = date("Y-m-d", strtotime($date));
                 $daily_folder->save();
+                break;
             }
         }
     }
