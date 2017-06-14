@@ -196,6 +196,7 @@ class DistributeController extends Controller {
         $distro->fee_rate = $btc_fee_rate;
         $distro->folding_start_date = date("Y-m-d H:i:s", strtotime($input['folding_start_date']));
         $distro->folding_end_date = date("Y-m-d H:i:s", strtotime($input['folding_end_date']));
+        $distro->label = $asset. ' - '.$input['asset_total'] . ' - '. date('Y/m/d');
 
         //estimate fees (AFTER btc_dust is set)
         $num_tx = count($address_list);
