@@ -93,10 +93,6 @@
                             </td>
                             <td id="distro-{{ $row->id }}-table-actions">
                                 <a href="{{ route('distribute.details', $row->deposit_address) }}" class="btn btn-info btn-sm" title="View details"><i class="fa fa-info"></i></a>
-                                <a href="{{ route('distribute.duplicate', $row->deposit_address) }}" class="btn btn-warning btn-sm" title="Duplicate this distribution"><i class="fa fa-clone"></i></a>
-                                @if($row->complete == 1 OR ($row->asset_received == 0 AND $row->fee_received == 0))
-                                    <a href="{{ route('distribute.delete', $row->id) }}" class="btn btn-sm btn-danger delete" title="Delete"><i class="fa fa-close"></i></a>
-                                @endif
                             </td>
                         </tr>
                     @endforeach

@@ -232,13 +232,19 @@ class DistributeController extends Controller {
 	public function getDetails($address)
 	{
 		$user = Auth::user();
-		if(!$user){
-			return Redirect::route('account.auth');
+
+		$distro = Distro::where('deposit_address', $address)->first();
+
+        //Only allow public view if distribution is completed
+        if(!$user && !$distro->complete){
+            return Redirect::route('account.auth');
+        }
+
+		//Only allow public view if distribution is completed
+		if(!$distro && !$distro->complete){
+            return $this->return_error('home', 'Distribution not found');
 		}
-		$distro = Distro::where('deposit_address', $address)->where('user_id', $user->id)->first();
-		if(!$distro){
-			return $this->return_error('home', 'Distribution not found');
-		}
+
         $extra = json_decode($distro->extra, true);
 		
 		$address_list = DistroTx::where('distribution_id', $distro->id)->orderBy('quantity', 'desc')->get();
@@ -511,11 +517,58 @@ class DistributeController extends Controller {
 
     function getDistributionsHistory()
     {
-        $user = Auth::user();
-        $distros = Distro::where('complete', 1)->get();
-        if(!$distros){
+        $distros = Distro::all();
+        if(!$distro){
             return $this->return_error('home', 'Distribution not found');
         }
-        return view('distribute.public_history', array('user' => $user, 'distros' => $distros));
+        $extra = json_decode($distro->extra, true);
+
+        $address_list = DistroTx::where('distribution_id', $distro->id)->orderBy('quantity', 'desc')->get();
+
+        $address_count = 0;
+        $num_complete = 0;
+        if($address_list){
+            $lookup_addresses = array();
+            foreach($address_list as $row){
+                $address_count++;
+                if($row->confirmed == 1){
+                    $num_complete++;
+                }
+                $lookup_addresses[] = $row->destination;
+                $row->tokenpass_user = false;
+            }
+            if(isset($distro->extra['user_list'])){
+                foreach($address_list as $row){
+                    if(isset($distro->extra['user_list'][$row->destination])){
+                        $row->tokenpass_user = $distro->extra['user_list'][$row->destination]['username'];
+                    }
+                }
+            }
+            else{
+                $tokenpass = new TokenpassAPI;
+                $lookup = false;
+                try{
+                    $lookup = $tokenpass->lookupUserByAddress($lookup_addresses);
+                }
+                catch(Exception $e){
+                    Log::error('Error looking up address users (distro #'.$distro->id.'): '.$e->getMessage());
+                }
+                if($lookup AND isset($lookup['users']) AND is_array($lookup['users']) AND count($lookup['users']) > 0){
+                    foreach($address_list as $row){
+                        if($lookup AND isset($lookup['users'][$row->destination])){
+                            $row->tokenpass_user = $lookup['users'][$row->destination]['username'];
+                        }
+                    }
+                    $extra['user_list'] = $lookup;
+                    $distro->extra = json_encode($extra);
+                    $distro->save();
+                }
+            }
+        }
+
+        return view('distribute.details', array('user' => $user, 'distro' => $distro,
+            'address_list' => $address_list,
+            'address_count' => $address_count,
+            'num_complete' => $num_complete,));
     }
 }
