@@ -99,6 +99,8 @@
             @endif
 			<li><strong>Date Created:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->created_at)) }} </li>
 			<li><strong>Last Updated:</strong> <span id="distro-{{ $distro->id }}-last-update">{{ date('F j\, Y \a\t g:i A', strtotime($distro->updated_at)) }}</span></li>
+			<li><strong>Folding Start Date:</strong> <span id="distro-{{ $distro->id }}-last-update">{{ date('F j\, Y', strtotime($distro->folding_start_date)) }}</span></li>
+			<li><strong>Folding End Date:</strong> <span id="distro-{{ $distro->id }}-last-update">{{ date('F j\, Y', strtotime($distro->folding_end_date)) }}</span></li>
 			@if($distro->complete == 1)
 				<li id="distro-complete-cont"><strong>Completed:</strong> <span id="distro-{{ $distro->id }}-complete-date">{{ date('F j\, Y \a\t g:i A', strtotime($distro->completed_at)) }}</span></li>
 			@else
@@ -135,6 +137,7 @@
 				<thead>
 					<th>Address</th>
 					<th>Quantity</th>
+					<th>Folding Credit</th>
 					<th>TX</th>
 				</thead>
 				<tbody>
@@ -147,6 +150,7 @@
                                 @endif
                             </td>
 							<td>{{ rtrim(rtrim(number_format($row->quantity / 100000000, 8),"0"),".") }}</td>
+							<td>{{ $row->folding_credit }}</td>
 							<td id="distro-tx-{{ $row->id }}-status">
 								@if($row->confirmed == 1)
 									<a href="https://blocktrail.com/BTC/tx/{{ $row->txid }}" target="_blank" title="View complete transaction"><i class="fa fa-check text-success"></i></a>
