@@ -23,7 +23,7 @@
 				</div>
 			</li>
 			<li>
-				<strong>Token:</strong> <a href="https://blockscan.com/assetInfo/{{ $distro->asset }}" target="_blank">{{ $distro->asset }}</a>
+				<strong>Token:</strong> <a href="https://xchain.io/asset/{{ $distro->asset }}" target="_blank">{{ $distro->asset }}</a>
 			</li>
 			<li>
 				<strong>Amount to Distribute:</strong> {{ rtrim(rtrim(number_format($distro->asset_total / 100000000, 8),"0"),".") }} {{ $distro->asset }}
@@ -144,7 +144,7 @@
 					@foreach($address_list as $row)
 						<tr>
 							<td>
-                                <a href="https://blockscan.com/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a>
+                                <a href="https://xchain.io/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a>
                                 @if($row->tokenpass_user)
                                    <br> ({{ $row->tokenpass_user }})
                                 @endif
