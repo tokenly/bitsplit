@@ -83,10 +83,6 @@ class SaveStats extends Command
                     if (!AddressValidator::isValid($bitcoin_address)) {
                         continue;
                     }
-                    //Check if token is valid
-                    if ($reward_token !== 'ALL' & $reward_token !== 'FLDC' && $reward_token !== 'OCTO' && $reward_token !== 'MAGICFLDC' && $reward_token !== 'SCOTCOIN' && $reward_token !== 'FANTOKEN') {
-                        continue;
-                    }
                 }
                 $daily_folder = DailyFolder::where('team', $team_number)->where('bitcoin_address', $bitcoin_address)
                     ->where('date', date("Y-m-d", strtotime($date)))
