@@ -112,7 +112,6 @@ class DistributeController extends Controller {
             }
         }
         $get_list = Distro::processAddressList($folding_list, $value_type);
-        var_dump($get_list); die();
 
         if(!$get_list){
             return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
@@ -186,11 +185,10 @@ class DistributeController extends Controller {
         $distro->folding_start_date = date("Y-m-d H:i:s", strtotime($input['folding_start_date']));
         $distro->folding_end_date = date("Y-m-d H:i:s", strtotime($input['folding_end_date']));
 
-        //TODO: remove comment
         //estimate fees (AFTER btc_dust is set)
-         /* $num_tx = count($address_list);
+        $num_tx = count($address_list);
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
-        $distro->fee_total = $fee_total; */
+        $distro->fee_total = $fee_total;
         $distro->fee_total = 12;
         // save
 		$save = $distro->save();
