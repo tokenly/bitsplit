@@ -352,7 +352,7 @@ class APIController extends Controller
         $fields = Distro::$api_fields;
         $fields[] = 'user_id';        
         $get = Distro::where('uuid', $id)->orWhere('deposit_address', $id)->select($fields)->first();
-        if($get AND ($get->user_id == $user->id OR intval($user->admin) == 1)){
+        if($get AND ($get->user_id == $user->id OR intval($user->admin) == 1 OR $get->complete)){
             return $get;
         }
         return false;
