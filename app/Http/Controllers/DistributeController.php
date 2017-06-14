@@ -96,8 +96,10 @@ class DistributeController extends Controller {
                                                             $query->where('reward_token', 'ALL')
                                                                 ->orWhere('reward_token',  $input['asset']);
                                                         } )->get();
-        //TODO: validate that it isn't empty
 
+        if($folding_address_list->isEmpty()) {
+            return $this->return_error('home', 'No results on selected Folding dates range, please choose another.');
+        }
         $total = 0;
         foreach ($folding_address_list as $daily_folder) {
             $total += $daily_folder->new_credit;
