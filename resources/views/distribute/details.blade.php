@@ -15,12 +15,14 @@
 			<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 		<ul class="distro-info">
 			<li>
-				<div class="form-group">
-					<div class="input-group">
-						<span class="input-group-addon">Label:</span>
-						<input @if(!$user || $user->id !== $distro->user_id) disabled="disabled" @endif type="text" name="label" id="label" class="form-control" value="{{ $distro->label }}" placeholder="(optional)" />
+				@if($user && $user->id === $distro->user_id)
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon">Label:</span>
+							<input type="text" name="label" id="label" class="form-control" value="{{ $distro->label }}" placeholder="(optional)" />
+						</div>
 					</div>
-				</div>
+				@endif
 			</li>
 			<li>
 				<strong>Token:</strong> <a href="https://xchain.io/asset/{{ $distro->asset }}" target="_blank">{{ $distro->asset }}</a>
