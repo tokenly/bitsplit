@@ -44,7 +44,7 @@ class SaveStats extends Command
             $pre_dates = explode('-', $this->argument('date'));
             foreach ($pre_dates as $date) {
                 if (\DateTime::createFromFormat('Y/m/d', $date) == false) {
-                    die("Please write the date or range of dates in this format: YYYY/MM/DD \n");
+                    die("Please write the date in this format: YYYY/MM/DD or YYYY/MM/DD-YYYYDMM/DD for a range of dates \n");
                 }
                 $datetime = \DateTime::createFromFormat('Y/m/d', $date);
                 $dates[] = $datetime->format('Y/m/d');
