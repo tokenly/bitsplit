@@ -50,7 +50,8 @@
 						<li><a href="{{ url('/account/logout') }}">Logout</a></li>
 					</ul>
 				</li>
-			@endif				
+			@endif
+			  <li><a href=" {{route('distribute.history')}}"><i class="fa fa-list"></i> Public distributions</a></li>
 		  </ul>
 		</nav>
 	  </div>
