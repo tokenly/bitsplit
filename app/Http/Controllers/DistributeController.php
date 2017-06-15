@@ -146,9 +146,6 @@ class DistributeController extends Controller {
 				return $this->return_error('home', 'Invalid amount of tokens to send');
 			}
 			$address_list = Distro::divideTotalBetweenList($address_list, $use_total);
-			if(count($address_list) < $min_addresses){
-				return $this->return_error('home', 'Please enter at least '.$min_addresses.' addresses to distribute to (some amounts invalid)');
-			}
 			$asset_total = $use_total;
 		}
 		else {
