@@ -233,6 +233,8 @@ class Distribution extends Model
             }
 			if(isset($parse_row[0]) AND isset($parse_row[1])){
 				$address = trim($parse_row[0]);
+                /*
+                //disable for now, addresses are validated elsewhere in this fork
 				try{
 					$valid_address = $xchain->validateAddress($address);
 					if(!$valid_address OR !$valid_address['result']){
@@ -243,6 +245,7 @@ class Distribution extends Model
 					Log::error('Error validating distribution address "'.$address.'": '.$e->getMessage());
 					$address = false;
 				}
+                
 				if(!$address){
 					//see if we can lookup address by username
 					try{
@@ -257,7 +260,10 @@ class Distribution extends Model
 					if(!$address){
 						continue;
 					}
-				}
+				}*/
+                if(!$address){
+                    continue;
+                }
 				if($value_type == 'percent'){
 					$amount = floatval($parse_row[1]) / 100;
 				}
