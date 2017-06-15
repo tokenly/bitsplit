@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\DailyFolder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
-use \LinusU\Bitcoin\AddressValidator;
+use BitWasp\BitcoinLib\BitcoinLib;
 
 class SaveStats extends Command
 {
@@ -69,7 +69,7 @@ class SaveStats extends Command
                 $newcredit = $data[1];
                 $total_sum = $data[2];
                 $team_number = $data[3];
-                if ($team_number === 22628 && AddressValidator::isValid($username)) {
+                if ($team_number === 22628 && BitcoinLib::validate_address($username)) {
                     $bitcoin_address = $username;
                     $reward_token = 'FLDC';
                 } else {
@@ -80,7 +80,7 @@ class SaveStats extends Command
                     $name = $arr[0];
                     $reward_token = $arr[1];
                     $bitcoin_address = $arr[2];
-                    if (!AddressValidator::isValid($bitcoin_address)) {
+                    if (!BitcoinLib::validate_address($bitcoin_address)) {
                         continue;
                     }
                 }
