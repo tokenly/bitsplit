@@ -97,7 +97,6 @@ class SaveStats extends Command
                 $daily_folder->reward_token = $reward_token;
                 $daily_folder->date = date("Y-m-d", strtotime($date));
                 $daily_folder->save();
-                break;
             }
         }
     }
