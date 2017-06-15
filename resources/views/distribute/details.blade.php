@@ -12,18 +12,20 @@
 		</p>
 		<h4>Details &amp; Status</h4>
 		<form action="{{ route('distribute.details.update', $distro->deposit_address) }}" method="post" enctype="multipart/form-data">
-			<input type="hidden" name="_token" value="{{ csrf_token() }}" />		
+			<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 		<ul class="distro-info">
 			<li>
-				<div class="form-group">
-					<div class="input-group">
-						<span class="input-group-addon">Label:</span>
-						<input type="text" name="label" id="label" class="form-control" value="{{ $distro->label }}" placeholder="(optional)" />
+				@if($user && $user->id === $distro->user_id)
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon">Label:</span>
+							<input type="text" name="label" id="label" class="form-control" value="{{ $distro->label }}" placeholder="(optional)" />
+						</div>
 					</div>
-				</div>
+				@endif
 			</li>
 			<li>
-				<strong>Token:</strong> <a href="https://blockscan.com/assetInfo/{{ $distro->asset }}" target="_blank">{{ $distro->asset }}</a>
+				<strong>Token:</strong> <a href="https://xchain.io/asset/{{ $distro->asset }}" target="_blank">{{ $distro->asset }}</a>
 			</li>
 			<li>
 				<strong>Amount to Distribute:</strong> {{ rtrim(rtrim(number_format($distro->asset_total / 100000000, 8),"0"),".") }} {{ $distro->asset }}
@@ -40,7 +42,7 @@
 			</li>
             @endif
 			<li>
-				<strong>Deposit Address:</strong> 
+				<strong>Deposit Address:</strong>
 				<a href="https://blocktrail.com/BTC/address/{{ $distro->deposit_address }}" target="_blank">{{ $distro->deposit_address }}</a>
 				<span class="dynamic-payment-button" data-label="BitSplit Distribution #{{ $distro->id }} @if(trim($distro->label) != '') '{{ $distro->label }}' @endif" data-amount="{{ round($distro->asset_total / 100000000, 8) }}" data-address="{{ $distro->deposit_address }}" data-tokens="{{ $distro->asset }}"></span>
 			</li>
@@ -99,6 +101,8 @@
             @endif
 			<li><strong>Date Created:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->created_at)) }} </li>
 			<li><strong>Last Updated:</strong> <span id="distro-{{ $distro->id }}-last-update">{{ date('F j\, Y \a\t g:i A', strtotime($distro->updated_at)) }}</span></li>
+			<li><strong>Folding Start Date:</strong> <span id="distro-{{ $distro->id }}-last-update">{{ date('F j\, Y', strtotime($distro->folding_start_date)) }}</span></li>
+			<li><strong>Folding End Date:</strong> <span id="distro-{{ $distro->id }}-last-update">{{ date('F j\, Y', strtotime($distro->folding_end_date)) }}</span></li>
 			@if($distro->complete == 1)
 				<li id="distro-complete-cont"><strong>Completed:</strong> <span id="distro-{{ $distro->id }}-complete-date">{{ date('F j\, Y \a\t g:i A', strtotime($distro->completed_at)) }}</span></li>
 			@else
@@ -112,9 +116,11 @@
 			</li>
 			@endif
 		</ul>
-			<div class="form-group form-submit">
-				<button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Update</button>
-			</div>
+			@if($user && $distro->user_id === $user->id)
+				<div class="form-group form-submit">
+					<button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Update</button>
+				</div>
+			@endif
 		</form>
 		<hr>
 		<h4>Transactions (<span class="distro-{{ $distro->id }}-complete-count">{{ $num_complete }}</span> / {{ $address_count }} complete)</h4>
@@ -133,18 +139,20 @@
 				<thead>
 					<th>Address</th>
 					<th>Quantity</th>
+					<th>Folding Credit</th>
 					<th>TX</th>
 				</thead>
 				<tbody>
 					@foreach($address_list as $row)
 						<tr>
 							<td>
-                                <a href="https://blockscan.com/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a>
+                                <a href="https://xchain.io/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a>
                                 @if($row->tokenpass_user)
                                    <br> ({{ $row->tokenpass_user }})
                                 @endif
                             </td>
 							<td>{{ rtrim(rtrim(number_format($row->quantity / 100000000, 8),"0"),".") }}</td>
+							<td>{{ $row->folding_credit }}</td>
 							<td id="distro-tx-{{ $row->id }}-status">
 								@if($row->confirmed == 1)
 									<a href="https://blocktrail.com/BTC/tx/{{ $row->txid }}" target="_blank" title="View complete transaction"><i class="fa fa-check text-success"></i></a>
@@ -162,7 +170,9 @@
 			</table>
 		@endif
 	</div>
-	@include('inc.dash-sidebar')
+	@if($user)
+		@include('inc.dash-sidebar')
+	@endif
 </div>
 @stop
 

@@ -1,4 +1,5 @@
 <?php namespace App\Http\Controllers;
+use App\Models\DailyFolder;
 use Distribute\Initialize as DistroInit;
 use Input, Session, Exception, Log;
 use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
@@ -48,12 +49,9 @@ class DistributeController extends Controller {
 		if(isset($input['label'])){
 			$label = htmlentities(trim($input['label']));
 		}
-		
-		//check value type
-		$value_type = 'fixed';
-		if(isset($input['value_type']) AND $input['value_type'] == 'percent'){
-			$value_type = 'percent';
-		}
+
+		$value_type = 'percent';
+
 		$max_fixed_decimals = Config::get('settings.amount_decimals');
 
         // btc_dust_override
@@ -76,45 +74,65 @@ class DistributeController extends Controller {
             }
         }
 
-		
+        //Validate folding dates
+        if(empty($input['folding_start_date'])) {
+            return $this->return_error('home', 'Please enter a Folding Start Date');
+        }
+        if(empty($input['folding_end_date'])) {
+            return $this->return_error('home', 'Please enter a Folding End Date');
+        }
+        if(strtotime($input['folding_start_date']) > time() || strtotime($input['folding_end_date']) > time()) {
+            return $this->return_error('home', 'Both folding dates should be set before the current day');
+        }
+        if(strtotime($input['folding_start_date']) > strtotime($input['folding_end_date'])) {
+            return $this->return_error('home', 'Folding end date should be set after the start');
+        }
+
+        $folding_start_date = date("Y-m-d", strtotime($input['folding_start_date']));
+        $folding_end_date = date("Y-m-d", strtotime($input['folding_end_date']));
 		//build address list
-		$address_list = false;
-		if(Input::hasFile('csv_list')){
-			$get_csv = false;
-			if(Input::file('csv_list')->isValid()){
-				$get_csv = @file_get_contents(Input::file('csv_list')->getRealPath());
-			}
-			if(!$get_csv){
-				return $this->return_error('home', 'Invalid .csv file');
-			}
-			$cut_head = false;
-			if(isset($input['cut_head']) AND intval($input['cut_head']) == 1){
-				$cut_head = true;
-			}
-			$csv_list =	Distro::processAddressList($get_csv, $value_type, true, $cut_head);
-			if(!$csv_list){
-				return $this->return_error('home', 'CSV file empty or contains no valid entries');
-			}
-			$address_list = $csv_list;
-		}
-		
-		if(!$address_list AND isset($input['address_list'])){
-			$get_list = Distro::processAddressList($input['address_list'], $value_type);
-			if(!$get_list){
-				return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
-			}
-			$address_list = $get_list;
-		}
-		
-		if(!$address_list){
-			return $this->return_error('home', 'List of distribution addresses required');
-		}
+        $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
+                                                        ->where(function ($query) use ($input) {
+                                                            $query->where('reward_token', 'ALL')
+                                                                ->orWhere('reward_token',  $input['asset']);
+                                                        } )->get();
+
+        if($folding_address_list->isEmpty()) {
+            return $this->return_error('home', 'No results on selected Folding dates range, please choose another.');
+        }
+        $total = 0;
+        foreach ($folding_address_list as $daily_folder) {
+            $total += $daily_folder->new_credit;
+        }
+
+        $folding_list = array();
+        $list_new_credits = array();
+        foreach ($folding_address_list as $daily_folder) {
+            if(isset($folding_list[$daily_folder->bitcoin_address])) {
+                $folding_list[$daily_folder->bitcoin_address] += ($daily_folder->new_credit * 100) / $total;
+            } else {
+                $folding_list[$daily_folder->bitcoin_address] = ($daily_folder->new_credit * 100) / $total;
+            }
+
+            //Array to store new credits for each address
+            if(isset($list_new_credits[$daily_folder->bitcoin_address])) {
+                $list_new_credits[$daily_folder->bitcoin_address] += $daily_folder->new_credit;
+            } else {
+                $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
+            }
+        }
+
+        $get_list = Distro::processAddressList($folding_list, $value_type);
+
+        if(!$get_list){
+            return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
+        }
+		$address_list = $get_list;
+
+
 		$min_addresses = Config::get('settings.min_distribution_addresses');
-		if(count($address_list) < $min_addresses){
-			return $this->return_error('home', 'Please enter at least '.$min_addresses.' addresses to distribute to');
-		}
-		
-		//figure out total to send
+
+			//figure out total to send
 		$asset_total = 0;
 		if($value_type == 'percent'){
 			$use_total = false;
@@ -133,7 +151,7 @@ class DistributeController extends Controller {
 			}
 			$asset_total = $use_total;
 		}
-		else{
+		else {
 			$asset_total = 0;
 			foreach($address_list as $row){
 				$asset_total += $row['amount'];
@@ -161,7 +179,7 @@ class DistributeController extends Controller {
 		if(isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
 			$use_fuel = 1;
 		}
-		
+
 		//save distribution
 		$distro = new Distro;
 		$distro->user_id = $user->id;
@@ -176,16 +194,18 @@ class DistributeController extends Controller {
 		$distro->btc_dust = $btc_dust_satoshis;
         $distro->uuid = Uuid::uuid4()->toString();
         $distro->fee_rate = $btc_fee_rate;
+        $distro->folding_start_date = date("Y-m-d H:i:s", strtotime($input['folding_start_date']));
+        $distro->folding_end_date = date("Y-m-d H:i:s", strtotime($input['folding_end_date']));
+        $distro->label = $asset. ' - '.$input['asset_total'] . ' - '. date('Y/m/d');
 
         //estimate fees (AFTER btc_dust is set)
         $num_tx = count($address_list);
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
         $distro->fee_total = $fee_total;
-
+        $distro->fee_total = 12;
         // save
 		$save = $distro->save();
 
-		
 		if(!$save){
 			Log::error('Error saving distribution '.$deposit_address.' for user '.$user->id);
 			return $this->return_error('home', 'Error saving distribution');
@@ -198,6 +218,7 @@ class DistributeController extends Controller {
 			$tx->distribution_id = $id;
 			$tx->destination = $row['address'];
 			$tx->quantity = $row['amount'];
+			$tx->folding_credit = $list_new_credits[$row['address']];
 			$tx->save();
 		}
 		
@@ -214,13 +235,19 @@ class DistributeController extends Controller {
 	public function getDetails($address)
 	{
 		$user = Auth::user();
-		if(!$user){
-			return Redirect::route('account.auth');
+
+		$distro = Distro::where('deposit_address', $address)->first();
+
+        //Only allow public view if distribution is completed
+        if(!$user && !$distro->complete){
+            return Redirect::route('account.auth');
+        }
+
+		//Only allow public view if distribution is completed
+		if(!$distro && !$distro->complete){
+            return $this->return_error('home', 'Distribution not found');
 		}
-		$distro = Distro::where('deposit_address', $address)->where('user_id', $user->id)->first();
-		if(!$distro){
-			return $this->return_error('home', 'Distribution not found');
-		}
+
         $extra = json_decode($distro->extra, true);
 		
 		$address_list = DistroTx::where('distribution_id', $distro->id)->orderBy('quantity', 'desc')->get();
@@ -489,5 +516,16 @@ class DistributeController extends Controller {
              }
          }
          return Response::json($output);
+    }
+
+    function getDistributionsHistory()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+
+        $distros = Distro::where('complete', 1)->get();
+        if(!$distros){
+            return $this->return_error('home', 'Distribution not found');
+        }
+        return view('distribute.public_history', array('user' => $user, 'distros' => $distros));
     }
 }

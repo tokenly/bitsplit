@@ -196,7 +196,7 @@ class Distribution extends Model
             });
         }
     }
-    
+
     public static function processAddressList($list, $value_type, $csv = false, $cut_csv_head = false)
     {
 		$xchain = xchain();

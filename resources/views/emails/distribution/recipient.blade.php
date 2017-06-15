@@ -11,7 +11,7 @@
     @foreach($notify_data['txs'] as $tx)
         <li>
             {{ rtrim(rtrim(number_format($tx->quantity/100000000,8),"0"),".") }} {{ $distro->asset }} to 
-            <a href="https://blockscan.com/address/{{ $tx->destination }}">{{ $tx->destination }}</a>
+            <a href="https://xchain.io/address/{{ $tx->destination }}">{{ $tx->destination }}</a>
             <br>
             TX ID: <a href="https://blocktrail.com/BTC/tx/{{ $tx->txid }}">{{ $tx->txid }}</a>
         </li>

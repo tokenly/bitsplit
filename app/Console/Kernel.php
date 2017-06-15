@@ -32,7 +32,9 @@ class Kernel extends ConsoleKernel
          Commands\ShowBalances::class,
          Commands\ResendWebhook::class,
          Commands\CloneDistro::class,
-         Commands\EstimateFuelCost::class,
+        Commands\EstimateFuelCost::class,
+        Commands\DownloadFoldingStats::class,
+        Commands\SaveStats::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
@@ -47,5 +49,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('bitsplit:distribute')->everyMinute();
+         $schedule->command('bitsplit:stats')->daily();
+         $schedule->command('bitsplit:save_stats')->daily();
     }
 }
