@@ -88,15 +88,15 @@ class DistributeController extends Controller {
             return $this->return_error('home', 'Folding end date should be set after the start');
         }
 
-        $folding_start_date = date("Y-m-d", strtotime($input['folding_start_date']));
-        $folding_end_date = date("Y-m-d", strtotime($input['folding_end_date']));
+        $folding_start_date = date("Y-m-d", strtotime($input['folding_start_date'])).' 00:00:00';
+        $folding_end_date = date("Y-m-d", strtotime($input['folding_end_date'])).' 23:59:59';
 		//build address list
         $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
                                                         ->where(function ($query) use ($input) {
                                                             $query->where('reward_token', 'ALL')
                                                                 ->orWhere('reward_token',  $input['asset']);
                                                         } )->get();
-
+        
         if($folding_address_list->isEmpty()) {
             return $this->return_error('home', 'No results on selected Folding dates range, please choose another.');
         }
