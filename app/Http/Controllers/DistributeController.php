@@ -519,7 +519,7 @@ class DistributeController extends Controller {
     {
         $user = \Illuminate\Support\Facades\Auth::user();
 
-        $distros = Distro::where('complete', 1)->get();
+        $distros = Distro::where('complete', 1)->paginate(35);
         if(!$distros){
             return $this->return_error('home', 'Distribution not found');
         }

@@ -99,13 +99,8 @@
                     </tbody>
                 </table>
             @endif
-            <ul class="pagination">
-                <li class="disabled"><span>«</span></li>
-                <li class="active"><span>1</span></li>
-                <li><a href="{{ URL::route('distribute.history',['page'=>'2']) }}">2</a></li>
-                <li class="disabled"><span>...</span></li>
-                <li><a href="{{ URL::route('distribute.history',['page'=>'2']) }}" rel="next">»</a></li>
-            </ul>
+            {{ $distros->links() }}
+
         </div>
     </div>
 @endsection
