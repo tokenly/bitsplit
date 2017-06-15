@@ -8,7 +8,13 @@
 			<h3>{{ $distro->label }}</h3>
 		@endif
 		<p>
-			<a href="{{ route('home') }}"><i class="fa fa-mail-reply"></i> Go Back</a>
+			@if (Request::url() === url()->previous() AND $user)
+				<a href="{{ route('home') }}"><i class="fa fa-mail-reply"></i> Go Back</a>
+			@elseif(Request::url() === url()->previous() AND !$user)
+				<a href="{{ route('distribute.history') }}"><i class="fa fa-mail-reply"></i> Go Back</a>
+			@else
+				<a href="{{ url()->previous() }}"><i class="fa fa-mail-reply"></i> Go Back</a>
+			@endif
 		</p>
 		<h4>Details &amp; Status</h4>
 		<form action="{{ route('distribute.details.update', $distro->deposit_address) }}" method="post" enctype="multipart/form-data">
