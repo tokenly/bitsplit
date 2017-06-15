@@ -196,7 +196,6 @@ class DistributeController extends Controller {
         $num_tx = count($address_list);
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
         $distro->fee_total = $fee_total;
-        $distro->fee_total = 12;
         // save
 		$save = $distro->save();
 
