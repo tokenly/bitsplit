@@ -2,26 +2,19 @@
 
 @section('content')
     
-	<p class="pull-right">
-		<a href="https://tokenly.com" target="_blank" class="small-tokenly"><img src="{{ asset('img/Tokenly_Logo_BorderlessA_ldpi.png') }}" alt=""></a>
+	<p class="pull-right" style="text-align: right;">
+		<a href="https://tokenly.com" target="_blank" class="small-tokenly"><img src="{{ asset('img/Tokenly_Logo_BorderlessA_ldpi.png') }}" alt=""></a><br>
+        <a href="http://foldingcoin.net" target="_blank"><img src="http://foldingcoin.net/wp/wp-content/uploads/2016/01/FLDC-Banner2.png" alt=""  style="width: 200px;"></a>
 	</p>	
-    <h1>Bitsplit</h1>
+    <h1>Bitsplit - FLDC edition</h1>
     <div class="row">
         <div class="col col-lg-6">
             <h2>Token Distribution</h2>
             <p>
-                Ever need to get your crypto tokens into the hands of 100's or 1000's of users,
-                without spending your life manually sending each transaction from your wallet?<br>
-                Enter the token distributor, a forwarding service which allows
-                you to make a single transaction, walk away and receive an email notification
-                when your entire distribution list has received their tokens. 
+                Use this service to distribute Counterparty tokens to participating Folding@Home users based on their folding contributions.
             </p>
             <p>
                 <a href="{{ route('home') }}" class="btn btn-lg btn-success"><i class="fa fa-rocket"></i> Get Started</a>
-            </p>
-            <h2>Payment Routing</h2>
-            <p>
-                Coming soon...
             </p>
         </div>
     </div>

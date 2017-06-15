@@ -31,13 +31,18 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a href="{{ URL::to('/') }}" class="navbar-brand"><!--<img src="" alt="" /> --> <strong><i class="fa fa-code-fork"></i> BitSplit</strong></a>
+		  <a href="{{ URL::to('/') }}" class="navbar-brand"><img src="http://foldingcoin.net/wp/wp-content/uploads/2016/01/FLDC.jpg" alt=""
+          style="
+    width: 25px;
+    margin-right: 10px;
+    margin-top: -2px;
+    float: left;"          
+           /> <strong>BitSplit - FLDC</strong></a>
 		</div>
 		<nav class="collapse navbar-collapse" role="navigation">
 		  <ul class="nav navbar-nav">
 			  <li><a href="{{ URL::to('/') }}"><i class="fa fa-home"></i> Home</a></li>
-				<li><a href="https://github.com/tokenly/bitsplit" target="_blank"><i class="fa fa-github-alt"></i> Github</a></li>
-				<li><a href="http://tokenly.com" target="_blank"><i class="fa fa-globe"></i> Tokenly</a></li>
+				<li><a href="http://foldingcoin.net/" target="_blank"><i class="fa fa-globe"></i> FoldingCoin</a></li>
 			@if (Auth::guest())
 				<li><a href="{{ route('account.authorize') }}"><i class="fa fa-user"></i> Login/Register</a></li>
 			@else
@@ -71,7 +76,8 @@
 			<div class="col-md-12">
 				<div class="footer text-center">
 					<small class="tagline">
-						&copy; {{ date('Y') }} Tokenly
+                        Powered by <a href="https://tokenly.com" target="_blank">Tokenly</a><br>
+						&copy; {{ date('Y') }} FoldingCoin
 					</small>
 				</div>
 			</div>

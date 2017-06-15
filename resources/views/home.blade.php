@@ -3,16 +3,10 @@
 @section('content')
 <div class="row">
 	<div class="col-lg-6">
-		<h1>Bitsplit - Distribute Tokens</h1>
-		<p>
-			Use this tool to mass distribute Counterparty tokens to many addresses. <br>
-			Enter in your token name to pay with and either upload a .csv file, or manually
-			enter in addresses in the following format:
-		</p>
-		<blockquote style="font-size: 14px;">
-			&lt;Bitcoin Address&gt;, &lt;Amount&gt;<br>
-			<small>(one per line) </small>
-		</blockquote>
+		<h1>Distribute Tokens</h1>
+        <p>
+            Use this tool to distribute Counterparty tokens to participating Folding@Home users based on their folding contributions in the given time period. 
+        </p>
 		<p>
 			A deposit address will be generated for you along with a total amount of tokens + 
 			total amount of <em>fuel</em> (bitcoin) it will cost. Fuel can be paid directly, 
@@ -24,9 +18,7 @@
             If your distribution is time sensitive at all, please make sure to double check that your miner fee rate
             is set appropriately, otherwise you may be stuck with a several day wait time.<br>
             You can use <a href="https://bitcoinfees.21.co/" target="_blank">https://bitcoinfees.21.co/</a> to help
-            with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.<br>
-            
-            This will be the status quo at least until bitcoin hard forks to a larger block size.
+            with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.
         </p>
 		<hr>
 		<div id="new-distro-form">
@@ -45,12 +37,13 @@
 					<label for="use_fuel" style="padding-left: 35px; font-size: 13px;" >Use available fuel for BTC fee?</label>
 				</div>				
 				<div class="form-group">
-					<label for="btc_dust_override">Custom BTC Dust Size</label>
-					<input type="text" class="form-control" id="btc_dust_override" name="btc_dust_override" placeholder="0.00005430" />
-					<small>
-						* This is an advanced feature.  Enter a value here to override the standard dust size of 0.00005430 BTC.
-					</small>
-				</div>	
+					<label for="folding_start_date">Folding Start Date</label>
+					<input type="text" id="folding_start_date" name="folding_start_date" class="form-control datetimepicker_folding" />
+                </div>
+                <div class="form-group">
+					<label for="folding_end_date">Folding End Date</label>
+					<input type="text" id="folding_end_date" name="folding_end_date" class="form-control datetimepicker_folding" />
+				</div>  
 				<div class="form-group">
 					<label for="btc_fee_rate">Custom Miner Fee Rate</label>
 					<input type="text" class="form-control" id="btc_fee_rate" name="btc_fee_rate" placeholder="{{ Config::get('settings.miner_satoshi_per_byte') }}" />
@@ -60,11 +53,12 @@
 					</small>
 				</div>
 				<div class="form-group">
-					<label for="folding_start_date">Folding Start Date</label>
-					<input type="text" id="folding_start_date" name="folding_start_date" class="form-control datetimepicker_folding" />
-					<label for="folding_end_date">Folding End Date</label>
-					<input type="text" id="folding_end_date" name="folding_end_date" class="form-control datetimepicker_folding" />
-				</div>
+					<label for="btc_dust_override">Custom BTC Dust Size</label>
+					<input type="text" class="form-control" id="btc_dust_override" name="btc_dust_override" placeholder="0.00005430" />
+					<small>
+						* This is an advanced feature.  Enter a value here to override the standard dust size of 0.00005430 BTC.
+					</small>
+				</div>	
 				<div class="form-submit">
 					<button type="submit" class="btn btn-lg btn-success"><i class="fa fa-check"></i> Initiate Distribution</button>
 				</div>															
