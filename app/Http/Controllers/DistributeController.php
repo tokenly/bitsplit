@@ -129,10 +129,7 @@ class DistributeController extends Controller {
         }
 		$address_list = $get_list;
 
-
-		$min_addresses = Config::get('settings.min_distribution_addresses');
-
-			//figure out total to send
+        //figure out total to send
 		$asset_total = 0;
 		if($value_type == 'percent'){
 			$use_total = false;
