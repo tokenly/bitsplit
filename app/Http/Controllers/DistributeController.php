@@ -109,12 +109,6 @@ class DistributeController extends Controller {
         $folding_list = array();
         $list_new_credits = array();
         foreach ($folding_address_list as $daily_folder) {
-            if(isset($folding_list[$daily_folder->bitcoin_address])) {
-                $folding_list[$daily_folder->bitcoin_address] += ($daily_folder->new_credit * 100) / $total;
-            } else {
-                $folding_list[$daily_folder->bitcoin_address] = ($daily_folder->new_credit * 100) / $total;
-            }
-
             //Array to store new credits for each address
             if(isset($list_new_credits[$daily_folder->bitcoin_address])) {
                 $list_new_credits[$daily_folder->bitcoin_address] += $daily_folder->new_credit;
@@ -122,6 +116,14 @@ class DistributeController extends Controller {
                 $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
             }
         }
+        
+        foreach($list_new_credits as $btc_address => $new_credit){
+            if($new_credit <= 0){
+                continue;
+            }
+            $folding_list[$btc_address] = ($new_credit / $total)*100;  
+        }
+
 
         $get_list = Distro::processAddressList($folding_list, $value_type);
 
