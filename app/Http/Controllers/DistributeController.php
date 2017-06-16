@@ -81,7 +81,8 @@ class DistributeController extends Controller {
         if(empty($input['folding_end_date'])) {
             return $this->return_error('home', 'Please enter a Folding End Date');
         }
-        if(strtotime($input['folding_start_date']) > time() || strtotime($input['folding_end_date']) > time()) {
+        $end_day_time = strtotime(date('Y-m-d').' 23:59:59');
+        if(strtotime($input['folding_start_date']) >  $end_day_time|| strtotime($input['folding_end_date']) > $end_day_time) {
             return $this->return_error('home', 'Both folding dates should be set before the current day');
         }
         if(strtotime($input['folding_start_date']) > strtotime($input['folding_end_date'])) {

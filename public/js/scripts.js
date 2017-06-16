@@ -222,12 +222,12 @@ $(document).ready(function(){
     //Folding dates
 
     $('#folding_start_date').datepicker({
-        maxDate: '-1D',
+        maxDate: '0D',
         onSelect: function() {
             $('#folding_end_date').datepicker('option', 'minDate', $(this).val());
         }
     })
     $('#folding_end_date').datepicker({
-        maxDate: '-1D',
+        maxDate: '0D',
     })
 });
