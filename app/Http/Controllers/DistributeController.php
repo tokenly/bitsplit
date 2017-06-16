@@ -185,7 +185,7 @@ class DistributeController extends Controller {
 		$distro->address_uuid = $address_uuid;
 		$distro->network = 'btc';
 		$distro->asset = $asset;
-		$distro->asset_total = $asset_total;
+		$distro->asset_total = (string)$asset_total;
         $distro->label = $label;
         $distro->use_fuel = $use_fuel;
 		$distro->btc_dust = $btc_dust_satoshis;
@@ -198,7 +198,7 @@ class DistributeController extends Controller {
         //estimate fees (AFTER btc_dust is set)
         $num_tx = count($address_list);
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
-        $distro->fee_total = $fee_total;
+        $distro->fee_total = (string)$fee_total;
         // save
 		$save = $distro->save();
 
