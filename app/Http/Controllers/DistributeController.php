@@ -213,8 +213,8 @@ class DistributeController extends Controller {
 			$tx = new DistroTx;
 			$tx->distribution_id = $id;
 			$tx->destination = $row['address'];
-			$tx->quantity = $row['amount'];
-			$tx->folding_credit = $list_new_credits[$row['address']];
+			$tx->quantity = (string)$row['amount'];
+			$tx->folding_credit = (string)$list_new_credits[$row['address']];
 			$tx->save();
 		}
 		
