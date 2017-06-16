@@ -13,6 +13,9 @@
 			or sourced from your account <em>fuel address</em>. Once confirmed, your tokens will enter
 			the distribution process.
 		</p>
+        <p>
+            <strong>Participating folders:</strong> {{ number_format(\App\Models\DailyFolder::countUniqueFolders()) }}
+        </p>
         <p class="text-danger">
             <strong>Attention:</strong> Transaction capacity on the Bitcoin network is at high levels of congestion.
             If your distribution is time sensitive at all, please make sure to double check that your miner fee rate
