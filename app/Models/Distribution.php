@@ -1,6 +1,7 @@
 <?php
 namespace Models;
 
+use App\Models\DailyFolder;
 use Illuminate\Database\Eloquent\Model;
 use DB, Mail, User, Log, Exception, Config;
 use Tokenly\TokenpassClient\TokenpassAPI;
@@ -353,6 +354,13 @@ class Distribution extends Model
         return $output;
     }
     
-    
+    public static function getFoldingAddressList($folding_start_date, $folding_end_date, $asset) {
+        $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
+            ->where(function ($query) use ($asset) {
+                $query->where('reward_token', 'ALL')
+                    ->orWhere('reward_token',  $asset);
+            } )->get();
+        return $folding_address_list;
+    }
     
 }
