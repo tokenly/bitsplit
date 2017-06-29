@@ -91,8 +91,10 @@ class DistributeController extends Controller {
 
         $folding_start_date = date("Y-m-d", strtotime($input['folding_start_date'])).' 00:00:00';
         $folding_end_date = date("Y-m-d", strtotime($input['folding_end_date'])).' 23:59:59';
+
+        $distribution_class = $input['distribution_class'];
 		//build address list
-        $folding_address_list = Distro::getFoldingAddressList($folding_start_date, $folding_end_date, $input['asset']);
+        $folding_address_list = Distro::getFoldingAddressList($folding_start_date, $folding_end_date, $input['asset'], $distribution_class, $input['minimum_fah_points']);
 
         if($folding_address_list->isEmpty()) {
             return $this->return_error('home', 'No results on selected Folding dates range, please choose another.');

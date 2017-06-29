@@ -354,12 +354,28 @@ class Distribution extends Model
         return $output;
     }
     
-    public static function getFoldingAddressList($folding_start_date, $folding_end_date, $asset) {
-        $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
-            ->where(function ($query) use ($asset) {
-                $query->where('reward_token', 'ALL')
-                    ->orWhere('reward_token',  $asset);
-            } )->get();
+    public static function getFoldingAddressList($folding_start_date, $folding_end_date, $asset, $distribution_class, $extra_num) {
+	    switch ($distribution_class) {
+            case 'All Folders':
+                $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
+                    ->where(function ($query) use ($asset) {
+                        $query->where('reward_token', 'ALL')
+                            ->orWhere('reward_token',  $asset);
+                    } )->get();
+                break;
+            case 'Minimum FAH points':
+                $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
+                    ->where(function ($query) use ($asset) {
+                        $query->where('reward_token', 'ALL')
+                            ->orWhere('reward_token',  $asset);
+                    } )
+                    ->where('new_credit', '>' , $extra_num)
+                    ->get();
+                break;
+            case '':
+
+                break;
+        }
         return $folding_address_list;
     }
     
