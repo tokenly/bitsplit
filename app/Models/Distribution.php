@@ -197,7 +197,7 @@ class Distribution extends Model
         }
     }
 
-    public static function processAddressList($list, $value_type, $csv = false, $cut_csv_head = false)
+    public static function processAddressList($list, $value_type, $csv = false, $cut_csv_head = false, $calculation_type = 'even')
     {
 		$xchain = xchain();
         $array = true;
@@ -264,7 +264,7 @@ class Distribution extends Model
                 if(!$address){
                     continue;
                 }
-				if($value_type == 'percent'){
+				if($value_type == 'percent' && $calculation_type === 'even'){
 					$amount = floatval($parse_row[1]) / 100;
 				}
 				else{

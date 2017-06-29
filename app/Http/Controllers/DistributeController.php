@@ -97,7 +97,7 @@ class DistributeController extends Controller {
                                                             $query->where('reward_token', 'ALL')
                                                                 ->orWhere('reward_token',  $input['asset']);
                                                         } )->get();
-        
+
         if($folding_address_list->isEmpty()) {
             return $this->return_error('home', 'No results on selected Folding dates range, please choose another.');
         }
@@ -106,6 +106,7 @@ class DistributeController extends Controller {
             $total += $daily_folder->new_credit;
         }
 
+        $calculation_type = $input['calculation_type'];
         $folding_list = array();
         $list_new_credits = array();
         foreach ($folding_address_list as $daily_folder) {
@@ -116,25 +117,35 @@ class DistributeController extends Controller {
                 $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
             }
         }
-        
-        foreach($list_new_credits as $btc_address => $new_credit){
-            if($new_credit <= 0){
-                continue;
+
+        if($calculation_type == 'even') {
+            foreach($list_new_credits as $btc_address => $new_credit){
+                if($new_credit <= 0){
+                    continue;
+                }
+                $folding_list[$btc_address] = ($new_credit / $total)*100;
             }
-            $folding_list[$btc_address] = ($new_credit / $total)*100;  
+        } else {
+            foreach($list_new_credits as $btc_address => $new_credit){
+                if($new_credit <= 0){
+                    continue;
+                }
+                $folding_list[$btc_address] = $input['asset_total'];
+            }
         }
 
 
-        $get_list = Distro::processAddressList($folding_list, $value_type);
+        $get_list = Distro::processAddressList($folding_list, $value_type, false, false, $input['asset_total']);
 
         if(!$get_list){
             return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
         }
 		$address_list = $get_list;
 
+
         //figure out total to send
 		$asset_total = 0;
-		if($value_type == 'percent'){
+		if($calculation_type === 'even'){
 			$use_total = false;
 			if(isset($input['asset_total'])){
 				if(!$getAsset['divisible']){
@@ -147,12 +158,8 @@ class DistributeController extends Controller {
 			}
 			$address_list = Distro::divideTotalBetweenList($address_list, $use_total);
 			$asset_total = $use_total;
-		}
-		else {
-			$asset_total = 0;
-			foreach($address_list as $row){
-				$asset_total += $row['amount'];
-			}
+		} else {
+            $asset_total = $input['asset_total'] * count($folding_list);
 		}
 		
 		//generate deposit address
@@ -194,6 +201,7 @@ class DistributeController extends Controller {
         $distro->folding_start_date = date("Y-m-d H:i:s", strtotime($input['folding_start_date']));
         $distro->folding_end_date = date("Y-m-d H:i:s", strtotime($input['folding_end_date']));
         $distro->label = $asset. ' - '.$input['asset_total'] . ' - '. date('Y/m/d');
+        $distro->calculation_type = $calculation_type;
 
         //estimate fees (AFTER btc_dust is set)
         $num_tx = count($address_list);
