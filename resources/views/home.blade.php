@@ -38,7 +38,14 @@
 				<div class="form-group checkbox">
 					<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="use_fuel" id="use_fuel" value="1" checked="checked" />
 					<label for="use_fuel" style="padding-left: 35px; font-size: 13px;" >Use available fuel for BTC fee?</label>
-				</div>				
+				</div>
+				<div class="form-group dropdown">
+					<label for="calculation_type">Calculation Type</label>
+					<select name="calculation_type" id="calculation_type" class="form-control">
+						<option value="even">Even</option>
+						<option value="static">Static</option>
+					</select>
+				</div>
 				<div class="form-group">
 					<label for="folding_start_date">Folding Start Date</label>
 					<input type="text" id="folding_start_date" name="folding_start_date" class="form-control datetimepicker_folding" />
