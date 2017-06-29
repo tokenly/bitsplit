@@ -66,7 +66,7 @@
 				<div id="amount_random_folders_wrapper" style="display: none;">
 					<div class="form-group">
 						<label for="amount_random_folders">Amount of Random Folders to Select</label>
-						<input type="number" min="3" name="amount_top_folders" id="amount_top_folders" class="form-control">
+						<input type="number" min="3" name="amount_random_folders" id="amount_random_folders" class="form-control">
 					</div>
 					<div class="form-group checkbox">
 						<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="weight_cache_by_fah" id="weight_cache_by_fah" value="1" />

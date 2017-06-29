@@ -354,7 +354,8 @@ class Distribution extends Model
         return $output;
     }
     
-    public static function getFoldingAddressList($folding_start_date, $folding_end_date, $asset, $distribution_class, $extra_num) {
+    public static function getFoldingAddressList($folding_start_date, $folding_end_date, $asset, $distribution_class, $extra) {
+	    //TODO: Make parameters less flexible by having named params instead on an "extra" array
 	    switch ($distribution_class) {
             case 'All Folders':
                 $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
@@ -365,15 +366,24 @@ class Distribution extends Model
                 break;
             case 'Minimum FAH points':
                 $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
-                    ->where(function ($query) use ($asset) {
+                    ->where(function ($query) use ($asset, $extra)  {
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
-                    ->where('new_credit', '>' , $extra_num)
+                    ->where('new_credit', '>' , $extra['minimum_fah_points'])
                     ->get();
                 break;
-            case '':
-
+            case 'Top Folders':
+                $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
+                    ->where(function ($query) use ($asset, $extra)  {
+                        $query->where('reward_token', 'ALL')
+                            ->orWhere('reward_token',  $asset);
+                    } )
+                    ->selectRaw('*, SUM(new_credit) AS new_credit')
+                    ->orderBy('new_credit', 'desc')
+                    ->groupBy('bitcoin_address')
+                    ->limit($extra['amount_top_folders'])
+                    ->get();
                 break;
         }
         return $folding_address_list;
