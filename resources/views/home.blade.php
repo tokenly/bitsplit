@@ -55,6 +55,18 @@
 						<option value="Random">Random</option>
 					</select>
 				</div>
+				<div id="minimum_fah_points_wrapper" class="form-group" style="display: none;">
+					<label for="minimum_fah_points">Minimum Required FAH Points (New credit)</label>
+					<input type="text" min="0" name="minimum_fah_points" id="minimum_fah_points" class="form-control">
+				</div>
+				<div id="amount_top_folders_wrapper" class="form-group" style="display: none;">
+					<label for="amount_top_folders">Amount of Top Folders to Select</label>
+					<input type="number" min="3" value="100" name="amount_top_folders" id="amount_top_folders" class="form-control">
+				</div>
+				<div id="amount_random_folders_wrapper" class="form-group" style="display: none;">
+					<label for="amount_random_folders">Amount of Random Folders to Select</label>
+					<input type="number" min="3" name="amount_top_folders" id="amount_top_folders" class="form-control">
+				</div>
 				<div class="form-group">
 					<label for="folding_start_date">Folding Start Date</label>
 					<input type="text" id="folding_start_date" name="folding_start_date" class="form-control datetimepicker_folding" />
