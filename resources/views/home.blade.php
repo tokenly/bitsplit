@@ -46,6 +46,15 @@
 						<option value="static">Static</option>
 					</select>
 				</div>
+				<div class="form-group dropdown">
+					<label for="distribution_class">Distribution Class</label>
+					<select name="distribution_class" id="distribution_class" class="form-control">
+						<option value="All Folders">All Folders</option>
+						<option value="Minimum FAH points">Minimum FAH points</option>
+						<option value="Top Folders">Top Folders</option>
+						<option value="Random">Random</option>
+					</select>
+				</div>
 				<div class="form-group">
 					<label for="folding_start_date">Folding Start Date</label>
 					<input type="text" id="folding_start_date" name="folding_start_date" class="form-control datetimepicker_folding" />
