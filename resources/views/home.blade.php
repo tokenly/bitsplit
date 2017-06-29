@@ -63,9 +63,15 @@
 					<label for="amount_top_folders">Amount of Top Folders to Select</label>
 					<input type="number" min="3" value="100" name="amount_top_folders" id="amount_top_folders" class="form-control">
 				</div>
-				<div id="amount_random_folders_wrapper" class="form-group" style="display: none;">
-					<label for="amount_random_folders">Amount of Random Folders to Select</label>
-					<input type="number" min="3" name="amount_top_folders" id="amount_top_folders" class="form-control">
+				<div id="amount_random_folders_wrapper" style="display: none;">
+					<div class="form-group">
+						<label for="amount_random_folders">Amount of Random Folders to Select</label>
+						<input type="number" min="3" name="amount_top_folders" id="amount_top_folders" class="form-control">
+					</div>
+					<div class="form-group checkbox">
+						<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="weight_cache_by_fah" id="weight_cache_by_fah" value="1" />
+						<label for="weight_cache_by_fah" style="padding-left: 35px; font-size: 13px;" >Weight chance by FAH points?</label>
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="folding_start_date">Folding Start Date</label>
