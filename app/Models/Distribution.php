@@ -385,6 +385,22 @@ class Distribution extends Model
                     ->limit($extra['amount_top_folders'])
                     ->get();
                 break;
+            case 'Random':
+                $query = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
+                    ->where(function ($query) use ($asset, $extra)  {
+                        $query->where('reward_token', 'ALL')
+                            ->orWhere('reward_token',  $asset);
+                    } )
+                    ->selectRaw('SUM(new_credit) AS new_credit')
+                    ->groupBy('bitcoin_address')
+                    ->limit($extra['amount_random_folders']);
+                if(isset($extra['weight_cache_by_fah']) && $extra['weight_cache_by_fah']) {
+                    $query->orderByRaw('-LOG(1.0 - RAND()) / new_credit'); //Get Random Weighted Rows
+                } else {
+                    $query->orderByRaw('RAND()'); //Get random rows
+                }
+                $folding_address_list = $query->get()->toArray();
+                break;
         }
         return $folding_address_list;
     }
