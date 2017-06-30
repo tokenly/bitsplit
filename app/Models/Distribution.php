@@ -372,7 +372,7 @@ class Distribution extends Model
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
-                    ->selectRaw('*, SUM(new_credit) AS new_credit')
+                    ->selectRaw('*, SUM(new_credit) AS new_credit, COUNT(DISTINCT username) AS total_users')
                     ->orderBy('new_credit', 'desc')
                     ->groupBy('bitcoin_address')
                     ->limit($extra['amount_top_folders'])
@@ -384,7 +384,7 @@ class Distribution extends Model
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
-                    ->selectRaw('*, SUM(new_credit) AS new_credit')
+                    ->selectRaw('*, SUM(new_credit) AS new_credit, COUNT(DISTINCT username) AS total_users')
                     ->groupBy('bitcoin_address')
                     ->limit($extra['amount_random_folders']);
                 if(isset($extra['weight_cache_by_fah']) && $extra['weight_cache_by_fah']) {

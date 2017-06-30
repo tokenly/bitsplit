@@ -105,12 +105,19 @@ class DistributeController extends Controller {
 
         $folding_list = array();
         $list_new_credits = array();
+
+        $total_folders = 0;
         foreach ($folding_address_list as $daily_folder) {
             //Array to store new credits for each address
             if(isset($list_new_credits[$daily_folder->bitcoin_address])) {
                 $list_new_credits[$daily_folder->bitcoin_address] += $daily_folder->new_credit;
             } else {
                 $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
+            }
+
+            //Store total folders
+            if(!empty($daily_folder->total_users)) {
+                $total_folders += $daily_folder->total_users;
             }
         }
 
@@ -198,8 +205,12 @@ class DistributeController extends Controller {
         $num_tx = count($address_list);
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
         $distro->fee_total = (string)$fee_total;
+
+
         $distro->distribution_class = $input['distribution_class'];
         $distro->calculation_type = ucfirst($calculation_type);
+        $distro->total_folders = $total_folders;
+
         // save
 		$save = $distro->save();
 
