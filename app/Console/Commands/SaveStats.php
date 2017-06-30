@@ -94,7 +94,7 @@ class SaveStats extends Command
                 $daily_folder->total_credit = $total_sum;
                 $daily_folder->team = $team_number;
                 $daily_folder->bitcoin_address = $bitcoin_address;
-                $daily_folder->reward_token = $reward_token;
+                $daily_folder->reward_token = strtoupper($reward_token);
                 $daily_folder->date = date("Y-m-d", strtotime($date));
                 $daily_folder->save();
             }
