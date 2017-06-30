@@ -205,6 +205,8 @@ class DistributeController extends Controller {
 
         $distro->distribution_class = $input['distribution_class'];
         $distro->calculation_type = ucfirst($calculation_type);
+
+        //Stats
         $distro->total_folders = $total_folders;
 
         // save

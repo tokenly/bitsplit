@@ -412,4 +412,8 @@ class Distribution extends Model
     function getAveragePointsAttribute() {
         return DistributionTx::where('distribution_id', $this->id)->avg('folding_credit');
     }
+
+    function getTokensPerPointAttribute() {
+	    return (1 * $this->asset_total) / $this->fah_points;
+    }
 }
