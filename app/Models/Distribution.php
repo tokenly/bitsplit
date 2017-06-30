@@ -391,7 +391,7 @@ class Distribution extends Model
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
-                    ->selectRaw('SUM(new_credit) AS new_credit')
+                    ->selectRaw('*, SUM(new_credit) AS new_credit')
                     ->groupBy('bitcoin_address')
                     ->limit($extra['amount_random_folders']);
                 if(isset($extra['weight_cache_by_fah']) && $extra['weight_cache_by_fah']) {
@@ -399,7 +399,7 @@ class Distribution extends Model
                 } else {
                     $query->orderByRaw('RAND()'); //Get random rows
                 }
-                $folding_address_list = $query->get()->toArray();
+                $folding_address_list = $query->get();
                 break;
         }
         return $folding_address_list;
