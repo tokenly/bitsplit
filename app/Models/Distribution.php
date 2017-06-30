@@ -367,7 +367,9 @@ class Distribution extends Model
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
-                    ->where('new_credit', '>' , $extra['minimum_fah_points'])
+                    ->selectRaw('*, SUM(new_credit) AS new_credit, COUNT(DISTINCT username) AS total_users')
+                    ->where('new_credit', '>=' , $extra['minimum_fah_points'])
+                    ->groupBy('bitcoin_address')
                     ->get();
                 break;
             case 'Top Folders':
