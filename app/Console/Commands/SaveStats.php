@@ -77,7 +77,7 @@ class SaveStats extends Command
                     if (count($arr) < 3) {
                         continue;
                     }
-                    $name = $arr[0];
+                    $username = $arr[0];
                     $reward_token = $arr[1];
                     $bitcoin_address = $arr[2];
                     if (!BitcoinLib::validate_address($bitcoin_address)) {
@@ -96,6 +96,7 @@ class SaveStats extends Command
                 $daily_folder->bitcoin_address = $bitcoin_address;
                 $daily_folder->reward_token = strtoupper($reward_token);
                 $daily_folder->date = date("Y-m-d", strtotime($date));
+                $daily_folder->username = $username;
                 $daily_folder->save();
             }
         }
