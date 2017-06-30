@@ -157,7 +157,7 @@
 				<thead>
 					<th>Address</th>
 					<th>Quantity</th>
-					<th>Folding Credit</th>
+					<th>F@H Points</th>
 					<th>TX</th>
 				</thead>
 				<tbody>
