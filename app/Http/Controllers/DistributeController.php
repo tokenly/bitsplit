@@ -128,12 +128,6 @@ class DistributeController extends Controller {
             $folding_list[$btc_address] = ($new_credit / $total)*100;
         }
 
-        //TODO: Remove debugging lines
-        /*
-        if($total_folders === 0)
-            die('bad');
-        else
-            die('good'); */
         $get_list = Distro::processAddressList($folding_list, $value_type);
 
         if(!$get_list){

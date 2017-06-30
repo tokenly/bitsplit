@@ -405,7 +405,10 @@ class Distribution extends Model
                     ->where(function ($query) use ($asset) {
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
-                    } )->get();
+                    })
+                    ->selectRaw('*, SUM(new_credit) AS new_credit, COUNT(DISTINCT username) AS total_users')
+                    ->groupBy('bitcoin_address')
+                    ->get();
                 break;
         }
         return $folding_address_list;
