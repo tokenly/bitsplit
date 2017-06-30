@@ -111,6 +111,9 @@
 			@if(!empty($distro->distribution_class))
 				<li><strong>Distribution Class:</strong> {{ $distro->distribution_class }} </li>
 			@endif
+			@if(!empty($distro->calculation_type))
+				<li><strong>Calculation Type:</strong> {{ $distro->calculation_type }} </li>
+			@endif
 			<li><strong>Date Created:</strong> {{ date('F j\, Y \a\t g:i A', strtotime($distro->created_at)) }} </li>
 			<li><strong>Last Updated:</strong> <span id="distro-{{ $distro->id }}-last-update">{{ date('F j\, Y \a\t g:i A', strtotime($distro->updated_at)) }}</span></li>
 			<li><strong>Folding Start Date:</strong> <span id="distro-{{ $distro->id }}-last-update">{{ date('F j\, Y', strtotime($distro->folding_start_date)) }}</span></li>

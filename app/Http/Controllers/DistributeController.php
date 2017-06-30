@@ -199,6 +199,7 @@ class DistributeController extends Controller {
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
         $distro->fee_total = (string)$fee_total;
         $distro->distribution_class = $input['distribution_class'];
+        $distro->calculation_type = ucfirst($calculation_type);
         // save
 		$save = $distro->save();
 
