@@ -81,27 +81,81 @@ class APIController extends Controller
         }
         $asset = $getAsset['asset'];
          
-        //check value type
-        $value_type = 'fixed';
-        if(isset($input['value_type']) AND $input['value_type'] == 'percent'){
-            $value_type = 'percent';
-        }
- 
+        $value_type = 'percent';
+
         //figure out the list of addresses to send to
         if(!isset($input['address_list'])){
             $output['error'] = 'Address list required';
             return Response::json($output, 400);
-        }         
-        $address_list = Distro::processAddressList($input['address_list'], $value_type);
-		if(count($address_list) < $min_addresses){
-			$output['error'] = 'Please enter at least '.$min_addresses.' addresses to distribute to';
-            return Response::json($output, 400);
-		}
-        
-        
-		//figure out total to send
+        }
+
+        //Validate folding dates
+        if(empty($input['folding_start_date'])) {
+            return $this->return_error('home', 'Please enter a Folding Start Date');
+        }
+        if(empty($input['folding_end_date'])) {
+            return $this->return_error('home', 'Please enter a Folding End Date');
+        }
+        $end_day_time = strtotime(date('Y-m-d').' 23:59:59');
+        if(strtotime($input['folding_start_date']) >  $end_day_time|| strtotime($input['folding_end_date']) > $end_day_time) {
+            return $this->return_error('home', 'Both folding dates should be set before the current day');
+        }
+        if(strtotime($input['folding_start_date']) > strtotime($input['folding_end_date'])) {
+            return $this->return_error('home', 'Folding end date should be set after the start');
+        }
+
+        $folding_start_date = date("Y-m-d", strtotime($input['folding_start_date'])).' 00:00:00';
+        $folding_end_date = date("Y-m-d", strtotime($input['folding_end_date'])).' 23:59:59';
+
+        $distribution_class = $input['distribution_class'];
+
+
+        //TODO: Ask for permission to edit docs
+        $folding_address_list = Distro::getFoldingAddressList($folding_start_date, $folding_end_date, $input['asset'], $distribution_class, $input);
+
+        $total = 0;
+        foreach ($folding_address_list as $daily_folder) {
+            $total += $daily_folder->new_credit;
+        }
+
+        $folding_list = array();
+        $list_new_credits = array();
+
+        $total_folders = 0;
+        foreach ($folding_address_list as $daily_folder) {
+            //Array to store new credits for each address
+            if(isset($list_new_credits[$daily_folder->bitcoin_address])) {
+                $list_new_credits[$daily_folder->bitcoin_address] += $daily_folder->new_credit;
+            } else {
+                $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
+            }
+
+            //Store total folders
+            if(!empty($daily_folder->total_users)) {
+                $total_folders += $daily_folder->total_users;
+            }
+        }
+
+        foreach($list_new_credits as $btc_address => $new_credit){
+            if($new_credit <= 0){
+                continue;
+            }
+            $folding_list[$btc_address] = ($new_credit / $total)*100;
+        }
+
+
+        $get_list = Distro::processAddressList($folding_list, $value_type);
+
+        if(!$get_list){
+            return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
+        }
+
+        $address_list = $get_list;
+        $calculation_type = $input['calculation_type'];
+
+        //figure out total to send
 		$asset_total = 0;
-		if($value_type == 'percent'){
+		if($calculation_type == 'even'){
 			$use_total = false;
 			if(isset($input['asset_total'])){
 				if(!$getAsset['divisible']){
@@ -121,11 +175,9 @@ class APIController extends Controller
 			$asset_total = $use_total;
 		}
 		else{
-			$asset_total = 0;
-			foreach($address_list as $row){
-				$asset_total += $row['amount'];
-			}
-		}
+            $asset_total = $input['asset_total'] * count($address_list);
+
+        }
         
         //check for custom label
         $label = '';
@@ -200,12 +252,14 @@ class APIController extends Controller
 		$distro->network = 'btc';
 		$distro->asset = $asset;
 		$distro->asset_total = $asset_total;
-		$distro->label = $label;
 		$distro->use_fuel = $use_fuel;
         $distro->webhook = $webhook;
         $distro->hold = $hold;
         $distro->uuid = Uuid::uuid4()->toString();
         $distro->fee_rate = $btc_fee_rate;
+        $distro->folding_start_date = date("Y-m-d H:i:s", strtotime($input['folding_start_date']));
+        $distro->folding_end_date = date("Y-m-d H:i:s", strtotime($input['folding_end_date']));
+        $distro->label = $asset. ' - '.$input['asset_total'] . ' - '. date('Y/m/d');
         
         if(isset($btc_dust)){
             $distro->btc_dust = $btc_dust;
@@ -216,6 +270,12 @@ class APIController extends Controller
         $num_tx = count($address_list);
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
         $distro->fee_total = $fee_total;
+
+        $distro->distribution_class = $input['distribution_class'];
+        $distro->calculation_type = ucfirst($calculation_type);
+
+        //Stats
+        $distro->total_folders = $total_folders;
 
         // save the distribution
 		$save = $distro->save();
@@ -236,7 +296,8 @@ class APIController extends Controller
 			$tx->distribution_id = $id;
 			$tx->destination = $row['address'];
 			$tx->quantity = $row['amount'];
-			$tx->save();
+            $tx->folding_credit = (string)$list_new_credits[$row['address']];
+            $tx->save();
 		}
 		
 		//run through initialization stage immediately
