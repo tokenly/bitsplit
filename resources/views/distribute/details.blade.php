@@ -45,6 +45,9 @@
 			<li>
 				<strong>Total FAH points:</strong> {{ $distro->fah_points }}
 			</li>
+			<li>
+				<strong>Average FAH points per folder:</strong> {{ $distro->average_points }}
+			</li>
 			@if($distro->fee_rate != null)
 			<li>
 				<strong>Miner Fee Rate:</strong> {{ $distro->fee_rate }} satoshis per byte

@@ -408,4 +408,8 @@ class Distribution extends Model
     function getFahPointsAttribute() {
         return DistributionTx::where('distribution_id', $this->id)->sum('folding_credit');
     }
+
+    function getAveragePointsAttribute() {
+        return DistributionTx::where('distribution_id', $this->id)->avg('folding_credit');
+    }
 }
