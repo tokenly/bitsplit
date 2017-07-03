@@ -51,10 +51,9 @@
 			<li>
 				<strong>Amount of tokens per FAH point:</strong> {{ $distro->tokens_per_point }}
 			</li>
-			<?php $participating_folders = $distro->total_folders ?>
-			@if(!empty($participating_folders))
+			@if(!empty($distro->total_folders))
 				<li>
-					<strong>Total number of participating folders:</strong> {{ $participating_folders }}
+					<strong>Total number of participating folders:</strong> {{ $distro->total_folders }}
 				</li>
 			@endif
 			<li>

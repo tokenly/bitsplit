@@ -127,15 +127,15 @@ class DistributeController extends Controller {
             }
             $folding_list[$btc_address] = ($new_credit / $total)*100;
         }
+        $calculation_type = $input['calculation_type'];
 
-        $get_list = Distro::processAddressList($folding_list, $value_type);
+        $get_list = Distro::processAddressList($folding_list, $value_type, false,false, $calculation_type);
 
         if(!$get_list){
             return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
         }
 		$address_list = $get_list;
 
-        $calculation_type = $input['calculation_type'];
 
         //figure out total to send
 		$asset_total = 0;

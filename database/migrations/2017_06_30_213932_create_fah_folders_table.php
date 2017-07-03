@@ -19,7 +19,6 @@ class CreateFahFoldersTable extends Migration
             $table->bigInteger('new_credit');
             $table->bigInteger('total_credit');
             $table->integer('team');
-            $table->date('date');
             $table->timestamps();
         });
     }
