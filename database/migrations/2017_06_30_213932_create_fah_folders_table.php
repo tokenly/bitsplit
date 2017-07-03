@@ -16,6 +16,7 @@ class CreateFahFoldersTable extends Migration
         Schema::create('fah_folders', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->bigInteger('new_credit');
             $table->bigInteger('total_credit');
             $table->integer('team');
             $table->date('date');

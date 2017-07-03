@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\DailyFolder;
+use App\Models\FAHFolder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use BitWasp\BitcoinLib\BitcoinLib;
@@ -59,16 +60,22 @@ class SaveStats extends Command
             }
             $stats = storage_path('dailyfolders/' . $filename);
             $fp = fopen($stats,'r');
+            $i = 0;
             while ( !feof($fp) ) {
+                $i++;
                 $line = fgets($fp, 2048);
                 $data = str_getcsv($line, "\t");
                 if (count($data) < 2) {
                     continue;
                 }
+                //Skip header rows
+                if($i < 3) { continue; }
+                var_dump($data);
                 $username = $data[0];
                 $newcredit = $data[1];
                 $total_sum = $data[2];
                 $team_number = $data[3];
+                $this->storeFahFolder($username, $newcredit, $total_sum, $team_number, $date);
                 if ($team_number === 22628 && BitcoinLib::validate_address($username)) {
                     $bitcoin_address = $username;
                     $reward_token = 'FLDC';
@@ -100,5 +107,20 @@ class SaveStats extends Command
                 $daily_folder->save();
             }
         }
+    }
+
+    protected function storeFahFolder($name, $newcredit, $totalcredit, $team, $date) {
+        $fah_folder = FAHFolder::where('team', $team)->where('name', $name)
+            ->where('date', date("Y-m-d", strtotime($date)))
+            ->first();
+        if(!$fah_folder) {
+            $fah_folder = new FAHFolder;
+        }
+        $fah_folder->name = $name;
+        $fah_folder->new_credit = $newcredit;
+        $fah_folder->total_credit = $totalcredit;
+        $fah_folder->team = $team;
+        $fah_folder->date = date("Y-m-d", strtotime($date));
+        $fah_folder->save();
     }
 }
