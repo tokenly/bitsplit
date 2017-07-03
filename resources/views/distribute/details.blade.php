@@ -51,11 +51,14 @@
 			<li>
 				<strong>Amount of tokens per FAH point:</strong> {{ $distro->tokens_per_point }}
 			</li>
+			<?php $participating_folders = $distro->total_folders ?>
+			@if(!empty($participating_folders))
+				<li>
+					<strong>Total number of participating folders:</strong> {{ $participating_folders }}
+				</li>
+			@endif
 			<li>
-				<strong>Total number of participating folders:</strong> {{ $distro->total_folders }}
-			</li>
-			<li>
-					<strong>Percentage of FAH network:</strong> {{ $distro->percentage_fah_network }}%
+				<strong>Percentage of FAH network:</strong> {{ $distro->percentage_fah_network }}%
 			</li>
 			@if($distro->fee_rate != null)
 			<li>
