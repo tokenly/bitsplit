@@ -430,6 +430,9 @@ class Distribution extends Model
     function getPercentageFahNetworkAttribute() {
 	    $new_credit = $this->fah_points;
 	    $total_credit = FAHFolder::sum('new_credit');
+	    if($total_credit == 0) {
+	        return 0;
+        }
 	    return bcdiv(($new_credit * 100) / $total_credit, 1, 2);
     }
 }

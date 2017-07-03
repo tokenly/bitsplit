@@ -70,7 +70,6 @@ class SaveStats extends Command
                 }
                 //Skip header rows
                 if($i < 3) { continue; }
-                var_dump($data);
                 $username = $data[0];
                 $newcredit = $data[1];
                 $total_sum = $data[2];
