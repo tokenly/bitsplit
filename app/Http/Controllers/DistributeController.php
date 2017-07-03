@@ -121,13 +121,23 @@ class DistributeController extends Controller {
             }
         }
 
-        foreach($list_new_credits as $btc_address => $new_credit){
-            if($new_credit <= 0){
-                continue;
-            }
-            $folding_list[$btc_address] = ($new_credit / $total)*100;
-        }
         $calculation_type = $input['calculation_type'];
+
+        if($calculation_type === 'even') {
+            foreach($list_new_credits as $btc_address => $new_credit){
+                if($new_credit <= 0){
+                    continue;
+                }
+                $folding_list[$btc_address] = ($new_credit / $total)*100;
+            }
+        } else {
+            foreach($list_new_credits as $btc_address => $new_credit){
+                if($new_credit <= 0){
+                    continue;
+                }
+                $folding_list[$btc_address] = $input['asset_total'];
+            }
+        }
 
         $get_list = Distro::processAddressList($folding_list, $value_type, false,false, $calculation_type);
 
