@@ -54,6 +54,9 @@
 			<li>
 				<strong>Total number of participating folders:</strong> {{ $distro->total_folders }}
 			</li>
+			<li>
+					<strong>Percentage of FAH network:</strong> {{ $distro->percentage_fah_network }}%
+			</li>
 			@if($distro->fee_rate != null)
 			<li>
 				<strong>Miner Fee Rate:</strong> {{ $distro->fee_rate }} satoshis per byte

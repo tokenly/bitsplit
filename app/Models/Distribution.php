@@ -2,6 +2,7 @@
 namespace Models;
 
 use App\Models\DailyFolder;
+use App\Models\FAHFolder;
 use Illuminate\Database\Eloquent\Model;
 use DB, Mail, User, Log, Exception, Config;
 use Tokenly\TokenpassClient\TokenpassAPI;
@@ -424,5 +425,11 @@ class Distribution extends Model
 
     function getTokensPerPointAttribute() {
 	    return (1 * $this->asset_total) / $this->fah_points;
+    }
+
+    function getPercentageFahNetworkAttribute() {
+	    $new_credit = $this->fah_points;
+	    $total_credit = FAHFolder::sum('new_credit');
+	    return bcdiv(($new_credit * 100) / $total_credit, 1, 2);
     }
 }

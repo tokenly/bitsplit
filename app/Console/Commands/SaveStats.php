@@ -75,7 +75,7 @@ class SaveStats extends Command
                 $newcredit = $data[1];
                 $total_sum = $data[2];
                 $team_number = $data[3];
-                $this->storeFahFolder($username, $newcredit, $total_sum, $team_number, $date);
+                $this->storeFahFolder($username, $newcredit, $total_sum, $team_number);
                 if ($team_number === 22628 && BitcoinLib::validate_address($username)) {
                     $bitcoin_address = $username;
                     $reward_token = 'FLDC';
@@ -109,10 +109,8 @@ class SaveStats extends Command
         }
     }
 
-    protected function storeFahFolder($name, $newcredit, $totalcredit, $team, $date) {
-        $fah_folder = FAHFolder::where('team', $team)->where('name', $name)
-            ->where('date', date("Y-m-d", strtotime($date)))
-            ->first();
+    protected function storeFahFolder($name, $newcredit, $totalcredit, $team) {
+        $fah_folder = FAHFolder::where('team', $team)->where('name', $name)->first();
         if(!$fah_folder) {
             $fah_folder = new FAHFolder;
         }
@@ -120,7 +118,6 @@ class SaveStats extends Command
         $fah_folder->new_credit = $newcredit;
         $fah_folder->total_credit = $totalcredit;
         $fah_folder->team = $team;
-        $fah_folder->date = date("Y-m-d", strtotime($date));
         $fah_folder->save();
     }
 }
