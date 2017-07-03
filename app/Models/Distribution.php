@@ -20,7 +20,7 @@ class Distribution extends Model
         'distribution_class', 'calculation_type'
         );
 
-    protected $appends = ['tokens_per_point', 'average_points', 'fah_points'];
+    protected $appends = ['tokens_per_point', 'average_points', 'fah_points', 'percentage_fah_network'];
 
 
     public static function getStageMap()
