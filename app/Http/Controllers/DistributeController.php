@@ -163,7 +163,8 @@ class DistributeController extends Controller {
 			$address_list = Distro::divideTotalBetweenList($address_list, $use_total);
 			$asset_total = $use_total;
 		} else {
-            $asset_total = $input['asset_total'] * count($address_list);
+            $use_total = intval(bcmul(trim($input['asset_total']), '100000000', '0'));
+            $asset_total = $use_total * count($address_list);
 		}
 
 		//generate deposit address

@@ -10,7 +10,7 @@ use Ramsey\Uuid\Uuid;
 
 class APIController extends Controller
 {
-    
+
     protected $signed_routes = array('api.distribute.create',
                                      'api.distribute.update',
                                      'api.distribute.delete'
@@ -80,37 +80,42 @@ class APIController extends Controller
             return Response::json($output, 400);
         }
         $asset = $getAsset['asset'];
-         
-        $value_type = 'percent';
 
-        //figure out the list of addresses to send to
-        if(!isset($input['address_list'])){
-            $output['error'] = 'Address list required';
-            return Response::json($output, 400);
-        }
+        $value_type = 'percent';
 
         //Validate folding dates
         if(empty($input['folding_start_date'])) {
-            return $this->return_error('home', 'Please enter a Folding Start Date');
+            $output['error'] = 'Please enter a Folding Start Date';
+            return Response::json($output, 400);
         }
         if(empty($input['folding_end_date'])) {
-            return $this->return_error('home', 'Please enter a Folding End Date');
+            $output['error'] = 'Please enter a Folding End Date';
+            return Response::json($output, 400);
         }
         $end_day_time = strtotime(date('Y-m-d').' 23:59:59');
         if(strtotime($input['folding_start_date']) >  $end_day_time|| strtotime($input['folding_end_date']) > $end_day_time) {
-            return $this->return_error('home', 'Both folding dates should be set before the current day');
+            $output['error'] = 'Both folding dates should be set before the current day';
+            return Response::json($output, 400);
         }
         if(strtotime($input['folding_start_date']) > strtotime($input['folding_end_date'])) {
-            return $this->return_error('home', 'Folding end date should be set after the start');
+            $output['error'] = 'Folding end date should be set after the start';
+            return Response::json($output, 400);
         }
 
         $folding_start_date = date("Y-m-d", strtotime($input['folding_start_date'])).' 00:00:00';
         $folding_end_date = date("Y-m-d", strtotime($input['folding_end_date'])).' 23:59:59';
 
+        if(empty($input['distribution_class'])) {
+            $output['error'] = 'Please enter a valid distribution class';
+            return Response::json($output, 400);
+        }
+
+        if(empty($input['asset_total'])) {
+            $output['error'] = 'Please set the Total asset';
+            return Response::json($output, 400);
+        }
         $distribution_class = $input['distribution_class'];
 
-
-        //TODO: Ask for permission to edit docs
         $folding_address_list = Distro::getFoldingAddressList($folding_start_date, $folding_end_date, $input['asset'], $distribution_class, $input);
 
         $total = 0;
@@ -136,19 +141,34 @@ class APIController extends Controller
             }
         }
 
-        foreach($list_new_credits as $btc_address => $new_credit){
-            if($new_credit <= 0){
-                continue;
-            }
-            $folding_list[$btc_address] = ($new_credit / $total)*100;
+        if(empty($input['calculation_type'])) {
+            $output['error'] = 'Please set a calculation type';
+            return Response::json($output, 400);
         }
 
         $calculation_type = $input['calculation_type'];
 
+        if($calculation_type === 'even') {
+            foreach ($list_new_credits as $btc_address => $new_credit) {
+                if ($new_credit <= 0) {
+                    continue;
+                }
+                $folding_list[$btc_address] = ($new_credit / $total) * 100;
+            }
+        } else {
+            foreach($list_new_credits as $btc_address => $new_credit){
+                if($new_credit <= 0){
+                    continue;
+                }
+                $folding_list[$btc_address] = $input['asset_total'];
+            }
+        }
+
         $get_list = Distro::processAddressList($folding_list, $value_type, false, false, $calculation_type);
 
         if(!$get_list){
-            return $this->return_error('home', 'Please enter a valid list of addresses and amounts');
+            $output['error'] = 'Please enter a valid list of addresses and amounts';
+            return Response::json($output, 400);
         }
 
         $address_list = $get_list;
@@ -175,10 +195,11 @@ class APIController extends Controller
 			$asset_total = $use_total;
 		}
 		else{
-            $asset_total = $input['asset_total'] * count($address_list);
+            $use_total = intval(bcmul(trim($input['asset_total']), '100000000', '0'));
+            $asset_total = $use_total * count($address_list);
 
         }
-        
+
         //check for custom label
         $label = '';
         if(isset($input['label'])){
