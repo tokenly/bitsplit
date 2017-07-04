@@ -424,6 +424,10 @@ class Distribution extends Model
     }
 
     function getTokensPerPointAttribute() {
+	    $fah_points = $this->fah_points;
+	    if(empty($fah_points)) {
+            return 0;
+	    }
 	    return $this->asset_total / $this->fah_points;
     }
 

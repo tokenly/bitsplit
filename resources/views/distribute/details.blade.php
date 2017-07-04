@@ -48,9 +48,12 @@
 			<li>
 				<strong>Average FAH points per folder:</strong> {{ $distro->average_points }}
 			</li>
-			<li>
-				<strong>Amount of tokens per FAH point:</strong> {{ $distro->tokens_per_point }}
-			</li>
+			<?php $tokens_per_point = $distro->tokens_per_point ?>
+			@if(!empty($tokens_per_point))
+				<li>
+					<strong>Amount of tokens per FAH point:</strong> {{ $tokens_per_point }}
+				</li>
+			@endif
 			@if(!empty($distro->total_folders))
 				<li>
 					<strong>Total number of participating folders:</strong> {{ $distro->total_folders }}
