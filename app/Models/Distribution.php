@@ -424,7 +424,7 @@ class Distribution extends Model
     }
 
     function getTokensPerPointAttribute() {
-	    return (1 * $this->asset_total) / $this->fah_points;
+	    return $this->asset_total / $this->fah_points;
     }
 
     function getPercentageFahNetworkAttribute() {
