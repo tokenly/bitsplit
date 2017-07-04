@@ -463,6 +463,15 @@ class DistributeController extends Controller {
 		$new->use_fuel = $distro->use_fuel;
 		$new->webhook = $distro->webhook;
         $new->uuid = Uuid::uuid4()->toString();
+
+        $new->folding_start_date = $distro->folding_start_date;
+        $new->folding_end_date = $distro->folding_end_date;
+
+        $new->distribution_class = $distro->distribution_class;
+        $new->calculation_type = $distro->calculation_type;
+        $new->total_folders = $distro->total_folders;
+
+
 		$save = $new->save();
 		
 		if(!$save){
@@ -474,7 +483,8 @@ class DistributeController extends Controller {
 				$tx = new DistroTx;
 				$tx->distribution_id = $id;
 				$tx->destination = $row->destination;
-				$tx->quantity = $row->quantity;
+                $tx->quantity = $row->quantity;
+                $tx->folding_credit = $row->folding_credit;
 				$tx->save();
 			}
 		}
