@@ -10,7 +10,7 @@ return array(
 	'min_distribution_confirms' => 2, //how long before accepting distribution deposits
 	'valid_fuel_tokens' => array('BTC' => 0, 'TOKENLY' => 5), //things you can use to pay your fuel with. # is in $$
 	'miner_fee' => 15000, //standard miner fee for basic transactions
-	'miner_satoshi_per_byte' => 250, //satoshis per to pay for miner fees
+	'miner_satoshi_per_byte' => 150, //satoshis per to pay for miner fees
     'min_fee_per_byte' => 50,
     'max_fee_per_byte' => 600,
 	'average_tx_bytes' => 300, //average btc transaction size
@@ -19,5 +19,5 @@ return array(
     'tx_extra_bytes' => 10,
     'xcp_tx_bytes' => 231,
     'auto_pump_stuck_distros' => false, //set to true to have 1 miner_fee pumped into a distribution if it gets stuck, set to false if this goes out of wack
-    'distribute_service_fee' => 2000, //amount of satoshis per address to tack on to their fee for service profit
+    'distribute_service_fee' => 0, //amount of satoshis per address to tack on to their fee for service profit
 );
