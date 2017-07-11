@@ -169,6 +169,8 @@ return [
 		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
         Tokenly\ConsulHealthDaemon\ServiceProvider\ConsulHealthDaemonServiceProvider::class,
         Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
+        Tokenly\FluentdLogger\FluentdLoggerServiceProvider::class,
+        Tokenly\PlatformAdmin\Provider\PlatformAdminServiceProvider::class,
 
 
     ],
