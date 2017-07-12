@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a80146180617624d1df14e98dd43b2a6",
+    "content-hash": "4253f9429e1ae484e9b31cfebdecdf17",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2744,16 +2744,16 @@
         },
         {
             "name": "tokenly/platform-admin",
-            "version": "v0.3.1",
+            "version": "v0.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/platform-admin.git",
-                "reference": "c9effb6f71b14a41ea2fc303c77f097898fb6aea"
+                "reference": "894f9711f03644ac47fae01c8f934af045895a03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/c9effb6f71b14a41ea2fc303c77f097898fb6aea",
-                "reference": "c9effb6f71b14a41ea2fc303c77f097898fb6aea",
+                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/894f9711f03644ac47fae01c8f934af045895a03",
+                "reference": "894f9711f03644ac47fae01c8f934af045895a03",
                 "shasum": ""
             },
             "require": {
@@ -2784,7 +2784,7 @@
                 }
             ],
             "description": "A platform administration module for Tokenly services",
-            "time": "2017-07-08T16:49:30+00:00"
+            "time": "2017-07-12T12:40:30+00:00"
         },
         {
             "name": "tokenly/token-generator",
@@ -3204,12 +3204,12 @@
             "version": "0.9.9",
             "source": {
                 "type": "git",
-                "url": "https://github.com/padraic/mockery.git",
+                "url": "https://github.com/mockery/mockery.git",
                 "reference": "6fdb61243844dc924071d3404bb23994ea0b6856"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/6fdb61243844dc924071d3404bb23994ea0b6856",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/6fdb61243844dc924071d3404bb23994ea0b6856",
                 "reference": "6fdb61243844dc924071d3404bb23994ea0b6856",
                 "shasum": ""
             },
