@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4253f9429e1ae484e9b31cfebdecdf17",
+    "content-hash": "9a8d3a6cb0b8d6e754c398ce27199524",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2744,16 +2744,16 @@
         },
         {
             "name": "tokenly/platform-admin",
-            "version": "v0.3.2",
+            "version": "v0.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/platform-admin.git",
-                "reference": "894f9711f03644ac47fae01c8f934af045895a03"
+                "reference": "1341a616075eef222ccdd00efaf05d1179590805"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/894f9711f03644ac47fae01c8f934af045895a03",
-                "reference": "894f9711f03644ac47fae01c8f934af045895a03",
+                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/1341a616075eef222ccdd00efaf05d1179590805",
+                "reference": "1341a616075eef222ccdd00efaf05d1179590805",
                 "shasum": ""
             },
             "require": {
@@ -2784,7 +2784,7 @@
                 }
             ],
             "description": "A platform administration module for Tokenly services",
-            "time": "2017-07-12T12:40:30+00:00"
+            "time": "2017-07-12T13:12:50+00:00"
         },
         {
             "name": "tokenly/token-generator",

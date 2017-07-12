@@ -25,7 +25,7 @@
         "tokenly/xcaller-client": "^0.3",
         "ramsey/uuid": "^3",
         "bitwasp/bitcoin-lib": "1.0.*",
-        "tokenly/platform-admin": "^0.3.2",
+        "tokenly/platform-admin": "^0.3.3",
         "tokenly/fluentd-logger": "^0.1.0"
     },
     "require-dev": {
