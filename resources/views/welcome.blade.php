@@ -4,7 +4,7 @@
     
 	<p class="pull-right" style="text-align: right;">
 		<a href="https://tokenly.com" target="_blank" class="small-tokenly"><img src="{{ asset('img/Tokenly_Logo_BorderlessA_ldpi.png') }}" alt=""></a><br>
-        <a href="http://foldingcoin.net" target="_blank"><img src="http://foldingcoin.net/wp/wp-content/uploads/2016/01/FLDC-Banner2.png" alt=""  style="width: 200px;"></a>
+        <a href="http://foldingcoin.net" target="_blank"><img src="{{ asset('img/fldc/FLDC-Banner2.png') }}" alt=""  style="width: 200px;"></a>
 	</p>	
     <h1>Bitsplit - FLDC edition</h1>
     <div class="row">

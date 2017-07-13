@@ -31,7 +31,7 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a href="{{ URL::to('/') }}" class="navbar-brand"><img src="http://foldingcoin.net/wp/wp-content/uploads/2016/01/FLDC.jpg" alt=""
+		  <a href="{{ URL::to('/') }}" class="navbar-brand"><img src="{{ asset('img/fldc/FLDC.jpg') }}" alt=""
           style="
     width: 25px;
     margin-right: 10px;
