@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "991d343a72361d4502616eeae30c9b5a",
+    "content-hash": "4e011a9c4c4587a2288323e20759e58b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2511,16 +2511,16 @@
         },
         {
             "name": "tokenly/fluentd-logger",
-            "version": "v0.1.0",
+            "version": "v0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/fluentd-logger.git",
-                "reference": "8fe07c7b2dfba6cc18989aeba429d558d4f674e3"
+                "reference": "91bcfaaf9fb98686ab695cbcb9edc74821c042f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/fluentd-logger/zipball/8fe07c7b2dfba6cc18989aeba429d558d4f674e3",
-                "reference": "8fe07c7b2dfba6cc18989aeba429d558d4f674e3",
+                "url": "https://api.github.com/repos/tokenly/fluentd-logger/zipball/91bcfaaf9fb98686ab695cbcb9edc74821c042f5",
+                "reference": "91bcfaaf9fb98686ab695cbcb9edc74821c042f5",
                 "shasum": ""
             },
             "require": {
@@ -2563,7 +2563,7 @@
                 "fluentd",
                 "logging"
             ],
-            "time": "2017-07-06T02:27:08+00:00"
+            "time": "2017-08-16T21:40:23+00:00"
         },
         {
             "name": "tokenly/hmac-auth",
@@ -2744,16 +2744,16 @@
         },
         {
             "name": "tokenly/platform-admin",
-            "version": "v0.4.0",
+            "version": "v0.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/platform-admin.git",
-                "reference": "d6033923979d4689c7c307589dfb76fe2bf19387"
+                "reference": "cb401df2b4dfc3ebba53929839540afed6763f70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/d6033923979d4689c7c307589dfb76fe2bf19387",
-                "reference": "d6033923979d4689c7c307589dfb76fe2bf19387",
+                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/cb401df2b4dfc3ebba53929839540afed6763f70",
+                "reference": "cb401df2b4dfc3ebba53929839540afed6763f70",
                 "shasum": ""
             },
             "require": {
@@ -2784,7 +2784,7 @@
                 }
             ],
             "description": "A platform administration module for Tokenly services",
-            "time": "2017-07-14T20:25:40+00:00"
+            "time": "2017-08-23T17:23:42+00:00"
         },
         {
             "name": "tokenly/token-generator",
