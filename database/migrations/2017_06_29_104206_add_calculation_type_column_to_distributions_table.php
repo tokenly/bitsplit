@@ -15,7 +15,7 @@ class AddCalculationTypeColumnToDistributionsTable extends Migration
     {
         Schema::table('distributions', function(Blueprint $table)
         {
-            $table->string('calculation_type');
+            $table->string('calculation_type')->nullable();
         });
     }
 

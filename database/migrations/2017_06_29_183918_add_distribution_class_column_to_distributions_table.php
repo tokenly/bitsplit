@@ -15,7 +15,7 @@ class AddDistributionClassColumnToDistributionsTable extends Migration
     {
         Schema::table('distributions', function(Blueprint $table)
         {
-            $table->string('distribution_class');
+            $table->string('distribution_class')->nullable();
         });
     }
 

@@ -15,7 +15,7 @@ class AddTotalFoldersToDistributionsTable extends Migration
     {
         Schema::table('distributions', function(Blueprint $table)
         {
-            $table->bigInteger('total_folders')->unsigned();
+            $table->bigInteger('total_folders')->nullable()->unsigned();
         });
     }
 

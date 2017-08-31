@@ -15,8 +15,8 @@ class AddFoldingDatesToDistributions extends Migration
     {
         Schema::table('distributions', function(Blueprint $table)
         {
-            $table->date('folding_start_date');
-            $table->date('folding_end_date');
+            $table->date('folding_start_date')->nullable();
+            $table->date('folding_end_date')->nullable();
         });
     }
 
