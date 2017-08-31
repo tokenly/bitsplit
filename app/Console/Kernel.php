@@ -49,7 +49,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('bitsplit:distribute')->everyMinute();
-         $schedule->command('bitsplit:stats')->daily();
-         $schedule->command('bitsplit:save_stats')->daily();
+         $schedule->command('bitsplit:stats')->dailyAt('03:00')->timezone('EST');
+         $schedule->command('bitsplit:save_stats')->dailyAt('03:00')->timezone('EST');
     }
 }
