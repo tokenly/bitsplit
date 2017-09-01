@@ -17,7 +17,7 @@
         "tokenly/laravel-event-log": "^1",
         "simplesoftwareio/simple-qrcode": "1.4.*",        
         "nesbot/carbon": "*",
-        "tokenly/laravel-api-provider": "^1.0.0-rc2",
+        "tokenly/laravel-api-provider": "^1.0.11",
         "tokenly/consul-health-daemon": "^0.2",
         "tokenly/bitcoin-currency-lib": "^1",
         "fideloper/proxy": "^3.1",
@@ -25,8 +25,9 @@
         "tokenly/xcaller-client": "^0.3",
         "ramsey/uuid": "^3",
         "bitwasp/bitcoin-lib": "1.0.*",
-        "tokenly/platform-admin": "^0.4.4",
-        "tokenly/fluentd-logger": "^0.2.2"
+        "tokenly/platform-admin": "^0.5.0",
+        "tokenly/fluentd-logger": "^0.2.2",
+        "laravelcollective/html": "^5.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

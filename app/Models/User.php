@@ -7,12 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Models\Distribution, Models\DistributionTx;
 use Tokenly\CurrencyLib\CurrencyUtil;
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract
+use Tokenly\LaravelApiProvider\Contracts\APIPermissionedUserContract;
+use Tokenly\LaravelApiProvider\Model\APIUser;
+use Tokenly\LaravelApiProvider\Model\Traits\Permissioned;
+class User extends APIUser implements AuthenticatableContract, CanResetPasswordContract, APIPermissionedUserContract
 {
 	use Authenticatable, CanResetPassword;
+    use Permissioned;
 	
 	protected $fillable = array('name','email','username','tokenly_uuid','oauth_token');
-	
+
 	public static $cur_user = false;
 	
 	public static function currentUser()

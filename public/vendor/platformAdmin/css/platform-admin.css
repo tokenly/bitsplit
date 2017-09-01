@@ -1,0 +1,65 @@
+header {
+    background: #888;
+    color: #F2F2F2;
+
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.error-panel, .info-panel {
+  padding: 3% 3%;
+
+  color: white;
+  border-radius: 6px;
+
+  margin-top: 1.8%;
+  margin-bottom: 1.8%;
+}
+
+.error-panel h5.heading, .info-panel h5.heading {
+  margin-bottom: 0.5rem;
+}
+
+.error-panel {
+  background-color: #a51515;
+}
+.info-panel {
+  background-color: #1eaedb;
+}
+
+nav > a {
+  display: inline-block;
+  margin: 0;
+
+  padding: 0.8% 1.3%;
+
+  color: #eee;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+nav > a:hover {
+  background-color: #333;
+  color: #f6f6f6;
+}
+
+nav > a.active {
+  background-color: #666;
+  color: #f6f6f6;
+}
+
+nav > a.brand {
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+
+.filter-active {
+    font-weight: bold;
+}
+
+.button-small {
+  height: 30px;
+  line-height: 30px;
+  padding: 0 14px;
+}
