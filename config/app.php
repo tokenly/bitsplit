@@ -171,6 +171,7 @@ return [
         Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
         Tokenly\FluentdLogger\FluentdLoggerServiceProvider::class,
         Tokenly\PlatformAdmin\Provider\PlatformAdminServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
 
 
     ],
@@ -221,6 +222,8 @@ return [
 		'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 		'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
 		'Input' => Illuminate\Support\Facades\Input::class,
+    
+        'Form' => Collective\Html\FormFacade::class,
     ],
 
 ];

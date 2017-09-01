@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e011a9c4c4587a2288323e20759e58b",
+    "content-hash": "a7fee17e41d58b457bd7a4d0e15fe390",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -683,6 +683,60 @@
                 "oauth"
             ],
             "time": "2017-05-05T14:17:11+00:00"
+        },
+        {
+            "name": "laravelcollective/html",
+            "version": "v5.4.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LaravelCollective/html.git",
+                "reference": "f04965dc688254f4c77f684ab0b42264f9eb9634"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/f04965dc688254f4c77f684ab0b42264f9eb9634",
+                "reference": "f04965dc688254f4c77f684ab0b42264f9eb9634",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "5.4.*",
+                "illuminate/routing": "5.4.*",
+                "illuminate/session": "5.4.*",
+                "illuminate/support": "5.4.*",
+                "illuminate/view": "5.4.*",
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "illuminate/database": "5.4.*",
+                "mockery/mockery": "~0.9.4",
+                "phpunit/phpunit": "~5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Collective\\Html\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                },
+                {
+                    "name": "Adam Engebretson",
+                    "email": "adam@laravelcollective.com"
+                }
+            ],
+            "description": "HTML and Form Builders for the Laravel Framework",
+            "homepage": "http://laravelcollective.com",
+            "time": "2017-08-12T15:52:38+00:00"
         },
         {
             "name": "league/flysystem",
@@ -2619,16 +2673,16 @@
         },
         {
             "name": "tokenly/laravel-api-provider",
-            "version": "v1.0.9",
+            "version": "v1.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/laravel-api-provider.git",
-                "reference": "6a39a15cd73a5a6731fac5a3b744186a15b6c857"
+                "reference": "412e171206c54171f85752661c98bb49927654cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/laravel-api-provider/zipball/6a39a15cd73a5a6731fac5a3b744186a15b6c857",
-                "reference": "6a39a15cd73a5a6731fac5a3b744186a15b6c857",
+                "url": "https://api.github.com/repos/tokenly/laravel-api-provider/zipball/412e171206c54171f85752661c98bb49927654cc",
+                "reference": "412e171206c54171f85752661c98bb49927654cc",
                 "shasum": ""
             },
             "require": {
@@ -2659,7 +2713,7 @@
                 }
             ],
             "description": "An API service provider for Laravel",
-            "time": "2017-05-03T13:02:09+00:00"
+            "time": "2017-09-01T15:16:40+00:00"
         },
         {
             "name": "tokenly/laravel-event-log",
@@ -2744,16 +2798,16 @@
         },
         {
             "name": "tokenly/platform-admin",
-            "version": "v0.4.4",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/platform-admin.git",
-                "reference": "cb401df2b4dfc3ebba53929839540afed6763f70"
+                "reference": "bdf31da6ef55bab9680805da3d4c1f62062e2ea5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/cb401df2b4dfc3ebba53929839540afed6763f70",
-                "reference": "cb401df2b4dfc3ebba53929839540afed6763f70",
+                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/bdf31da6ef55bab9680805da3d4c1f62062e2ea5",
+                "reference": "bdf31da6ef55bab9680805da3d4c1f62062e2ea5",
                 "shasum": ""
             },
             "require": {
@@ -2784,7 +2838,7 @@
                 }
             ],
             "description": "A platform administration module for Tokenly services",
-            "time": "2017-08-23T17:23:42+00:00"
+            "time": "2017-09-01T15:11:19+00:00"
         },
         {
             "name": "tokenly/token-generator",

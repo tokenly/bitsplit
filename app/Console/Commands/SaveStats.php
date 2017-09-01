@@ -4,9 +4,10 @@ namespace App\Console\Commands;
 
 use App\Models\DailyFolder;
 use App\Models\FAHFolder;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use BitWasp\BitcoinLib\BitcoinLib;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SaveStats extends Command
 {
@@ -41,6 +42,7 @@ class SaveStats extends Command
      */
     public function handle()
     {
+        Log::debug("Begin bitsplit:save_stats");
         if(!empty($this->argument('date'))) {
             $pre_dates = explode('-', $this->argument('date'));
             foreach ($pre_dates as $date) {
@@ -57,6 +59,8 @@ class SaveStats extends Command
         foreach ($dates as $date) {
             $this->removeFoldersFromDate($date);
 
+            Log::debug("bitsplit:save_stats begin processing $date");
+            $inserted_count = 0;
 
             $filename = $date .'.txt';
             if(!Storage::disk('dailyfolders')->exists($filename)) {
@@ -90,6 +94,7 @@ class SaveStats extends Command
                 $folders[] = $folder;
                 if($h >= 5000) {
                     FAHFolder::insert($folders);
+                    $inserted_count += count($folders);
                     $h = 0;
                     $folders = array();
                 }
@@ -124,8 +129,14 @@ class SaveStats extends Command
                 $daily_folder->save();
             }
             FAHFolder::insert($folders);
+            $inserted_count += count($folders);
             fclose($fp);
+
+            $folder_records_count = FAHFolder::count();
+            Log::debug("bitsplit:save_stats end processing $date.  Inserted $inserted_count folders.  There are $folder_records_count records in the database.");
         }
+
+        Log::debug("End bitsplit:save_stats");
     }
 
     protected function removeFoldersFromDate($date) {

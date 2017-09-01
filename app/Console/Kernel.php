@@ -13,29 +13,30 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-         Commands\Distribute::class,
-         Commands\PumpFuel::class,
-         Commands\RefreshFuelBalances::class,
-         Commands\NewAddress::class,
-         Commands\ListDistros::class,
-         Commands\MarkComplete::class,
-         Commands\GetDistro::class,
-         Commands\GetDistroTxList::class,
-         Commands\DeleteDistro::class,
-         Commands\DeleteDistroTx::class,
-         Commands\ResetDistroMonitor::class,
-         Commands\UpdateDistro::class,
-         Commands\UpdateDistroTx::class,
-         Commands\ListUsers::class,
-         Commands\GetUser::class,
-         Commands\SetAdmin::class,
-         Commands\ShowBalances::class,
-         Commands\ResendWebhook::class,
-         Commands\CloneDistro::class,
+        Commands\Distribute::class,
+        Commands\PumpFuel::class,
+        Commands\RefreshFuelBalances::class,
+        Commands\NewAddress::class,
+        Commands\ListDistros::class,
+        Commands\MarkComplete::class,
+        Commands\GetDistro::class,
+        Commands\GetDistroTxList::class,
+        Commands\DeleteDistro::class,
+        Commands\DeleteDistroTx::class,
+        Commands\ResetDistroMonitor::class,
+        Commands\UpdateDistro::class,
+        Commands\UpdateDistroTx::class,
+        Commands\ListUsers::class,
+        Commands\GetUser::class,
+        Commands\SetAdmin::class,
+        Commands\ShowBalances::class,
+        Commands\ResendWebhook::class,
+        Commands\CloneDistro::class,
         Commands\EstimateFuelCost::class,
         Commands\DownloadFoldingStats::class,
         Commands\SaveStats::class,
         Commands\SaveStatsFromFLDC::class,
+        Commands\FoldingCoinSaveStatsScheduler::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
@@ -49,8 +50,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('bitsplit:distribute')->everyMinute();
-         $schedule->command('bitsplit:stats')->dailyAt('03:00')->timezone('EST');
-         $schedule->command('bitsplit:save_stats')->dailyAt('03:00')->timezone('EST');
+        $schedule->command('bitsplit:distribute')->everyMinute();
+
+        // the stats and save_stats schedule are moved to App\Console\Commands\FoldingCoinSaveStatsScheduler
     }
 }
