@@ -54,62 +54,27 @@ class SaveStatsFromFLDC extends Command
         } else {
             $dates[] = date('Y') . '-' . date('m') . '-' . date('d');
         }
-        FAHFolder::truncate();
         foreach ($dates as $date) {
             $this->removeFoldersFromDate($date);
 
-            $folders = DB::connection('fldc')->table($date)->get();
-            $h = 0;
-            foreach ($folders as $folder) {
-                $h++;
+            $folders_collection = DB::connection('fldc')->table($date)->get();
+            $folders = array();
+            foreach ($folders_collection as $folder) {;
                 $data = json_decode(json_encode($folder), true);
-                $username = $data['name'];
-                $newcredit = $data['totalpts'];
-                $total_sum = $data[2];
-                $team_number = $data[3];
+
                 $folder = array(
-                    'name' => $username,
-                    'new_credit' => $newcredit,
-                    'total_credit' => $total_sum,
-                    'team' => $team_number
+                    'new_credit' => $data['totalpts'],
+                    'total_credit' => 0,
+                    'team' => 0,
+                    'bitcoin_address' => $data['address'],
+                    'reward_token' => strtoupper($data['token']),
+                    'date'         => date("Y-m-d", strtotime($date)),
+                    'username'     => $data['name']
                 );
                 $folders[] = $folder;
-                if ($h >= 5000) {
-                    FAHFolder::insert($folders);
-                    $h = 0;
-                    $folders = array();
-                }
-                if ($team_number === 22628 && BitcoinLib::validate_address($username)) {
-                    $bitcoin_address = $username;
-                    $reward_token = 'FLDC';
-                } else {
-                    $arr = explode("_", $username);
-                    if (count($arr) < 3) {
-                        continue;
-                    }
-                    $username = $arr[0];
-                    $reward_token = $arr[1];
-                    $bitcoin_address = $arr[2];
-                    if (!BitcoinLib::validate_address($bitcoin_address)) {
-                        continue;
-                    }
-                }
-                $daily_folder = DailyFolder::where('team', $team_number)->where('bitcoin_address', $bitcoin_address)
-                    ->where('date', date("Y-m-d", strtotime($date)))
-                    ->first();
-                if (!$daily_folder) {
-                    $daily_folder = new DailyFolder;
-                }
-                $daily_folder->new_credit = $newcredit;
-                $daily_folder->total_credit = $total_sum;
-                $daily_folder->team = $team_number;
-                $daily_folder->bitcoin_address = $bitcoin_address;
-                $daily_folder->reward_token = strtoupper($reward_token);
-                $daily_folder->date = date("Y-m-d", strtotime($date));
-                $daily_folder->username = $username;
-                $daily_folder->save();
             }
-            FAHFolder::insert($folders);
+
+            DailyFolder::insert($folders);
         }
     }
     protected function removeFoldersFromDate($date) {
