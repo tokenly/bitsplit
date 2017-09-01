@@ -53,6 +53,7 @@ class SaveStatsFromFLDC extends Command
         } else {
             $dates[] = date('Y') . '/' . date('m') . '/' . date('d');
         }
+        FAHFolder::where('date', $date)->delete();
         foreach ($dates as $date) {
             $this->removeFoldersFromDate($date);
 
@@ -129,6 +130,5 @@ class SaveStatsFromFLDC extends Command
     }
     protected function removeFoldersFromDate($date) {
         DailyFolder::where('date', $date)->delete();
-        FAHFolder::where('date', $date)->delete();
     }
 }
