@@ -53,6 +53,7 @@ class SaveStats extends Command
         } else {
             $dates[] = date('Y') . '/' . date( 'm'). '/'. date('d');
         }
+        $folders = array();
         foreach ($dates as $date) {
             $filename = $date .'.txt';
             if(!Storage::disk('dailyfolders')->exists($filename)) {
@@ -61,10 +62,12 @@ class SaveStats extends Command
             $stats = storage_path('dailyfolders/' . $filename);
             $fp = fopen($stats,'r');
             $i = 0;
-            while ( !feof($fp) ) {
+            $h = 0;
+            while (($line = fgets($fp, 4096)) !== false) {
+                echo 'Line: ' . $i . PHP_EOL;
                 $i++;
-                $line = fgets($fp, 2048);
-                $data = str_getcsv($line, "\t");
+                $h++;
+                $data = explode("	", $line);
                 if (count($data) < 2) {
                     continue;
                 }
@@ -74,7 +77,18 @@ class SaveStats extends Command
                 $newcredit = $data[1];
                 $total_sum = $data[2];
                 $team_number = $data[3];
-                $this->storeFahFolder($username, $newcredit, $total_sum, $team_number);
+                $folder = array(
+                    'name' => $username,
+                    'new_credit' => $newcredit,
+                    'total_credit' => $total_sum,
+                    'team' => $team_number
+                );
+                $folders[] = $folder;
+                if($h >= 5000) {
+                    FAHFolder::insert($folders);
+                    $h = 0;
+                    $folders = array();
+                }
                 if ($team_number === 22628 && BitcoinLib::validate_address($username)) {
                     $bitcoin_address = $username;
                     $reward_token = 'FLDC';
@@ -105,18 +119,7 @@ class SaveStats extends Command
                 $daily_folder->username = $username;
                 $daily_folder->save();
             }
+            fclose($fp);
         }
-    }
-
-    protected function storeFahFolder($name, $newcredit, $totalcredit, $team) {
-        $fah_folder = FAHFolder::where('team', $team)->where('name', $name)->first();
-        if(!$fah_folder) {
-            $fah_folder = new FAHFolder;
-        }
-        $fah_folder->name = $name;
-        $fah_folder->new_credit = $newcredit;
-        $fah_folder->total_credit = $totalcredit;
-        $fah_folder->team = $team;
-        $fah_folder->save();
     }
 }
