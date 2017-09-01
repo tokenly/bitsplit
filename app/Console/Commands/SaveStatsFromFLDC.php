@@ -2,27 +2,27 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Console\Command;
 use App\Models\DailyFolder;
 use App\Models\FAHFolder;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use BitWasp\BitcoinLib\BitcoinLib;
 
-class SaveStats extends Command
+class SaveStatsFromFLDC extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'bitsplit:save_stats  {date? : Optional argument to scan a specific date or range of dates}';
+    protected $signature = 'bitsplit:save_stats_fldc  {date? : Optional argument to scan a specific date or range of dates}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Scans the current day\'s saved Folding@Home stats and saves any entries that we care about to the database.';
+    protected $description = 'Scans the current day\'s saved Folding@Home stats from the FLDC database and saves any entries that we care about to the database.';
 
     /**
      * Create a new command instance.
@@ -41,7 +41,7 @@ class SaveStats extends Command
      */
     public function handle()
     {
-        if(!empty($this->argument('date'))) {
+        if (!empty($this->argument('date'))) {
             $pre_dates = explode('-', $this->argument('date'));
             foreach ($pre_dates as $date) {
                 if (\DateTime::createFromFormat('Y/m/d', $date) == false) {
@@ -51,19 +51,17 @@ class SaveStats extends Command
                 $dates[] = $datetime->format('Y/m/d');
             }
         } else {
-            $dates[] = date('Y') . '/' . date( 'm'). '/'. date('d');
+            $dates[] = date('Y') . '/' . date('m') . '/' . date('d');
         }
-        FAHFolder::truncate();
         foreach ($dates as $date) {
             $this->removeFoldersFromDate($date);
 
-
-            $filename = $date .'.txt';
-            if(!Storage::disk('dailyfolders')->exists($filename)) {
+            $filename = $date . '.txt';
+            if (!Storage::disk('dailyfolders')->exists($filename)) {
                 die("That date hasn\'t been downloaded yet \n");
             }
             $stats = storage_path('dailyfolders/' . $filename);
-            $fp = fopen($stats,'r');
+            $fp = fopen($stats, 'r');
             $folders = array();
             $i = 0;
             $h = 0;
@@ -76,7 +74,9 @@ class SaveStats extends Command
                     continue;
                 }
                 //Skip header rows
-                if($i < 3) { continue; }
+                if ($i < 3) {
+                    continue;
+                }
                 $username = $data[0];
                 $newcredit = $data[1];
                 $total_sum = $data[2];
@@ -88,7 +88,7 @@ class SaveStats extends Command
                     'team' => $team_number
                 );
                 $folders[] = $folder;
-                if($h >= 5000) {
+                if ($h >= 5000) {
                     FAHFolder::insert($folders);
                     $h = 0;
                     $folders = array();
@@ -127,8 +127,8 @@ class SaveStats extends Command
             fclose($fp);
         }
     }
-
     protected function removeFoldersFromDate($date) {
         DailyFolder::where('date', $date)->delete();
+        FAHFolder::where('date', $date)->delete();
     }
 }
