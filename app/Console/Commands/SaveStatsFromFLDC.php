@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\DailyFolder;
 use App\Models\FAHFolder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use BitWasp\BitcoinLib\BitcoinLib;
 
@@ -48,38 +49,22 @@ class SaveStatsFromFLDC extends Command
                     die("Please write the date in this format: YYYY/MM/DD or YYYY/MM/DD-YYYYDMM/DD for a range of dates \n");
                 }
                 $datetime = \DateTime::createFromFormat('Y/m/d', $date);
-                $dates[] = $datetime->format('Y/m/d');
+                $dates[] = $datetime->format('Y-m-d');
             }
         } else {
-            $dates[] = date('Y') . '/' . date('m') . '/' . date('d');
+            $dates[] = date('Y') . '-' . date('m') . '-' . date('d');
         }
-        FAHFolder::where('date', $date)->delete();
+        FAHFolder::truncate();
         foreach ($dates as $date) {
             $this->removeFoldersFromDate($date);
 
-            $filename = $date . '.txt';
-            if (!Storage::disk('dailyfolders')->exists($filename)) {
-                die("That date hasn\'t been downloaded yet \n");
-            }
-            $stats = storage_path('dailyfolders/' . $filename);
-            $fp = fopen($stats, 'r');
-            $folders = array();
-            $i = 0;
+            $folders = DB::connection('fldc')->table($date)->get();
             $h = 0;
-            while (($line = fgets($fp, 4096)) !== false) {
-                echo 'Line: ' . $i . PHP_EOL;
-                $i++;
+            foreach ($folders as $folder) {
                 $h++;
-                $data = explode("	", $line);
-                if (count($data) < 2) {
-                    continue;
-                }
-                //Skip header rows
-                if ($i < 3) {
-                    continue;
-                }
-                $username = $data[0];
-                $newcredit = $data[1];
+                $data = json_decode(json_encode($folder), true);
+                $username = $data['name'];
+                $newcredit = $data['totalpts'];
                 $total_sum = $data[2];
                 $team_number = $data[3];
                 $folder = array(
@@ -125,7 +110,6 @@ class SaveStatsFromFLDC extends Command
                 $daily_folder->save();
             }
             FAHFolder::insert($folders);
-            fclose($fp);
         }
     }
     protected function removeFoldersFromDate($date) {

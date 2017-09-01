@@ -35,6 +35,7 @@ class Kernel extends ConsoleKernel
         Commands\EstimateFuelCost::class,
         Commands\DownloadFoldingStats::class,
         Commands\SaveStats::class,
+        Commands\SaveStatsFromFLDC::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,

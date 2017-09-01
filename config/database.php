@@ -83,6 +83,17 @@ return [
             'prefix' => '',
             'schema' => 'public',
         ],
+        'fldc'  => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => env('FLDC_DB_DATABASE', 'fldc'),
+            'username' => env('FLDC_DB_USERNAME', 'root'),
+            'password' => env('FLDC_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+        ]
 
     ],
 
