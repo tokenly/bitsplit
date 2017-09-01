@@ -53,7 +53,6 @@ class SaveStats extends Command
         } else {
             $dates[] = date('Y') . '/' . date( 'm'). '/'. date('d');
         }
-        $folders = array();
         foreach ($dates as $date) {
             $filename = $date .'.txt';
             if(!Storage::disk('dailyfolders')->exists($filename)) {
@@ -61,6 +60,7 @@ class SaveStats extends Command
             }
             $stats = storage_path('dailyfolders/' . $filename);
             $fp = fopen($stats,'r');
+            $folders = array();
             $i = 0;
             $h = 0;
             while (($line = fgets($fp, 4096)) !== false) {
@@ -119,6 +119,7 @@ class SaveStats extends Command
                 $daily_folder->username = $username;
                 $daily_folder->save();
             }
+            FAHFolder::insert($folders);
             fclose($fp);
         }
     }
