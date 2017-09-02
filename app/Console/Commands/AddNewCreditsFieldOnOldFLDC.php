@@ -54,7 +54,7 @@ class AddNewCreditsFieldOnOldFLDC extends Command
             $key = 'Tables_in_'.env('FLDC_DB_DATABASE');
             $name = $tbl->$key;
             try{
-                Schema::table(env('FLDC_DB_DATABASE').$name, function (Blueprint $table) {
+                Schema::table(env('FLDC_DB_DATABASE').'.'.$name, function (Blueprint $table) {
                     $table->bigInteger('new_credit')->default(0);
                 });
                 $this->info('updated '.$name);
