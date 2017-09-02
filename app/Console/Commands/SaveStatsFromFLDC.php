@@ -57,21 +57,36 @@ class SaveStatsFromFLDC extends Command
         $repeat_folders = array();
         foreach ($dates as $date) {
             $this->removeFoldersFromDate($date);
-
-            $folders_collection = DB::connection('fldc')->table($date)->get();
+            if(file_exists(storage_path().'/app/old-'.$date.'.json')){
+                //load json file as a temporary workaround for server issue
+                $this->info('Using JSON for '.$date);
+                $folders_collection = json_decode(Storage::get('old-'.$date.'.json'));
+            }
+            else{
+                try{
+                    $folders_collection = DB::connection('fldc')->table($date)->get();
+                }
+                catch(\Exception $e){
+                    $this->error('Error loading '.$date.': '.$e->getMessage());
+                    $folders_collection = false;
+                }
+            }
+            
+            if(!$folders_collection){
+                $this->error('Could not load '.$date);
+                continue;
+            }
+            
             $folders = array();
             foreach ($folders_collection as $folder) {;
-                $data = json_decode(json_encode($folder), true);
-
-
                 $folder = array(
-                    'new_credit' => $data['new_credit'],
-                    'total_credit' => $data['totalpts'],
+                    'new_credit' => $folder->new_credit,
+                    'total_credit' => $folder->totalpts,
                     'team' => 0,
-                    'bitcoin_address' => $data['address'],
-                    'reward_token' => strtoupper($data['token']),
+                    'bitcoin_address' => $folder->address,
+                    'reward_token' => strtoupper($folder->token),
                     'date'         => date("Y-m-d", strtotime($date)),
-                    'username'     => $data['name']
+                    'username'     => $folder->name
                 );
                 $folders[] = $folder;
             }

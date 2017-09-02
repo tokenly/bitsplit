@@ -60,6 +60,7 @@ class CalculateNewCreditsOnOldFLDC extends Command
                 $this->error('No table found for '.$date);
                 continue;
             }
+            $date_data = array();
             foreach($folders as $folder){
                 $folder->new_credit = 0;
                 $key = $folder->name.'_'.$folder->token.'_'.$folder->address;
@@ -75,8 +76,10 @@ class CalculateNewCreditsOnOldFLDC extends Command
                 if(!isset($last_points[$key]) OR $folder->totalpts > $last_points[$key]){
                     $last_points[$key] = $folder->totalpts;
                 }
-                $db->table($date)->where('id', $folder->id)->update(array('new_credit' => $folder->new_credit));
+                $date_data[] = $folder;
+                //$db->table($date)->where('id', $folder->id)->update(array('new_credit' => $folder->new_credit));
             }
+            Storage::put('old-'.$date.'.json', json_encode($date_data));
         }
     }
 }
