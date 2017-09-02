@@ -79,7 +79,8 @@ class CalculateNewCreditsOnOldFLDC extends Command
                 $date_data[] = $folder;
                 //$db->table($date)->where('id', $folder->id)->update(array('new_credit' => $folder->new_credit));
             }
-            $put = Storage::put('old-'.$date.'.json', json_encode($date_data));
+            $encoded = json_encode($date_data);
+            $put = Storage::disk('local')->put('old-'.$date.'.json', json_encode($date_data));
             if(!$put){
                 $this->error('Error saving json for '.$date);
             }
