@@ -78,12 +78,11 @@ class SaveStatsFromFLDC extends Command
                 continue;
             }
             
-            if(!isset($folder->new_credit)){
-                $folder->new_credit = 0;
-            }
-            
             $folders = array();
-            foreach ($folders_collection as $folder) {;
+            foreach ($folders_collection as $folder) {
+                if(!isset($folder->new_credit)){
+                    $folder->new_credit = 0;
+                }
                 $folder = array(
                     'new_credit' => $folder->new_credit,
                     'total_credit' => $folder->totalpts,
