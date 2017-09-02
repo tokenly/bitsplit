@@ -45,6 +45,11 @@ class AddNewCreditsFieldOnOldFLDC extends Command
         
         $tables = $db->select('SHOW TABLES');
         
+        if(!$tables){
+            $this->error('Error loading table list');
+            return false;
+        }
+        
         foreach($tables as $tbl){
             $key = 'Tables_in_'.env('FLDC_DB_DATABASE');
             $name = $tbl->$key;
@@ -55,6 +60,7 @@ class AddNewCreditsFieldOnOldFLDC extends Command
                 $this->info('updated '.$name);
             }
             catch(\Exception $e){
+                $this->error('Error updating '.$name.': '.$e->getMessage());
                 continue;
             }
         }
