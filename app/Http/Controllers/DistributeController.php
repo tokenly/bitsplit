@@ -89,7 +89,7 @@ class DistributeController extends Controller {
             return $this->return_error('home', 'Folding end date should be set after the start');
         }
 
-        $folding_start_date = date("Y-m-d", strtotime($input['folding_start_date'])).' 00:00:00';
+        $folding_start_date = date("Y-m-d", strtotime($input['folding_start_date'].' +1 day'));
         $folding_end_date = date("Y-m-d", strtotime($input['folding_end_date'])).' 23:59:59';
 
         $distribution_class = $input['distribution_class'];
