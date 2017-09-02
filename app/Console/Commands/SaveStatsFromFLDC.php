@@ -57,10 +57,11 @@ class SaveStatsFromFLDC extends Command
         $repeat_folders = array();
         foreach ($dates as $date) {
             $this->removeFoldersFromDate($date);
-            if(file_exists(storage_path().'/app/old-'.$date.'.json')){
+            $get_json = Storage::get('old-'.$date.'.json');
+            if($get_json){
                 //load json file as a temporary workaround for server issue
                 $this->info('Using JSON for '.$date);
-                $folders_collection = json_decode(Storage::get('old-'.$date.'.json'));
+                $folders_collection = json_decode($get_json);
             }
             else{
                 try{
