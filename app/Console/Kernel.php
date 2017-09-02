@@ -37,6 +37,8 @@ class Kernel extends ConsoleKernel
         Commands\SaveStats::class,
         Commands\SaveStatsFromFLDC::class,
         Commands\FoldingCoinSaveStatsScheduler::class,
+        Commands\CalculateNewCreditsOnOldFLDC::class,
+        Commands\AddNewCreditsFieldOnOldFLDC::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,

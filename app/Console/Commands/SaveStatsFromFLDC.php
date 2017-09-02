@@ -54,6 +54,7 @@ class SaveStatsFromFLDC extends Command
         } else {
             $dates[] = date('Y') . '-' . date('m') . '-' . date('d');
         }
+        $repeat_folders = array();
         foreach ($dates as $date) {
             $this->removeFoldersFromDate($date);
 
@@ -62,9 +63,10 @@ class SaveStatsFromFLDC extends Command
             foreach ($folders_collection as $folder) {;
                 $data = json_decode(json_encode($folder), true);
 
+
                 $folder = array(
-                    'new_credit' => $data['totalpts'],
-                    'total_credit' => 0,
+                    'new_credit' => $data['new_credit'],
+                    'total_credit' => $data['totalpts'],
                     'team' => 0,
                     'bitcoin_address' => $data['address'],
                     'reward_token' => strtoupper($data['token']),
