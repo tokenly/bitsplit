@@ -434,10 +434,12 @@ class Distribution extends Model
 
     function getPercentageFahNetworkAttribute() {
 	    $new_credit = $this->fah_points;
-	    $total_credit = FAHFolder::sum('new_credit');
-	    if($total_credit == 0) {
-	        return 0;
-        }
-	    return bcdiv(($new_credit * 100) / $total_credit, 1, 2);
+        $folding_start_date = date("Y-m-d", strtotime($this->folding_start_date)).' 00:00:00';
+        $folding_end_date = date("Y-m-d", strtotime($this->folding_end_date)).' 23:59:59';
+
+        $datediff = strtotime($this->folding_end_date) - strtotime($this->folding_start_date);
+        $days =  floor($datediff / (60 * 60 * 24));
+
+        return DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])->sum('network_percentage') / $days;
     }
 }
