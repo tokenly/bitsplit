@@ -58,7 +58,7 @@ class SaveStats extends Command
             $inserted_count = 0;
             $filename = $date .'.txt';
             if(!Storage::disk('s3')->exists($filename)) {
-                echo "That date hasn\'t been downloaded yet \n";
+                echo "The stats file for the date ". $date . " hasn\'t been downloaded yet \n";
                 continue;
             }
             $contents = Storage::disk('s3')->get($filename);
