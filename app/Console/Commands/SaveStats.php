@@ -57,7 +57,7 @@ class SaveStats extends Command
             Log::debug("bitsplit:save_stats begin processing $date");
             $inserted_count = 0;
             $filename = $date .'.txt';
-            if(!Storage::disk('dailyfolders')->exists($filename)) {
+            if(!Storage::disk('s3')->exists($filename)) {
                 die("That date hasn\'t been downloaded yet \n");
             }
             $stats = storage_path('dailyfolders/' . $filename);
