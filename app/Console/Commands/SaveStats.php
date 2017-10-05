@@ -58,9 +58,12 @@ class SaveStats extends Command
             $inserted_count = 0;
             $filename = $date .'.txt';
             if(!Storage::disk('s3')->exists($filename)) {
-                die("That date hasn\'t been downloaded yet \n");
+                echo "That date hasn\'t been downloaded yet \n";
+                continue;
             }
+            $contents = Storage::disk('s3')->get($filename);
             $stats = storage_path('dailyfolders/' . $filename);
+            Storage::disk('dailyfolders')->put($filename, $contents);
             $fp = fopen($stats,'r');
             $folders = array();
             $daily_folders = array();
