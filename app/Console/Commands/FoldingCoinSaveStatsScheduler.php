@@ -43,9 +43,9 @@ class FoldingCoinSaveStatsScheduler extends ScheduleRunCommand
 
     protected function defineSchedule(Schedule $schedule) {
         // download the stats
-        $schedule->command('bitsplit:stats')->dailyAt('03:00')->timezone('EST');
+        $schedule->command('bitsplit:stats')->dailyAt('07:00');
 
         // process the stats
-        $schedule->command('bitsplit:save_stats')->dailyAt('03:00')->timezone('EST');
+        $schedule->command('bitsplit:save_stats')->dailyAt('07:00');
     }
 }
