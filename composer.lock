@@ -4,8 +4,89 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7fee17e41d58b457bd7a4d0e15fe390",
+    "hash": "f988659ed9804154620b27d0d9365d1d",
+    "content-hash": "2383a20d09907e1d16e6fd5b61f6bc4f",
     "packages": [
+        {
+            "name": "aws/aws-sdk-php",
+            "version": "3.36.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "bed7567b2ed8e70fbf5e1ecf927100e91955b29a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/bed7567b2ed8e70fbf5e1ecf927100e91955b29a",
+                "reference": "bed7567b2ed8e70fbf5e1ecf927100e91955b29a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-pcre": "*",
+                "ext-simplexml": "*",
+                "ext-spl": "*",
+                "guzzlehttp/guzzle": "^5.3.1|^6.2.1",
+                "guzzlehttp/promises": "~1.0",
+                "guzzlehttp/psr7": "^1.4.1",
+                "mtdowling/jmespath.php": "~2.2",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "andrewsville/php-token-reflection": "^1.4",
+                "aws/aws-php-sns-message-validator": "~1.0",
+                "behat/behat": "~3.0",
+                "doctrine/cache": "~1.4",
+                "ext-dom": "*",
+                "ext-openssl": "*",
+                "nette/neon": "^2.3",
+                "phpunit/phpunit": "^4.8.35|^5.4.0",
+                "psr/cache": "^1.0"
+            },
+            "suggest": {
+                "aws/aws-php-sns-message-validator": "To validate incoming SNS notifications",
+                "doctrine/cache": "To use the DoctrineCacheAdapter",
+                "ext-curl": "To send requests using cURL",
+                "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Aws\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Amazon Web Services",
+                    "homepage": "http://aws.amazon.com"
+                }
+            ],
+            "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
+            "homepage": "http://aws.amazon.com/sdkforphp",
+            "keywords": [
+                "amazon",
+                "aws",
+                "cloud",
+                "dynamodb",
+                "ec2",
+                "glacier",
+                "s3",
+                "sdk"
+            ],
+            "time": "2017-10-03 15:53:57"
+        },
         {
             "name": "bacon/bacon-qr-code",
             "version": "1.0.1",
@@ -46,7 +127,7 @@
             ],
             "description": "BaconQrCode is a QR code generator for PHP.",
             "homepage": "https://github.com/Bacon/BaconQrCode",
-            "time": "2016-01-09T22:55:35+00:00"
+            "time": "2016-01-09 22:55:35"
         },
         {
             "name": "bitwasp/bitcoin-lib",
@@ -104,7 +185,7 @@
                 "php",
                 "transactions"
             ],
-            "time": "2015-02-17T13:47:01+00:00"
+            "time": "2015-02-17 13:47:01"
         },
         {
             "name": "doctrine/inflector",
@@ -171,7 +252,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2017-07-22T12:18:28+00:00"
+            "time": "2017-07-22 12:18:28"
         },
         {
             "name": "erusev/parsedown",
@@ -213,7 +294,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2017-05-14T14:47:48+00:00"
+            "time": "2017-05-14 14:47:48"
         },
         {
             "name": "fideloper/proxy",
@@ -270,7 +351,7 @@
                 "proxy",
                 "trusted proxy"
             ],
-            "time": "2017-06-15T17:19:42+00:00"
+            "time": "2017-06-15 17:19:42"
         },
         {
             "name": "fluent/logger",
@@ -323,7 +404,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2017-02-15T07:14:53+00:00"
+            "time": "2017-02-15 07:14:53"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -388,7 +469,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-06-22T18:50:49+00:00"
+            "time": "2017-06-22 18:50:49"
         },
         {
             "name": "guzzlehttp/promises",
@@ -439,7 +520,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20T10:07:11+00:00"
+            "time": "2016-12-20 10:07:11"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -504,7 +585,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20T17:10:46+00:00"
+            "time": "2017-03-20 17:10:46"
         },
         {
             "name": "laravel/framework",
@@ -633,7 +714,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-08-30T09:26:16+00:00"
+            "time": "2017-08-30 09:26:16"
         },
         {
             "name": "laravel/socialite",
@@ -695,7 +776,7 @@
                 "laravel",
                 "oauth"
             ],
-            "time": "2017-07-22T14:44:37+00:00"
+            "time": "2017-07-22 14:44:37"
         },
         {
             "name": "laravelcollective/html",
@@ -749,7 +830,7 @@
             ],
             "description": "HTML and Form Builders for the Laravel Framework",
             "homepage": "http://laravelcollective.com",
-            "time": "2017-08-12T15:52:38+00:00"
+            "time": "2017-08-12 15:52:38"
         },
         {
             "name": "league/flysystem",
@@ -832,7 +913,54 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2017-08-06T17:41:04+00:00"
+            "time": "2017-08-06 17:41:04"
+        },
+        {
+            "name": "league/flysystem-aws-s3-v3",
+            "version": "1.0.18",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem-aws-s3-v3.git",
+                "reference": "dc09b19f455750663b922ed52dcc0ff215bed284"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-aws-s3-v3/zipball/dc09b19f455750663b922ed52dcc0ff215bed284",
+                "reference": "dc09b19f455750663b922ed52dcc0ff215bed284",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-sdk-php": "^3.0.0",
+                "league/flysystem": "^1.0.40",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "henrikbjorn/phpspec-code-coverage": "~1.0.1",
+                "phpspec/phpspec": "^2.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\AwsS3v3\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Flysystem adapter for the AWS S3 SDK v3.x",
+            "time": "2017-06-30 06:29:25"
         },
         {
             "name": "league/oauth1-client",
@@ -895,7 +1023,7 @@
                 "tumblr",
                 "twitter"
             ],
-            "time": "2016-08-17T00:36:58+00:00"
+            "time": "2016-08-17 00:36:58"
         },
         {
             "name": "linusu/bitcoin-address-validator",
@@ -940,7 +1068,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2014-08-20T13:04:51+00:00"
+            "time": "2014-08-20 13:04:51"
         },
         {
             "name": "mdanter/ecc",
@@ -999,7 +1127,7 @@
             ],
             "description": "PHP Elliptic Curve Cryptography library",
             "homepage": "https://github.com/mdanter/phpecc",
-            "time": "2014-07-07T12:44:15+00:00"
+            "time": "2014-07-07 12:44:15"
         },
         {
             "name": "monolog/monolog",
@@ -1077,7 +1205,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2017-06-19T01:22:40+00:00"
+            "time": "2017-06-19 01:22:40"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -1121,7 +1249,62 @@
                 "cron",
                 "schedule"
             ],
-            "time": "2017-01-23T04:29:33+00:00"
+            "time": "2017-01-23 04:29:33"
+        },
+        {
+            "name": "mtdowling/jmespath.php",
+            "version": "2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jmespath/jmespath.php.git",
+                "reference": "adcc9531682cf87dfda21e1fd5d0e7a41d292fac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jmespath/jmespath.php/zipball/adcc9531682cf87dfda21e1fd5d0e7a41d292fac",
+                "reference": "adcc9531682cf87dfda21e1fd5d0e7a41d292fac",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "bin": [
+                "bin/jp.php"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JmesPath\\": "src/"
+                },
+                "files": [
+                    "src/JmesPath.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Declaratively specify how to extract elements from a JSON document",
+            "keywords": [
+                "json",
+                "jsonpath"
+            ],
+            "time": "2016-12-03 22:08:25"
         },
         {
             "name": "nesbot/carbon",
@@ -1174,7 +1357,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2017-01-16T07:55:07+00:00"
+            "time": "2017-01-16 07:55:07"
         },
         {
             "name": "paragonie/random_compat",
@@ -1222,7 +1405,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-03-13T16:27:32+00:00"
+            "time": "2017-03-13 16:27:32"
         },
         {
             "name": "pda/pheanstalk",
@@ -1272,7 +1455,7 @@
             "keywords": [
                 "beanstalkd"
             ],
-            "time": "2015-08-07T21:42:41+00:00"
+            "time": "2015-08-07 21:42:41"
         },
         {
             "name": "psr/http-message",
@@ -1322,7 +1505,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "psr/log",
@@ -1369,7 +1552,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "ramsey/uuid",
@@ -1451,7 +1634,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2017-08-04T13:39:04+00:00"
+            "time": "2017-08-04 13:39:04"
         },
         {
             "name": "rmccue/requests",
@@ -1500,7 +1683,7 @@
                 "iri",
                 "sockets"
             ],
-            "time": "2016-10-13T00:11:37+00:00"
+            "time": "2016-10-13 00:11:37"
         },
         {
             "name": "rych/hash_pbkdf2-compat",
@@ -1545,7 +1728,7 @@
                 "hash_pbkdf2",
                 "pbkdf2"
             ],
-            "time": "2015-11-23T03:34:42+00:00"
+            "time": "2015-11-23 03:34:42"
         },
         {
             "name": "simplesoftwareio/simple-qrcode",
@@ -1596,7 +1779,7 @@
                 "qrcode",
                 "wrapper"
             ],
-            "time": "2016-10-12T21:23:04+00:00"
+            "time": "2016-10-12 21:23:04"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1650,7 +1833,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-05-01T15:54:03+00:00"
+            "time": "2017-05-01 15:54:03"
         },
         {
             "name": "symfony/console",
@@ -1718,7 +1901,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-08-27T14:52:21+00:00"
+            "time": "2017-08-27 14:52:21"
         },
         {
             "name": "symfony/css-selector",
@@ -1771,7 +1954,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-29T05:40:00+00:00"
+            "time": "2016-06-29 05:40:00"
         },
         {
             "name": "symfony/debug",
@@ -1827,7 +2010,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-08-27T14:52:21+00:00"
+            "time": "2017-08-27 14:52:21"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1890,7 +2073,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-29T21:54:42+00:00"
+            "time": "2017-07-29 21:54:42"
         },
         {
             "name": "symfony/finder",
@@ -1939,7 +2122,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-29T21:54:42+00:00"
+            "time": "2017-07-29 21:54:42"
         },
         {
             "name": "symfony/http-foundation",
@@ -1992,7 +2175,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-08-10T07:07:06+00:00"
+            "time": "2017-08-10 07:07:06"
         },
         {
             "name": "symfony/http-kernel",
@@ -2078,7 +2261,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2017-08-28T22:35:03+00:00"
+            "time": "2017-08-28 22:35:03"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2137,7 +2320,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-06-14T15:44:48+00:00"
+            "time": "2017-06-14 15:44:48"
         },
         {
             "name": "symfony/process",
@@ -2186,7 +2369,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-29T21:54:42+00:00"
+            "time": "2017-07-29 21:54:42"
         },
         {
             "name": "symfony/routing",
@@ -2264,7 +2447,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-07-29T21:54:42+00:00"
+            "time": "2017-07-29 21:54:42"
         },
         {
             "name": "symfony/translation",
@@ -2329,7 +2512,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-29T21:54:42+00:00"
+            "time": "2017-07-29 21:54:42"
         },
         {
             "name": "symfony/var-dumper",
@@ -2397,7 +2580,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2017-08-27T14:52:21+00:00"
+            "time": "2017-08-27 14:52:21"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -2444,7 +2627,7 @@
             ],
             "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
-            "time": "2016-09-20T12:50:39+00:00"
+            "time": "2016-09-20 12:50:39"
         },
         {
             "name": "tokenly/api-client",
@@ -2492,7 +2675,7 @@
                 "client",
                 "tokenly"
             ],
-            "time": "2016-10-29T13:11:52+00:00"
+            "time": "2016-10-29 13:11:52"
         },
         {
             "name": "tokenly/bitcoin-currency-lib",
@@ -2532,7 +2715,7 @@
                 }
             ],
             "description": "A bitcoin currency and quantity value library",
-            "time": "2016-02-24T02:17:54+00:00"
+            "time": "2016-02-24 02:17:54"
         },
         {
             "name": "tokenly/consul-health-daemon",
@@ -2573,7 +2756,7 @@
                 }
             ],
             "description": "A library to monitor services health and report to consul",
-            "time": "2016-10-21T13:37:35+00:00"
+            "time": "2016-10-21 13:37:35"
         },
         {
             "name": "tokenly/fluentd-logger",
@@ -2629,7 +2812,7 @@
                 "fluentd",
                 "logging"
             ],
-            "time": "2017-08-16T21:40:23+00:00"
+            "time": "2017-08-16 21:40:23"
         },
         {
             "name": "tokenly/hmac-auth",
@@ -2681,7 +2864,7 @@
                 }
             ],
             "description": "HMAC authentication for Tokenly APIs",
-            "time": "2016-10-29T14:10:50+00:00"
+            "time": "2016-10-29 14:10:50"
         },
         {
             "name": "tokenly/laravel-api-provider",
@@ -2725,7 +2908,7 @@
                 }
             ],
             "description": "An API service provider for Laravel",
-            "time": "2017-09-01T15:16:40+00:00"
+            "time": "2017-09-01 15:16:40"
         },
         {
             "name": "tokenly/laravel-event-log",
@@ -2766,7 +2949,7 @@
                 }
             ],
             "description": "An event logger provider for Laravel.",
-            "time": "2017-08-26T12:23:31+00:00"
+            "time": "2017-08-26 12:23:31"
         },
         {
             "name": "tokenly/laravel-record-lock",
@@ -2806,7 +2989,7 @@
                 }
             ],
             "description": "A locking library",
-            "time": "2017-07-07T19:04:59+00:00"
+            "time": "2017-07-07 19:04:59"
         },
         {
             "name": "tokenly/platform-admin",
@@ -2850,7 +3033,7 @@
                 }
             ],
             "description": "A platform administration module for Tokenly services",
-            "time": "2017-09-01T15:11:19+00:00"
+            "time": "2017-09-01 15:11:19"
         },
         {
             "name": "tokenly/token-generator",
@@ -2890,7 +3073,7 @@
                 }
             ],
             "description": "A library to generate random strings",
-            "time": "2014-12-03T03:55:02+00:00"
+            "time": "2014-12-03 03:55:02"
         },
         {
             "name": "tokenly/tokenpass-client",
@@ -2938,7 +3121,7 @@
                 "tokenly",
                 "tokenpass"
             ],
-            "time": "2017-09-01T06:39:10+00:00"
+            "time": "2017-09-01 06:39:10"
         },
         {
             "name": "tokenly/tokenslot-client",
@@ -2981,7 +3164,7 @@
                 "source": "https://github.com/tokenly/tokenslot-client/tree/master",
                 "issues": "https://github.com/tokenly/tokenslot-client/issues"
             },
-            "time": "2016-12-14T15:24:42+00:00"
+            "time": "2016-12-14 15:24:42"
         },
         {
             "name": "tokenly/xcaller-client",
@@ -3021,7 +3204,7 @@
                 }
             ],
             "description": "A library to push webhook notifications to XCaller",
-            "time": "2016-10-19T17:02:49+00:00"
+            "time": "2016-10-19 17:02:49"
         },
         {
             "name": "tokenly/xchain-client",
@@ -3064,7 +3247,7 @@
                 }
             ],
             "description": "A library",
-            "time": "2017-06-17T23:25:19+00:00"
+            "time": "2017-06-17 23:25:19"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -3114,7 +3297,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-09-01T10:05:43+00:00"
+            "time": "2016-09-01 10:05:43"
         }
     ],
     "packages-dev": [
@@ -3170,7 +3353,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2015-06-14 21:17:01"
         },
         {
             "name": "fzaninotto/faker",
@@ -3220,7 +3403,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2017-08-15T16:48:10+00:00"
+            "time": "2017-08-15 16:48:10"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -3265,7 +3448,7 @@
             "keywords": [
                 "test"
             ],
-            "time": "2015-05-11T14:41:42+00:00"
+            "time": "2015-05-11 14:41:42"
         },
         {
             "name": "mockery/mockery",
@@ -3330,7 +3513,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2017-02-28T12:52:32+00:00"
+            "time": "2017-02-28 12:52:32"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -3384,7 +3567,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27T11:43:31+00:00"
+            "time": "2015-12-27 11:43:31"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -3429,7 +3612,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-08-29T19:37:41+00:00"
+            "time": "2017-08-29 19:37:41"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -3476,7 +3659,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2017-07-14T14:27:02+00:00"
+            "time": "2017-07-14 14:27:02"
         },
         {
             "name": "phpspec/prophecy",
@@ -3539,7 +3722,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02T20:05:34+00:00"
+            "time": "2017-03-02 20:05:34"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3601,7 +3784,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-06T15:47:00+00:00"
+            "time": "2015-10-06 15:47:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -3648,7 +3831,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03T07:40:28+00:00"
+            "time": "2016-10-03 07:40:28"
         },
         {
             "name": "phpunit/php-text-template",
@@ -3689,7 +3872,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21T13:50:34+00:00"
+            "time": "2015-06-21 13:50:34"
         },
         {
             "name": "phpunit/php-timer",
@@ -3738,7 +3921,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-02-26T11:10:40+00:00"
+            "time": "2017-02-26 11:10:40"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -3787,7 +3970,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-02-27T10:12:30+00:00"
+            "time": "2017-02-27 10:12:30"
         },
         {
             "name": "phpunit/phpunit",
@@ -3859,7 +4042,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-06-21T08:07:12+00:00"
+            "time": "2017-06-21 08:07:12"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3915,7 +4098,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-10-02T06:51:40+00:00"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "sebastian/comparator",
@@ -3979,7 +4162,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-01-29T09:50:25+00:00"
+            "time": "2017-01-29 09:50:25"
         },
         {
             "name": "sebastian/diff",
@@ -4031,7 +4214,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-05-22T07:24:03+00:00"
+            "time": "2017-05-22 07:24:03"
         },
         {
             "name": "sebastian/environment",
@@ -4081,7 +4264,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18T05:49:44+00:00"
+            "time": "2016-08-18 05:49:44"
         },
         {
             "name": "sebastian/exporter",
@@ -4148,7 +4331,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17T09:04:28+00:00"
+            "time": "2016-06-17 09:04:28"
         },
         {
             "name": "sebastian/global-state",
@@ -4199,7 +4382,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12T03:26:01+00:00"
+            "time": "2015-10-12 03:26:01"
         },
         {
             "name": "sebastian/recursion-context",
@@ -4252,7 +4435,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2016-10-03T07:41:43+00:00"
+            "time": "2016-10-03 07:41:43"
         },
         {
             "name": "sebastian/version",
@@ -4287,7 +4470,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2015-06-21T13:59:46+00:00"
+            "time": "2015-06-21 13:59:46"
         },
         {
             "name": "symfony/dom-crawler",
@@ -4343,7 +4526,7 @@
             ],
             "description": "Symfony DomCrawler Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-30T07:22:48+00:00"
+            "time": "2016-07-30 07:22:48"
         },
         {
             "name": "symfony/yaml",
@@ -4398,7 +4581,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-29T21:54:42+00:00"
+            "time": "2017-07-29 21:54:42"
         },
         {
             "name": "webmozart/assert",
@@ -4448,7 +4631,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23T20:04:58+00:00"
+            "time": "2016-11-23 20:04:58"
         }
     ],
     "aliases": [],

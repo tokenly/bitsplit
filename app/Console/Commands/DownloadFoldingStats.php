@@ -43,7 +43,7 @@ class DownloadFoldingStats extends Command
         Log::debug("Begin downloading daily user summary in bitsplit:stats");
         $stats = file_get_contents('http://fah-web.stanford.edu/daily_user_summary.txt');
         $filename = date('Y') . '/' . date( 'm'). '/'. date('d') .'.txt';
-        Storage::disk('dailyfolders')->put($filename, $stats);
+        Storage::disk('s3')->put($filename, $stats);
         Log::debug("End downloading daily user summary in bitsplit:stats");
     }
 }
