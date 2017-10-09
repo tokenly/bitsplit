@@ -123,8 +123,12 @@ class SaveStats extends Command
                     $daily_new_credit = 0;
                 } else {
                     $daily_new_credit =  $newcredit - $previous_daily_folder->total_credit;
+                    if($daily_new_credit < 0) {
+                        $daily_new_credit = 0;
+                    }
                 }
                 $daily_folder = DailyFolder::where('team', $team_number)->where('bitcoin_address', $bitcoin_address)
+                    ->where('username', $username)
                     ->where('date', date("Y-m-d", strtotime($date)))
                     ->first();
                 if ($daily_folder) {
