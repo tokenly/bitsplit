@@ -118,6 +118,7 @@ class SaveStats extends Command
                 }
                 $previous_daily_folder = $daily_folder = DailyFolder::where('team', $team_number)->where('bitcoin_address', $bitcoin_address)
                     ->where('date', date("Y-m-d", strtotime($date . ' -1 day')))
+                    ->where('username', $username)
                     ->first();
                 if(empty($previous_daily_folder)) {
                     $daily_new_credit = 0;
