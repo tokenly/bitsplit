@@ -41,7 +41,7 @@ class CalculateNewCreditsOnOldFLDC extends Command
     {
         $db = DB::connection('fldc');
         
-        $begin = new \DateTime($this->argument('start'));
+        $begin = new \DateTime($this->argument('start').' - 1 day');
         $end = new \DateTime($this->argument('end'));
 
         $interval = \DateInterval::createFromDateString('1 day');
@@ -50,43 +50,76 @@ class CalculateNewCreditsOnOldFLDC extends Command
         $last_points = array();
         foreach($period as $dt){
             $date = $dt->format('Y-m-d');
+            $table_name = env('FLDC_DB_DATABASE').'.'.$date;
             try{
-                $folders = $db->table($date)->get();
+                $folders = $db->table($table_name)->get();
             }
             catch(\Exception $e){
                 $folders = false;
             }
             if(!$folders){
-                $this->error('No table found for '.$date);
+                $this->error('No table found for '.$table_name);
                 continue;
             }
-            $date_data = array();
+            
+            //first, combine points for duplicate entries
+            $dupe_folders = array();
+            $delete_dupes = array();
             foreach($folders as $folder){
-                $folder->new_credit = 0;
                 $key = $folder->name.'_'.$folder->token.'_'.$folder->address;
-                if(isset($last_points[$key])){
-                    if($last_points[$key] > $folder->totalpts){
-                        continue;
-                    }
-                    $folder->new_credit = intval($folder->totalpts - $last_points[$key]);
-                    if($folder->new_credit < 0){
-                        $folder->new_credit = 0;
-                    }              
+                if($folder->totalpts <= 0){
+                    $delete_dupes[] = $folder->id;
+                    continue;
                 }
-                if(!isset($last_points[$key]) OR $folder->totalpts > $last_points[$key]){
-                    $last_points[$key] = $folder->totalpts;
+                if(!isset($dupe_folders[$key])){
+                    $dupe_folders[$key] = $folder;
                 }
-                $date_data[] = $folder;
-                //$db->table($date)->where('id', $folder->id)->update(array('new_credit' => $folder->new_credit));
+                else{
+                    $dupe_folders[$key]->totalpts += $folder->totalpts;
+                    $delete_dupes[] = $folder->id; //we don't want these duplicates, messing things up..
+                }
             }
-            $encoded = json_encode($date_data);
-            $put = Storage::disk('local')->put('old-'.$date.'.json', json_encode($date_data));
-            if(!$put){
-                $this->error('Error saving json for '.$date);
+            
+            //set the base 'last_points' array
+            foreach($dupe_folders as $folder){
+                $key = $folder->name.'_'.$folder->token.'_'.$folder->address; 
+                if(!isset($last_points[$key])){
+                    $last_points[$key] = 0;
+                }
             }
-            else{
-                $this->info('JSON saved for '.$date);
+            
+            
+            //now loop through the combined entries
+            foreach($dupe_folders as $folder){
+                $key = $folder->name.'_'.$folder->token.'_'.$folder->address;                
+                $folder->new_credit = intval($folder->totalpts - $last_points[$key]);
+                if($folder->new_credit <= 0){
+                    $this->info('Zero credit for folder '.$folder->id.' '.$date);
+                    continue;
+                }              
+                $last_points[$key] = $folder->totalpts;
+                
+                try{
+                    $save = $db->table($table_name)->where('id', $folder->id)->update(array('new_credit' => $folder->new_credit));
+                    $this->info('Saved new_credit to database for folder '.$folder->id.' '.$date.' credit: '.$folder->new_credit);
+                }
+                catch(\Exception $e){
+                    $this->error('Error saving new_credit to database for folder '.$folder->id.' '.$date.' credit: '.$folder->new_credit);
+                }
             }
+            
+            //delete dupe and 0 point entries
+            if(count($delete_dupes) > 0){
+                $delete = $db->table($table_name)->whereIn('id', $delete_dupes)->delete();
+                if(!$delete){
+                    $this->error('Error deleting duplicate entries for '.$table_name);
+                }
+                else{
+                    $this->info('Removed duplicate entries for '.$table_name);
+                }
+            }
+            
+            $this->info('Finished parsing date '.$date);
         }
     }
 }

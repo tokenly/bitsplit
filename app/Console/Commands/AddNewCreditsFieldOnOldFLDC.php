@@ -53,14 +53,28 @@ class AddNewCreditsFieldOnOldFLDC extends Command
         foreach($tables as $tbl){
             $key = 'Tables_in_'.env('FLDC_DB_DATABASE');
             $name = $tbl->$key;
+            $table_name = env('FLDC_DB_DATABASE').'.'.$name;
             try{
-                Schema::table(env('FLDC_DB_DATABASE').'.'.$name, function (Blueprint $table) {
-                    $table->bigInteger('new_credit')->default(0);
-                });
+                if(!Schema::hasColumn($table_name, 'new_credit')){
+                    //add new column
+                    Schema::table($table_name, function (Blueprint $table) {
+                        $table->bigInteger('new_credit')->default(0);
+                    });
+                }
+                else{
+                    //reset values to 0
+                    DB::table($table_name)->update(array('new_credit' => 0));
+                }
                 $this->info('updated '.$name);
             }
             catch(\Exception $e){
-                $this->error('Error updating '.$name.': '.$e->getMessage());
+                try{
+                    $update = DB::table($table_name)->update(array('new_credit' => 0));
+                    $this->info('reset '.$name);
+                }
+                catch(\Exception $e){
+                    $this->error('Error updating '.$name.': '.$e->getMessage());
+                }
                 continue;
             }
         }

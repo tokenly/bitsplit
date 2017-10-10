@@ -16,7 +16,7 @@ class SaveStatsFromFLDC extends Command
      *
      * @var string
      */
-    protected $signature = 'bitsplit:save_stats_fldc  {date? : Optional argument to scan a specific date or range of dates}';
+    protected $signature = 'bitsplit:save_stats_fldc  {date? : Optional to scan a specific date} {end? : end date range for multi import}';
 
     /**
      * The console command description.
@@ -42,40 +42,39 @@ class SaveStatsFromFLDC extends Command
      */
     public function handle()
     {
-        if (!empty($this->argument('date'))) {
-            $pre_dates = explode('-', $this->argument('date'));
-            foreach ($pre_dates as $date) {
-                if (\DateTime::createFromFormat('Y/m/d', $date) == false) {
-                    die("Please write the date in this format: YYYY/MM/DD or YYYY/MM/DD-YYYYDMM/DD for a range of dates \n");
-                }
-                $datetime = \DateTime::createFromFormat('Y/m/d', $date);
-                $dates[] = $datetime->format('Y-m-d');
-            }
-        } else {
-            $dates[] = date('Y') . '-' . date('m') . '-' . date('d');
+
+        $db = DB::connection('fldc');
+
+        $opt_date = $this->argument('date');
+        $opt_end = $this->argument('end');
+        $date_range = array();
+        if(!empty($opt_date) AND !empty($opt_end)){
+            //date range
+            $start = new \DateTime($opt_date);
+            $end = new \DateTime($opt_end);
+            $interval = \DateInterval::createFromDateString('1 day');
+            $date_range = new \DatePeriod($start, $interval, $end);
         }
-        $repeat_folders = array();
-        foreach ($dates as $date) {
+        elseif(!empty($opt_date)){
+            $date_range[] = new \DateTime($opt_date);
+        }
+        else{
+            //use current date
+            $date_range[] = new \DateTime(date('Y-m-d'));
+        }
+        
+        foreach ($date_range as $dt) {
+            $date = $dt->format('Y-m-d');
+            $table_name = env('FLDC_DB_DATABASE').'.'.$date;
+            
             $this->removeFoldersFromDate($date);
+            
             try{
-                $get_json = Storage::disk('local')->get('old-'.$date.'.json');
+                $folders_collection = $db->table($table_name)->get();
             }
             catch(\Exception $e){
-                $get_json = false;
-            }
-            if($get_json){
-                //load json file as a temporary workaround for server issue
-                $this->info('Using JSON for '.$date);
-                $folders_collection = json_decode($get_json);
-            }
-            else{
-                try{
-                    $folders_collection = DB::connection('fldc')->table($date)->get();
-                }
-                catch(\Exception $e){
-                    $this->error('Error loading '.$date.': '.$e->getMessage());
-                    $folders_collection = false;
-                }
+                //$this->error('Error loading '.$date.': '.$e->getMessage());
+                $folders_collection = false;
             }
             
             if(!$folders_collection){
@@ -92,18 +91,25 @@ class SaveStatsFromFLDC extends Command
                     'new_credit' => $folder->new_credit,
                     'total_credit' => $folder->totalpts,
                     'team' => 0,
-                    'bitcoin_address' => $folder->address,
+                    'bitcoin_address' => trim($folder->address),
                     'reward_token' => strtoupper($folder->token),
-                    'date'         => date("Y-m-d", strtotime($date)),
-                    'username'     => $folder->name
+                    'date'         => $date,
+                    'username'     => trim($folder->name)
                 );
                 $folders[] = $folder;
             }
 
-            DailyFolder::insert($folders);
+            $insert = DailyFolder::insert($folders);
+            if(!$insert){
+                $this->error('Error inserting folders for '.$date);
+            }
+            else{
+                $this->info('Success - Folders inserted for '.$date);
+            }
         }
     }
     protected function removeFoldersFromDate($date) {
+        $this->info('Removing old entries for '.$date.'...');
         DailyFolder::where('date', $date)->delete();
     }
 }
