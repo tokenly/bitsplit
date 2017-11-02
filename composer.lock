@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.36.23",
+            "version": "3.36.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "755ff10ad2ea4ebb04b4e2b150a4a4fb13a22060"
+                "reference": "cb1cd051ef07dfbe6b181e552378e7a1673b228c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/755ff10ad2ea4ebb04b4e2b150a4a4fb13a22060",
-                "reference": "755ff10ad2ea4ebb04b4e2b150a4a4fb13a22060",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cb1cd051ef07dfbe6b181e552378e7a1673b228c",
+                "reference": "cb1cd051ef07dfbe6b181e552378e7a1673b228c",
                 "shasum": ""
             },
             "require": {
@@ -84,24 +84,28 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2017-10-06T22:26:58+00:00"
+            "time": "2017-11-01T23:08:48+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
-            "version": "1.0.1",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Bacon/BaconQrCode.git",
-                "reference": "031a2ce68c5794064b49d11775b2daf45c96e21c"
+                "reference": "5a91b62b9d37cee635bbf8d553f4546057250bee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/031a2ce68c5794064b49d11775b2daf45c96e21c",
-                "reference": "031a2ce68c5794064b49d11775b2daf45c96e21c",
+                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/5a91b62b9d37cee635bbf8d553f4546057250bee",
+                "reference": "5a91b62b9d37cee635bbf8d553f4546057250bee",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "ext-iconv": "*",
+                "php": "^5.4|^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
             },
             "suggest": {
                 "ext-gd": "to generate QR code images"
@@ -126,7 +130,7 @@
             ],
             "description": "BaconQrCode is a QR code generator for PHP.",
             "homepage": "https://github.com/Bacon/BaconQrCode",
-            "time": "2016-01-09T22:55:35+00:00"
+            "time": "2017-10-17T09:59:25+00:00"
         },
         {
             "name": "bitwasp/bitcoin-lib",
@@ -1208,7 +1212,7 @@
         },
         {
             "name": "mtdowling/cron-expression",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mtdowling/cron-expression.git",
@@ -2264,16 +2268,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.5.0",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "7c8fae0ac1d216eb54349e6a8baa57d515fe8803"
+                "reference": "2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/7c8fae0ac1d216eb54349e6a8baa57d515fe8803",
-                "reference": "7c8fae0ac1d216eb54349e6a8baa57d515fe8803",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296",
+                "reference": "2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296",
                 "shasum": ""
             },
             "require": {
@@ -2285,7 +2289,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5-dev"
+                    "dev-master": "1.6-dev"
                 }
             },
             "autoload": {
@@ -2319,7 +2323,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-06-14T15:44:48+00:00"
+            "time": "2017-10-11T12:05:26+00:00"
         },
         {
             "name": "symfony/process",
@@ -2630,16 +2634,16 @@
         },
         {
             "name": "tokenly/api-client",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/api-client.git",
-                "reference": "aeb4629b5fea6e3f7e66e6433d12ed39d218900e"
+                "reference": "f8d3d2cf2f5d10f1eff9ac3005a706c3723074ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/api-client/zipball/aeb4629b5fea6e3f7e66e6433d12ed39d218900e",
-                "reference": "aeb4629b5fea6e3f7e66e6433d12ed39d218900e",
+                "url": "https://api.github.com/repos/tokenly/api-client/zipball/f8d3d2cf2f5d10f1eff9ac3005a706c3723074ff",
+                "reference": "f8d3d2cf2f5d10f1eff9ac3005a706c3723074ff",
                 "shasum": ""
             },
             "require": {
@@ -2674,7 +2678,7 @@
                 "client",
                 "tokenly"
             ],
-            "time": "2016-10-29T13:11:52+00:00"
+            "time": "2017-10-18T13:02:25+00:00"
         },
         {
             "name": "tokenly/bitcoin-currency-lib",
@@ -3040,24 +3044,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/token-generator.git",
-                "reference": "f3422f54e82d6e1d24b7dec46135db4e845f63ee"
+                "reference": "a0fff2db10325416ea2bbe1a11b729e97cc6f86c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/token-generator/zipball/f3422f54e82d6e1d24b7dec46135db4e845f63ee",
-                "reference": "f3422f54e82d6e1d24b7dec46135db4e845f63ee",
+                "url": "https://api.github.com/repos/tokenly/token-generator/zipball/a0fff2db10325416ea2bbe1a11b729e97cc6f86c",
+                "reference": "a0fff2db10325416ea2bbe1a11b729e97cc6f86c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0"
+                "php": ">=7.0.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4"
+                "phpunit/phpunit": "~6"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Tokenly\\TokenGenerator": "src"
+                "psr-4": {
+                    "Tokenly\\TokenGenerator\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3067,12 +3071,12 @@
             "authors": [
                 {
                     "name": "Devon Weller",
-                    "email": "dweller@devonweller.com",
-                    "homepage": "http://devonweller.com"
+                    "email": "devon@tokenly.com",
+                    "homepage": "http://tokenly.com"
                 }
             ],
-            "description": "A library to generate random strings",
-            "time": "2014-12-03T03:55:02+00:00"
+            "description": "A library to generate secure random strings",
+            "time": "2017-11-01T12:59:07+00:00"
         },
         {
             "name": "tokenly/tokenpass-client",
@@ -3080,17 +3084,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/tokenpass-client.git",
-                "reference": "7718e592776e57625f3350adf49debf74498bbe4"
+                "reference": "29e782250279a5c1691e11ac6a97fb5234c1d1db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/tokenpass-client/zipball/7718e592776e57625f3350adf49debf74498bbe4",
-                "reference": "7718e592776e57625f3350adf49debf74498bbe4",
+                "url": "https://api.github.com/repos/tokenly/tokenpass-client/zipball/29e782250279a5c1691e11ac6a97fb5234c1d1db",
+                "reference": "29e782250279a5c1691e11ac6a97fb5234c1d1db",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.0",
-                "tokenly/api-client": "^1.0.4"
+                "tokenly/api-client": "^1.0.6"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4"
@@ -3120,7 +3124,7 @@
                 "tokenly",
                 "tokenpass"
             ],
-            "time": "2017-09-08T18:23:27+00:00"
+            "time": "2017-10-18T13:07:24+00:00"
         },
         {
             "name": "tokenly/tokenslot-client",
@@ -3211,12 +3215,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/xchain-client.git",
-                "reference": "8455a22144cd3fbc99f9ec64427ed3618afccccc"
+                "reference": "088925a488f6f66e9a3385c8c023987e79004c49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/xchain-client/zipball/8455a22144cd3fbc99f9ec64427ed3618afccccc",
-                "reference": "8455a22144cd3fbc99f9ec64427ed3618afccccc",
+                "url": "https://api.github.com/repos/tokenly/xchain-client/zipball/088925a488f6f66e9a3385c8c023987e79004c49",
+                "reference": "088925a488f6f66e9a3385c8c023987e79004c49",
                 "shasum": ""
             },
             "require": {
@@ -3226,7 +3230,7 @@
                 "tokenly/hmac-auth": "^0.2|^1"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4"
+                "phpunit/phpunit": "~6"
             },
             "type": "library",
             "autoload": {
@@ -3246,7 +3250,7 @@
                 }
             ],
             "description": "A library",
-            "time": "2017-06-17T23:25:19+00:00"
+            "time": "2017-10-18T16:00:11+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
