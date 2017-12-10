@@ -71,13 +71,16 @@ class Fuel
 			return $xchain->sweepAllAssets($uuid, $address);
 		}
 		if($amount_satoshis){
-			$amount = round($amount / 100000000, 8); 
-			if($fee === null){
-				$fee = round(Config::get('settings.miner_fee')/100000000,8);
-			}			
+			$amount = round($amount / 100000000, 8); 	
 		}
-		Log::info('Pumping '.$amount.' '.$asset.' from '.$uuid.' to '.$address.' (fee: '.$fee.')');
-        $per_byte = Config::get('settings.miner_satoshi_per_byte');
+        if($fee === null){
+            $per_byte = Config::get('settings.miner_satoshi_per_byte');
+        }
+        else{
+            $per_byte = $fee;
+        }
+		Log::info('Pumping '.$amount.' '.$asset.' from '.$uuid.' to '.$address.' (fee rate: '.$per_byte.')');
+        
         return $xchain->sendFromAccount($uuid, $address, $amount, $asset, 'default', false, null, null, null, null, $per_byte);
 	}
 	
