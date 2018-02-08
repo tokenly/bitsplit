@@ -72,7 +72,7 @@ class SaveStats extends Command
             //Calculate total network credits
             $total = 0;
             while (($line = fgets($fp, 4096)) !== false) {
-                echo 'Line: ' . $i . PHP_EOL;
+                //echo 'Line: ' . $i . PHP_EOL;
                 $i++;
                 $h++;
                 $data = explode("	", $line);
@@ -89,7 +89,7 @@ class SaveStats extends Command
 
             //Store daily folder
             while (($line = fgets($fp, 4096)) !== false) {
-                echo 'Line: ' . $i . PHP_EOL;
+                //echo 'Line: ' . $i . PHP_EOL;
                 $i++;
                 $h++;
                 $data = explode("	", $line);
