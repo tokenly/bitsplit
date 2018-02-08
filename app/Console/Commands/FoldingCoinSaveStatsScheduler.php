@@ -7,6 +7,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Console\Scheduling\ScheduleRunCommand;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
 class FoldingCoinSaveStatsScheduler extends ScheduleRunCommand
@@ -42,10 +43,13 @@ class FoldingCoinSaveStatsScheduler extends ScheduleRunCommand
     }
 
     protected function defineSchedule(Schedule $schedule) {
-        // download the stats
-        $schedule->command('bitsplit:stats')->dailyAt('07:00')->timezone('UTC');
+        $schedule->call(function() {
+            // download the stats
+            Artisan::call('bitsplit:stats');
 
-        // process the stats
-        $schedule->command('bitsplit:save_stats')->dailyAt('07:00')->timezone('UTC');
+            // process the stats
+            Artisan::call('bitsplit:save_stats');
+            
+        })->dailyAt('07:00')->timezone('UTC');
     }
 }
