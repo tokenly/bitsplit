@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7bb8f48bde20c4f2e66820f01b7b98b7",
+    "content-hash": "56bc52262ad3a76f48e02e9f5706f21c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -3489,7 +3489,7 @@
         },
         {
             "name": "tokenly/tokenpass-client",
-            "version": "dev-master",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/tokenpass-client.git",
@@ -5049,7 +5049,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "tokenly/tokenpass-client": 20,
         "tokenly/tokenslot-client": 20,
         "tokenly/xchain-client": 20,
         "tokenly/token-generator": 20
