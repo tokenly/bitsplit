@@ -99,6 +99,7 @@
 			</form>
 		</div>
 	</div>
+	@include('inc.dash-sidebar')
 </div>
 @endsection
 
