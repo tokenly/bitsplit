@@ -9,7 +9,7 @@ class DailyFolder extends Model
 {
     public static function countUniqueFolders()
     {
-        $result = DB::select("SELECT COUNT(*) FROM (SELECT 1 FROM daily_folders GROUP BY bitcoin_address LIMIT 5000) t;")[0];
+        $result = DB::select("SELECT COUNT(*) FROM (SELECT 1 FROM daily_folders GROUP BY bitcoin_address LIMIT 1000) t;")[0];
         return get_object_vars($result)['COUNT(*)'] ?? 0;
     }
 }
