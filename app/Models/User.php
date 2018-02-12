@@ -10,6 +10,7 @@ use Tokenly\CurrencyLib\CurrencyUtil;
 use Tokenly\LaravelApiProvider\Contracts\APIPermissionedUserContract;
 use Tokenly\LaravelApiProvider\Model\APIUser;
 use Tokenly\LaravelApiProvider\Model\Traits\Permissioned;
+use Illuminate\Support\Facades\Log;
 class User extends APIUser implements AuthenticatableContract, CanResetPasswordContract, APIPermissionedUserContract
 {
 	use Authenticatable, CanResetPassword;
