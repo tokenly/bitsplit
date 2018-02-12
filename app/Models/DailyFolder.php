@@ -8,6 +8,6 @@ class DailyFolder extends Model
 {
     public static function countUniqueFolders()
     {
-        return count(self::select('bitcoin_address')->groupBy('bitcoin_address')->get());
+        return self::groupBy('bitcoin_address')->count();
     }
 }
