@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Log;
@@ -40,10 +41,15 @@ class DownloadFoldingStats extends Command
      */
     public function handle()
     {
-        Log::debug("Begin downloading daily user summary in bitsplit:stats");
-        $stats = file_get_contents('http://fah-web.stanford.edu/daily_user_summary.txt');
-        $filename = date('Y') . '/' . date( 'm'). '/'. date('d') .'.txt';
-        Storage::disk('s3')->put($filename, $stats);
-        Log::debug("End downloading daily user summary in bitsplit:stats");
+        try {
+            Log::debug("Begin downloading daily user summary in bitsplit:stats");
+            $stats = file_get_contents('http://fah-web.stanford.edu/daily_user_summary.txt');
+            $filename = date('Y') . '/' . date( 'm'). '/'. date('d') .'.txt';
+            Storage::disk('s3')->put($filename, $stats);
+            Log::debug("End downloading daily user summary in bitsplit:stats");
+        } catch (Exception $e) {
+            Log::error("Error (".$e->getCode().") in in bitsplit:stats. ".$e->getMessage());
+            throw $e;
+        }
     }
 }
