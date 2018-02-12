@@ -23,7 +23,7 @@
 		</ul>
 		<hr>
 		<h3>Distribution History</h3>
-		@if(!$dash_info['distribution_history']) OR count($dash_info['distribution_history']) == 0)
+		@if(!$dash_info['distribution_history'] OR count($dash_info['distribution_history']) == 0)
 			<p>
 				You have made no distributions yet.
 			</p>

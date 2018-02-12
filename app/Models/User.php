@@ -43,6 +43,7 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
 	
 	public static function getDashInfo($userId = 0, $no_history = false)
 	{
+        $time_start = microtime(true);
 		if($userId == 0){
 			$user = Auth::user();
 		}
@@ -52,8 +53,8 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
 		if(!$user){
 			return false;
 		}
-		
-		$output = array();
+        Log::debug('Starting getDashInfo task');
+        $output = array();
 		$output['fuel_address'] = User::getFuelAddress($user->id);
 		$output['fuel_balance'] = intval(UserMeta::getMeta($user->id, 'fuel_balance'));
 		$output['fuel_pending'] = intval(UserMeta::getMeta($user->id, 'fuel_pending'));
@@ -61,7 +62,9 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
         $output['fuel_balanceFloat'] = CurrencyUtil::satoshisToValue($output['fuel_balance']);
         $output['fuel_pendingFloat'] = CurrencyUtil::satoshisToValue($output['fuel_pending']);;
         $output['fuel_spentFloat'] = CurrencyUtil::satoshisToValue($output['fuel_spent']);;
-		
+
+        Log::debug('Total execution time to get the user fuel address: ' . (microtime(true) - $time_start));
+        //TODO: remove debug code
         if(!$no_history){
             $distros = Distribution::where('user_id', $user->id)->orderBy('id', 'desc')->get();
             $output['distribution_history'] = $distros;
@@ -77,7 +80,7 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
                 }
             }
         }
-
+        Log::debug('Total execution time in seconds: ' . (microtime(true) - $time_start));
 		return $output;
 	}
 	
