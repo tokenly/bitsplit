@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddNetworkPercentageToDailyFoldersTable extends Migration
+class AddUuidToDailyFolders extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,8 @@ class AddNetworkPercentageToDailyFoldersTable extends Migration
     {
         Schema::table('daily_folders', function(Blueprint $table)
         {
-            $table->float('network_percentage')->default();
+            $table->char('uuid', 32)->nullable();
+            $table->index('uuid');
         });
     }
 
@@ -28,7 +29,7 @@ class AddNetworkPercentageToDailyFoldersTable extends Migration
     {
         Schema::table('daily_folders', function(Blueprint $table)
         {
-            $table->dropColumn(['network_percentage']);
+            $table->dropColumn(['uuid']);
         });
     }
 }

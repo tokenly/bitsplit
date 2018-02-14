@@ -39,6 +39,7 @@ class Kernel extends ConsoleKernel
         Commands\FoldingCoinSaveStatsScheduler::class,
         Commands\CalculateNewCreditsOnOldFLDC::class,
         Commands\AddNewCreditsFieldOnOldFLDC::class,
+        Commands\GenerateDailyFolderUUIDs::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
@@ -53,6 +54,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('bitsplit:distribute')->everyMinute();
+        
 
         // the stats and save_stats schedule are moved to App\Console\Commands\FoldingCoinSaveStatsScheduler
     }

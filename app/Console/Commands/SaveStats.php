@@ -90,6 +90,7 @@ class SaveStats extends Command
                 rewind($fp);
 
                 //Store daily folder
+                $used_uuids = array();
                 while (($line = fgets($fp, 4096)) !== false) {
                     //echo 'Line: ' . $i . PHP_EOL;
                     $i++;
@@ -118,10 +119,10 @@ class SaveStats extends Command
                             continue;
                         }
                     }
-                    $previous_daily_folder = $daily_folder = DailyFolder::where('team', $team_number)->where('bitcoin_address', $bitcoin_address)
-                        ->where('date', date("Y-m-d", strtotime($date . ' -1 day')))
-                        ->where('username', $username)
-                        ->first();
+                    
+                    $previous_folder_uuid = md5($team_number.$username.$bitcoin_address.strtotime($date . ' -1 day'));
+                    $previous_daily_folder = DailyFolder::select('total_credit')->where('uuid', $previous_folder_uuid)->first();
+                    
                     if(empty($previous_daily_folder)) {
                         $daily_new_credit = 0;
                     } else {
@@ -130,14 +131,10 @@ class SaveStats extends Command
                             $daily_new_credit = 0;
                         }
                     }
-                    $daily_folder = DailyFolder::where('team', $team_number)->where('bitcoin_address', $bitcoin_address)
-                        ->where('username', $username)
-                        ->where('date', date("Y-m-d", strtotime($date)))
-                        ->first();
-                    if ($daily_folder) {
-                        $daily_folder->delete();
-                    }
-                    $daily_folders[] = array(
+                    
+                    $this_folder_uuid = md5($team_number.$username.$bitcoin_address.strtotime($date));
+                    
+                    $daily_folders[$this_folder_uuid] = array(
                         'new_credit' => $daily_new_credit,
                         'total_credit' => $newcredit,
                         'team' => $team_number,
@@ -145,7 +142,8 @@ class SaveStats extends Command
                         'reward_token' => strtoupper($reward_token),
                         'date' => date("Y-m-d", strtotime($date)),
                         'username' => $username,
-                        'network_percentage' => ($newcredit * 100) / $total
+                        'network_percentage' => ($newcredit * 100) / $total,
+                        'uuid' => $this_folder_uuid,
                     );
                 }
                 DailyFolder::insert($daily_folders);
