@@ -54,11 +54,13 @@ class SaveStats extends Command
             }
             //Actual proccess
             foreach ($dates as $date) {
+                $this->info('Processing date '.$date);
                 //Don't store duplicated
                 $this->removeFoldersFromDate($date);
                 Log::debug("bitsplit:save_stats begin processing $date");
                 $inserted_count = 0;
                 $filename = $date .'.txt';
+                $this->info('Loading daily f@h data');
                 if(!Storage::disk('s3')->exists($filename)) {
                     echo "The stats file for the date ". $date . " hasn\'t been downloaded yet \n";
                     continue;
@@ -72,6 +74,7 @@ class SaveStats extends Command
                 $i = 0;
                 $h = 0;
                 //Calculate total network credits
+                $this->info('Processing f@h data');
                 $total = 0;
                 while (($line = fgets($fp, 4096)) !== false) {
                     //echo 'Line: ' . $i . PHP_EOL;
@@ -145,20 +148,25 @@ class SaveStats extends Command
                         'network_percentage' => ($newcredit * 100) / $total,
                         'uuid' => $this_folder_uuid,
                     );
+                    $this->info('Adding folder '.$this_folder_uuid);
                 }
+                $this->info('Inserting folders');
                 DailyFolder::insert($daily_folders);
-                $inserted_count += count($folders);
+                $inserted_count += count($daily_folders);
                 fclose($fp);
-                $folder_records_count = FAHFolder::count();
-                Log::debug("bitsplit:save_stats end processing $date.  Inserted $inserted_count folders.  There are $folder_records_count records in the database.");
+                Log::debug("bitsplit:save_stats end processing $date.  Inserted $inserted_count folders.");
+                $this->info('Inserted '.$inserted_count.' folders into db');
             }
             Log::debug("End bitsplit:save_stats");
         } catch (Exception $e) {
+            $this->info('Error: '.$e->getMessage());
             Log::error("Error (".$e->getCode().") in in bitsplit:save_stats. ".$e->getMessage());
             throw $e;
         }
+        $this->info('..done');
     }
     protected function removeFoldersFromDate($date) {
+        $this->info('Removing folders from date '.$date);
         DailyFolder::where('date', $date)->delete();
     }
 }
