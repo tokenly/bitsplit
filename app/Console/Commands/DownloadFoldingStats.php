@@ -42,14 +42,18 @@ class DownloadFoldingStats extends Command
     public function handle()
     {
         try {
+            $this->info('Begin downloading...');
             Log::debug("Begin downloading daily user summary in bitsplit:stats");
             $stats = file_get_contents('http://fah-web.stanford.edu/daily_user_summary.txt');
             $filename = date('Y') . '/' . date( 'm'). '/'. date('d') .'.txt';
+            $this->info('Begin uploading to S3..');
             Storage::disk('s3')->put($filename, $stats);
             Log::debug("End downloading daily user summary in bitsplit:stats");
         } catch (Exception $e) {
             Log::error("Error (".$e->getCode().") in in bitsplit:stats. ".$e->getMessage());
+            $this->info('Error: '.$e->getMessage());
             throw $e;
         }
+        $this->info('..done');
     }
 }
