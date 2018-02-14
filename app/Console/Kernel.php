@@ -40,6 +40,7 @@ class Kernel extends ConsoleKernel
         Commands\CalculateNewCreditsOnOldFLDC::class,
         Commands\AddNewCreditsFieldOnOldFLDC::class,
         Commands\GenerateDailyFolderUUIDs::class,
+        Commands\CacheTotalUniqueFolders::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
@@ -55,6 +56,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('bitsplit:distribute')->everyMinute();
         
+        $schedule->command('bitsplit:cache-total-unique-folders')->dailyAt('6:00');
 
         // the stats and save_stats schedule are moved to App\Console\Commands\FoldingCoinSaveStatsScheduler
     }

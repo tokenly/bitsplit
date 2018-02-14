@@ -14,7 +14,7 @@
 			the distribution process.
 		</p>
         <p>
-            <strong>Participating folders:</strong> {{ number_format(\App\Models\DailyFolder::countUniqueFolders()) }}+
+            <strong>Participating folders:</strong> {{ number_format(\App\Models\DailyFolder::countUniqueFolders(true)) }}
         </p>
         <p class="text-danger">
             <strong>Attention:</strong> Transaction capacity on the Bitcoin network is at high levels of congestion.

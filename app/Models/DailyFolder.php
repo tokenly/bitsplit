@@ -4,12 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Exception;
 
 class DailyFolder extends Model
 {
-    public static function countUniqueFolders()
+    public static function countUniqueFolders($cached = false)
     {
-        $result = DB::select("SELECT COUNT(*) FROM (SELECT 1 FROM daily_folders GROUP BY bitcoin_address) t LIMIT 10000;")[0];
-        return get_object_vars($result)['COUNT(*)'] ?? 0;
+        if($cached){
+            try{
+                $get = Cache::get('total-unique-folders');
+            }
+            catch(Exception $e){
+                $get = false;
+            }
+            if(!$get){
+                return 0;
+            }
+            return $get;
+        }
+        else{
+            $result = DB::select("SELECT COUNT(DISTINCT(bitcoin_address)) as total FROM daily_folders")[0];
+            $total = get_object_vars($result)['total'] ?? 0;
+            Cache::forever('total-unique-folders', $total);
+            return $total;
+        }
     }
 }
