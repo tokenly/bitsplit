@@ -23,7 +23,7 @@ class SaveStatsFromFLDC extends Command
      *
      * @var string
      */
-    protected $description = 'Scans the current day\'s saved Folding@Home stats from the FLDC database and saves any entries that we care about to the database.';
+    protected $description = 'Scans the current day\'s saved Folding@Home stats from the original FLDC database and saves any entries that we care about to the new database.';
 
     /**
      * Create a new command instance.
@@ -67,8 +67,11 @@ class SaveStatsFromFLDC extends Command
             $date = $dt->format('Y-m-d');
             $table_name = env('FLDC_DB_DATABASE').'.'.$date;
             
+            $this->info('Processing date '.$date);
+            
             $this->removeFoldersFromDate($date);
             
+            $this->info('Loading old FLDC table data');
             try{
                 $folders_collection = $db->table($table_name)->get();
             }
@@ -82,11 +85,16 @@ class SaveStatsFromFLDC extends Command
                 continue;
             }
             
+            $this->info('Processing folders for '.$date);
+            
             $folders = array();
             foreach ($folders_collection as $folder) {
                 if(!isset($folder->new_credit)){
                     $folder->new_credit = 0;
                 }
+                
+                $folder_uuid = md5('0'.trim($folder->name).trim($folder->address).strtotime($date));
+                
                 $folder = array(
                     'new_credit' => $folder->new_credit,
                     'total_credit' => $folder->totalpts,
@@ -94,9 +102,11 @@ class SaveStatsFromFLDC extends Command
                     'bitcoin_address' => trim($folder->address),
                     'reward_token' => strtoupper($folder->token),
                     'date'         => $date,
-                    'username'     => trim($folder->name)
+                    'username'     => trim($folder->name),
+                    'uuid' => $folder_uuid,
                 );
                 $folders[] = $folder;
+                $this->info('Inserting folder entry '.$folder_uuid);
             }
 
             $insert = DailyFolder::insert($folders);
@@ -104,8 +114,9 @@ class SaveStatsFromFLDC extends Command
                 $this->error('Error inserting folders for '.$date);
             }
             else{
-                $this->info('Success - Folders inserted for '.$date);
+                $this->info('Success - '.count($folders).' Folders inserted for '.$date);
             }
+            $this->info('..done');
         }
     }
     protected function removeFoldersFromDate($date) {
