@@ -38,8 +38,9 @@ class CacheTotalUniqueFolders extends Command
      */
     public function handle()
     {
+        Log::debug("begin bitsplit:cache-total-unique-folders");
         $total = DailyFolder::countUniqueFolders(false);
-        $this->info($total.' unique folders');
-        $this->info('..done');        
+        $this->info('Finished with '.$total.' unique folders');
+        Log::debug("end bitsplit:cache-total-unique-folders.  There were $total unique folders");
     }
 }
