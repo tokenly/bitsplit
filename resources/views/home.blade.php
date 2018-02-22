@@ -29,11 +29,11 @@
 				<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 				<div class="form-group">
 					<label for="asset">Token Name</label>
-					<input type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" required />
+					<input type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" value="{{ old('asset') }}" required />
 				</div>
 				<div class="form-group" id="percent_asset_total">
 					<label for="asset_total">Total Tokens to Send</label>
-					<input type="text" class="form-control numeric-only" id="asset_total" name="asset_total" placeholder="" />
+					<input type="text" class="form-control numeric-only" id="asset_total" name="asset_total" value="{{ old('asset_total') }}" placeholder="" />
 				</div>
 				<div class="form-group checkbox">
 					<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="use_fuel" id="use_fuel" value="1" checked="checked" />
@@ -75,11 +75,11 @@
 				</div>
 				<div class="form-group">
 					<label for="folding_start_date">Folding Start Date</label>
-					<input type="text" id="folding_start_date" name="folding_start_date" class="form-control datetimepicker_folding" />
+					<input type="text" id="folding_start_date" name="folding_start_date" value="{{ old('folding_start_date') }}" class="form-control datetimepicker_folding" />
                 </div>
                 <div class="form-group">
 					<label for="folding_end_date">Folding End Date</label>
-					<input type="text" id="folding_end_date" name="folding_end_date" class="form-control datetimepicker_folding" />
+					<input type="text" id="folding_end_date" name="folding_end_date" value="{{ old('folding_end_date') }}" class="form-control datetimepicker_folding" />
 				</div>  
 				<div class="form-group">
 					<label for="btc_fee_rate">Custom Miner Fee Rate</label>

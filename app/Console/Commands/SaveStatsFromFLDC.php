@@ -92,11 +92,21 @@ class SaveStatsFromFLDC extends Command
                 if(!isset($folder->new_credit)){
                     $folder->new_credit = 0;
                 }
-                
+
+                $previous_folder_uuid = md5('0'.$folder->name.$folder->address.strtotime($date . ' -1 day'));
+                $previous_daily_folder = DailyFolder::select('total_credit')->where('uuid', $previous_folder_uuid)->first();
+
+                $daily_new_credit = 0;
+                if(!empty($previous_daily_folder)) {
+                    $daily_new_credit = $folder->totalpts - $previous_daily_folder->total_credit;
+                }
+                if($daily_new_credit < 0) {
+                    $daily_new_credit = 0;
+                }
+
                 $folder_uuid = md5('0'.trim($folder->name).trim($folder->address).strtotime($date));
-                
                 $folder = array(
-                    'new_credit' => $folder->new_credit,
+                    'new_credit' => $daily_new_credit,
                     'total_credit' => $folder->totalpts,
                     'team' => 0,
                     'bitcoin_address' => trim($folder->address),

@@ -54,7 +54,6 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
 		if(!$user){
 			return false;
 		}
-        Log::debug('Starting getDashInfo task');
         $output = array();
 		$output['fuel_address'] = User::getFuelAddress($user->id);
 		$output['fuel_balance'] = intval(UserMeta::getMeta($user->id, 'fuel_balance'));
@@ -64,7 +63,6 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
         $output['fuel_pendingFloat'] = CurrencyUtil::satoshisToValue($output['fuel_pending']);;
         $output['fuel_spentFloat'] = CurrencyUtil::satoshisToValue($output['fuel_spent']);;
 
-        Log::debug('Total execution time to get the user fuel address: ' . (microtime(true) - $time_start));
         if(!$no_history){
             $distros = Distribution::where('user_id', $user->id)->orderBy('id', 'desc')->get();
             $output['distribution_history'] = $distros;
@@ -80,7 +78,6 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
                 }
             }
         }
-        Log::debug('Total execution time in seconds: ' . (microtime(true) - $time_start));
 		return $output;
 	}
 	

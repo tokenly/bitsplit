@@ -32,6 +32,9 @@ class DistributeController extends Controller {
 		if(!isset($input['asset']) OR trim($input['asset']) == ''){
 			return $this->return_error('home', 'Token name required');
 		}
+		//TODO: remove debug code
+        $getAsset['asset'] = $input['asset'];
+        /*
 		try{
 			$getAsset = $xchain->getAsset(strtoupper(trim($input['asset'])));
 		}
@@ -41,7 +44,7 @@ class DistributeController extends Controller {
 		}
 		if(!$getAsset){
 			return $this->return_error('home', 'Invalid token name');
-		}
+		} */
 		$asset = $getAsset['asset'];
 
 		//check/clean label
@@ -95,9 +98,6 @@ class DistributeController extends Controller {
         $distribution_class = $input['distribution_class'];
 		//build address list
         $folding_address_list = Distro::getFoldingAddressList($folding_start_date, $folding_end_date, $input['asset'], $distribution_class, $input);
-        if($folding_address_list->isEmpty()) {
-            return $this->return_error('home', 'No results on selected Folding dates range, please choose another.');
-        }
         $total = 0;
         foreach ($folding_address_list as $daily_folder) {
             $total += $daily_folder->new_credit;
@@ -137,6 +137,10 @@ class DistributeController extends Controller {
                 }
                 $folding_list[$btc_address] = $input['asset_total'];
             }
+        }
+
+        if(empty($folding_list)) {
+            return $this->return_error('home', 'No results on selected Folding dates range, please choose another.')->withInput();
         }
 
         $get_list = Distro::processAddressList($folding_list, $value_type, false,false, $calculation_type);
