@@ -93,8 +93,13 @@ class SaveStatsFromFLDC extends Command
                     $folder->new_credit = 0;
                 }
 
-                $previous_folder_uuid = md5('0'.$folder->name.$folder->address.strtotime($date . ' -1 day'));
+                $previous_folder_uuid = md5(trim($folder->name).trim($folder->address).strtotime($date . ' -1 day'));
                 $previous_daily_folder = DailyFolder::select('total_credit')->where('uuid', $previous_folder_uuid)->first();
+                if(!$previous_daily_folder){
+                    //try 2 days before
+                    $previous_folder_uuid = md5(trim($folder->name).trim($folder->address).strtotime($date . ' -2 days'));
+                    $previous_daily_folder = DailyFolder::select('total_credit')->where('uuid', $previous_folder_uuid)->first();
+                }
 
                 $daily_new_credit = 0;
                 if(!empty($previous_daily_folder)) {
@@ -104,7 +109,7 @@ class SaveStatsFromFLDC extends Command
                     $daily_new_credit = 0;
                 }
 
-                $folder_uuid = md5('0'.trim($folder->name).trim($folder->address).strtotime($date));
+                $folder_uuid = md5(trim($folder->name).trim($folder->address).strtotime($date));
                 $folder = array(
                     'new_credit' => $daily_new_credit,
                     'total_credit' => $folder->totalpts,

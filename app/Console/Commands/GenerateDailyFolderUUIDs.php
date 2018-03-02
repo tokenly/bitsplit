@@ -51,7 +51,7 @@ class GenerateDailyFolderUUIDs extends Command
 
             $uuids = [];
             foreach($folders as $folder) {
-                $uuid = md5($folder->team.$folder->username.$folder->bitcoin_address.strtotime(date('Y/m/d', strtotime($folder->date))));
+                $uuid = md5($folder->username.$folder->bitcoin_address.strtotime(date('Y/m/d', strtotime($folder->date))));
                 $uuids[$folder->id] = $uuid;
 
                 ++$offset;

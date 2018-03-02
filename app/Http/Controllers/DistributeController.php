@@ -156,7 +156,7 @@ class DistributeController extends Controller {
 		if($calculation_type === 'even'){
 			$use_total = false;
 			if(isset($input['asset_total'])){
-				if(!$getAsset['divisible']){
+				if(isset($getAsset['divisible']) AND !$getAsset['divisible']){
 					$input['asset_total'] = round(floatval($input['asset_total']));
 				}
 				$use_total = intval(bcmul(trim($input['asset_total']), '100000000', '0'));

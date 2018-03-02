@@ -123,8 +123,13 @@ class SaveStats extends Command
                         }
                     }
                     
-                    $previous_folder_uuid = md5($team_number.$username.$bitcoin_address.strtotime($date . ' -1 day'));
+                    $previous_folder_uuid = md5($username.$bitcoin_address.strtotime($date . ' -1 day'));
                     $previous_daily_folder = DailyFolder::select('total_credit')->where('uuid', $previous_folder_uuid)->first();
+                    if(!$previous_daily_folder){
+                        //try 2 days before
+                        $previous_folder_uuid = md5($username.$bitcoin_address.strtotime($date . ' -2 days'));
+                        $previous_daily_folder = DailyFolder::select('total_credit')->where('uuid', $previous_folder_uuid)->first();
+                    }
                     
                     if(empty($previous_daily_folder)) {
                         $daily_new_credit = 0;
@@ -135,7 +140,7 @@ class SaveStats extends Command
                         }
                     }
                     
-                    $this_folder_uuid = md5($team_number.$username.$bitcoin_address.strtotime($date));
+                    $this_folder_uuid = md5($username.$bitcoin_address.strtotime($date));
                     
                     $daily_folders[$this_folder_uuid] = array(
                         'new_credit' => $daily_new_credit,
