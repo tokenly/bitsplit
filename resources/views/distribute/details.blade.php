@@ -43,15 +43,15 @@
 				<strong>BTC Dust Size:</strong> {{ rtrim(rtrim(number_format($distro->btc_dust / 100000000, 8),"0"),".") }} BTC
 			</li>
 			<li>
-				<strong>Total FAH points:</strong> {{ $distro->fah_points }}
+				<strong>Total F@H points:</strong> {{ $distro->fah_points }}
 			</li>
 			<li>
-				<strong>Average FAH points per folder:</strong> {{ $distro->average_points }}
+				<strong>Average F@H points per folder:</strong> {{ $distro->average_points }}
 			</li>
 			<?php $tokens_per_point = $distro->tokens_per_point; ?>
 			@if(!empty($tokens_per_point))
 				<li>
-					<strong>Amount of tokens per FAH point:</strong> {{  number_format((float)$tokens_per_point, 8, '.', '') }}
+					<strong>Amount of tokens per F@H point:</strong> {{  number_format((float)$tokens_per_point, 8, '.', '') }}
 				</li>
 			@endif
 			@if(!empty($distro->total_folders))

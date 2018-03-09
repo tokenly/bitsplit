@@ -420,7 +420,7 @@ class Distribution extends Model
     }
 
     function getAveragePointsAttribute() {
-	    return DistributionTx::where('distribution_id', $this->id)->avg('folding_credit');
+        return $this->fah_points / $this->total_folders;
     }
 
     function getTokensPerPointAttribute() {
@@ -428,8 +428,8 @@ class Distribution extends Model
 	    if(empty($fah_points)) {
             return 0;
 	    }
-	    $asset_total = bcdiv($this->asset_total, 100000000, 0);
-	    return $asset_total / $this->average_points;
+	    $asset_total = bcdiv((string)$this->asset_total, "100000000", "8");
+        return bcdiv($asset_total, (string)$fah_points, "8");
     }
 
     function getPercentageFahNetworkAttribute() {
