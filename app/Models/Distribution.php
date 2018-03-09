@@ -435,8 +435,8 @@ class Distribution extends Model
                     foreach($select_keys as $k){
                         $folding_address_list[$k] = $query[$k];
                     }
-                    $folding_address_list = array_values($folding_address_list);
                 }
+                $folding_address_list = array_values($folding_address_list);
                 break;
             default:
                 $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
