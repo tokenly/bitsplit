@@ -368,7 +368,7 @@ class Distribution extends Model
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
-                    ->selectRaw('*, SUM(new_credit) AS new_credit, COUNT(DISTINCT username) AS total_users')
+                    ->selectRaw('*, SUM(new_credit) AS new_credit')
                     ->where('new_credit', '>=' , $extra['minimum_fah_points'])
                     ->groupBy('bitcoin_address')
                     ->get();
@@ -379,7 +379,7 @@ class Distribution extends Model
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
-                    ->selectRaw('*, SUM(new_credit) AS new_credit, COUNT(DISTINCT username) AS total_users')
+                    ->selectRaw('*, SUM(new_credit) AS new_credit')
                     ->orderBy('new_credit', 'desc')
                     ->groupBy('bitcoin_address')
                     ->limit($extra['amount_top_folders'])
@@ -391,7 +391,7 @@ class Distribution extends Model
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
-                    ->selectRaw('*, SUM(new_credit) AS new_credit, COUNT(DISTINCT username) AS total_users')
+                    ->selectRaw('*, SUM(new_credit) AS new_credit')
                     ->groupBy('bitcoin_address')
                     ->limit($extra['amount_random_folders']);
                 if(isset($extra['weight_cache_by_fah']) && $extra['weight_cache_by_fah']) {
@@ -407,7 +407,7 @@ class Distribution extends Model
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     })
-                    ->selectRaw('*, SUM(new_credit) AS new_credit, COUNT(DISTINCT username) AS total_users')
+                    ->selectRaw('*, SUM(new_credit) AS new_credit')
                     ->groupBy('bitcoin_address')
                     ->get();
                 break;

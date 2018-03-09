@@ -31,5 +31,12 @@ class DailyFolder extends Model
         }
     }
     
+    public static function countUniqueFoldersInDateRange($start, $end)
+    {
+        $result = DB::select("SELECT COUNT(DISTINCT(username)) as total FROM daily_folders WHERE `date` >= '".$start."' AND `date` <= '".$end."' AND new_credit > 0")[0];
+        $total = get_object_vars($result)['total'] ?? 0;
+        return $total;
+    }
+    
 
 }

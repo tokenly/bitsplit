@@ -105,8 +105,7 @@ class DistributeController extends Controller {
 
         $folding_list = array();
         $list_new_credits = array();
-
-        $total_folders = 0;
+        
         foreach ($folding_address_list as $daily_folder) {
             //Array to store new credits for each address
             if(isset($list_new_credits[$daily_folder->bitcoin_address])) {
@@ -114,12 +113,9 @@ class DistributeController extends Controller {
             } else {
                 $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
             }
-
-            //Store total folders
-            if(!empty($daily_folder->total_users)) {
-                $total_folders += $daily_folder->total_users;
-            }
         }
+        
+        $total_folders = DailyFolder::countUniqueFoldersInDateRange($folding_start_date, $folding_end_date);
 
         $calculation_type = $input['calculation_type'];
 
