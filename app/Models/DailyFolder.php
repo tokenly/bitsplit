@@ -24,10 +24,12 @@ class DailyFolder extends Model
             return $get;
         }
         else{
-            $result = DB::select("SELECT COUNT(DISTINCT(bitcoin_address)) as total FROM daily_folders")[0];
+            $result = DB::select("SELECT COUNT(DISTINCT(username)) as total FROM daily_folders")[0];
             $total = get_object_vars($result)['total'] ?? 0;
             Cache::forever('total-unique-folders', $total);
             return $total;
         }
     }
+    
+
 }
