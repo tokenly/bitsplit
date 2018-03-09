@@ -254,15 +254,15 @@ class DistributeController extends Controller {
 
 		$distro = Distro::where('deposit_address', $address)->first();
 
-        //Only allow public view if distribution is completed
-        if(!$user && !$distro->complete){
-            return Redirect::route('account.auth');
-        }
-
 		//Only allow public view if distribution is completed
-		if(!$distro && !$distro->complete){
+		if(!$distro OR (!$user AND !$distro->complete)){
             return $this->return_error('home', 'Distribution not found');
 		}
+
+        //Only allow public view if distribution is completed
+        if((!$user OR $user->id != $distro->user_id) && !$distro->complete){
+            return Redirect::route('account.auth');
+        }
 
         $extra = json_decode($distro->extra, true);
 		
