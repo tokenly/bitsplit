@@ -391,15 +391,52 @@ class Distribution extends Model
                         $query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
+                    ->where('new_credit', '>', 0)
                     ->selectRaw('*, SUM(new_credit) AS new_credit')
-                    ->groupBy('bitcoin_address')
-                    ->limit($extra['amount_random_folders']);
-                if(isset($extra['weight_cache_by_fah']) && $extra['weight_cache_by_fah']) {
-                    $query->orderByRaw('-LOG(1.0 - RAND()) / new_credit'); //Get Random Weighted Rows
-                } else {
-                    $query->orderByRaw('RAND()'); //Get random rows
+                    ->orderBy('new_credit', 'desc')
+                    ->groupBy('bitcoin_address')->get();
+                    
+                $folding_address_list = array();
+                $choose_amount = 1;
+                if(isset($extra['amount_random_folders']) AND intval($extra['amount_random_folders']) > 0){
+                    $choose_amount = intval($extra['amount_random_folders']);
                 }
-                $folding_address_list = $query->get();
+                if(isset($extra['weight_cache_by_fah']) && $extra['weight_cache_by_fah']) {
+                    //randomize selection but use new_credit to determine probabilities
+                    $total_credit = 0;
+                    $total_count = 0;
+                    foreach($query as $k => $daily_folder){
+                        $total_credit += $daily_folder->new_credit;
+                        $total_count++;
+                    }
+                    $winners = 0;
+                    while($winners < $choose_amount && $winners < $total_count){
+                        foreach($query as $k => $daily_folder){
+                            if(isset($folding_address_list[$k])){
+                                //already won
+                                continue;
+                            }
+                            $probability = ($daily_folder->new_credit / $total_credit) * 1000;
+                            $lucky = mt_rand(0, 1000);
+                            if($lucky <= $probability){
+                                //winner
+                                $folding_address_list[$k] = $daily_folder;
+                                $winners++;
+                            }
+                        }
+                    }
+                } else {
+                    //get completely (pseudo)random addresses
+                    $keys = array();
+                    foreach($query as $k => $daily_folder){
+                        $keys[] = $k;
+                    }
+                    $select_keys = array_rand($keys, $choose_amount);
+                    foreach($select_keys as $k){
+                        $folding_address_list[$k] = $query[$k];
+                    }
+                    $folding_address_list = array_values($folding_address_list);
+                }
                 break;
             default:
                 $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
