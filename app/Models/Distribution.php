@@ -457,6 +457,9 @@ class Distribution extends Model
     }
 
     function getAveragePointsAttribute() {
+        if($this->total_folders <= 0){
+            return 0;
+        }
         return $this->fah_points / $this->total_folders;
     }
 
@@ -476,7 +479,11 @@ class Distribution extends Model
 
         $datediff = strtotime($this->folding_end_date) - strtotime($this->folding_start_date);
         $days =  floor($datediff / (60 * 60 * 24));
-
+        
+        if($days <= 0){
+            return 0;
+        }
+        
         return DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])->sum('network_percentage') / $days;
     }
 }
