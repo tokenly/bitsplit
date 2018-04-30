@@ -42,8 +42,8 @@
 				<div class="form-group dropdown">
 					<label for="calculation_type">Calculation Type</label>
 					<select name="calculation_type" id="calculation_type" class="form-control">
-						<option value="even">Even</option>
-						<option value="static">Static</option>
+						<option value="even">Proportional</option>
+						<option value="static">Uniform</option>
 					</select>
 				</div>
 				<div class="form-group dropdown">

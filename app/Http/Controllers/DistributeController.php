@@ -32,9 +32,6 @@ class DistributeController extends Controller {
 		if(!isset($input['asset']) OR trim($input['asset']) == ''){
 			return $this->return_error('home', 'Token name required');
 		}
-		//TODO: remove debug code
-        $getAsset['asset'] = $input['asset'];
-        /*
 		try{
 			$getAsset = $xchain->getAsset(strtoupper(trim($input['asset'])));
 		}
@@ -44,7 +41,7 @@ class DistributeController extends Controller {
 		}
 		if(!$getAsset){
 			return $this->return_error('home', 'Invalid token name');
-		} */
+		}
 		$asset = $getAsset['asset'];
 
 		//check/clean label
