@@ -43,10 +43,10 @@
 				<strong>BTC Dust Size:</strong> {{ rtrim(rtrim(number_format($distro->btc_dust / 100000000, 8),"0"),".") }} BTC
 			</li>
 			<li>
-				<strong>Total F@H Points:</strong> {{ $distro->fah_points }}
+				<strong>Total F@H Points:</strong> {{ number_format($distro->fah_points) }}
 			</li>
 			<li>
-				<strong>Average F@H Points Per Folder:</strong> {{ $distro->average_points }}
+				<strong>Average F@H Points Per Folder:</strong> {{ number_format($distro->average_points) }}
 			</li>
 			<?php $tokens_per_point = $distro->tokens_per_point; ?>
 			@if(!empty($tokens_per_point))
@@ -56,7 +56,7 @@
 			@endif
 			@if(!empty($distro->total_folders))
 				<li>
-					<strong>Participating Folders in Date Range:</strong> {{ $distro->total_folders }}
+					<strong>Participating Folders in Date Range:</strong> {{ number_format($distro->total_folders) }}
 				</li>
 			@endif
 			<?php
@@ -188,7 +188,7 @@
                                 @endif
                             </td>
 							<td>{{ rtrim(rtrim(number_format($row->quantity / 100000000, 8),"0"),".") }}</td>
-							<td>{{ $row->folding_credit }}</td>
+							<td>{{ number_format($row->folding_credit) }}</td>
 							<td id="distro-tx-{{ $row->id }}-status">
 								@if($row->confirmed == 1)
 									<a href="https://blocktrail.com/BTC/tx/{{ $row->txid }}" target="_blank" title="View complete transaction"><i class="fa fa-check text-success"></i></a>

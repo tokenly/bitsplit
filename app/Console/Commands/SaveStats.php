@@ -112,14 +112,25 @@ class SaveStats extends Command
                         $reward_token = 'FLDC';
                     } else {
                         $arr = explode("_", $username);
-                        if (count($arr) < 3) {
+                        if (count($arr) < 2) {
                             continue;
                         }
-                        $username = $arr[0];
-                        $reward_token = $arr[1];
-                        $bitcoin_address = $arr[2];
-                        if (!BitcoinLib::validate_address($bitcoin_address)) {
-                            continue;
+                        if (count($arr) < 3) {
+                            //FORMAT: username_address
+                            $username = $arr[0];
+                            $bitcoin_address = $arr[1];
+                            $reward_token = 'FLDC';
+                            if (!BitcoinLib::validate_address($bitcoin_address)) {
+                                continue;
+                            }
+                        } else {
+                            //FORMAT: username_token_address
+                            $username = $arr[0];
+                            $reward_token = $arr[1];
+                            $bitcoin_address = $arr[2];
+                            if (!BitcoinLib::validate_address($bitcoin_address)) {
+                                continue;
+                            }
                         }
                     }
                     
