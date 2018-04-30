@@ -486,4 +486,9 @@ class Distribution extends Model
         
         return DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])->sum('network_percentage') / $days;
     }
+
+    public function user()
+    {
+        return $this->belongsTo('User');
+    }
 }

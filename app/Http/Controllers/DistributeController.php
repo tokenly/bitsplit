@@ -554,4 +554,17 @@ class DistributeController extends Controller {
         }
         return view('distribute.public_history', array('user' => $user, 'distros' => $distros));
     }
+
+    function getOfficialFldcDistributionsHistory()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $distros = Distro::whereHas('user', function ($query) {
+            $query->where('email', '=', 'foldingcoin.net@gmail.com');
+        })->where('complete', 1)->paginate(35);
+        if(!$distros){
+            return $this->return_error('home', 'Distribution not found');
+        }
+        return view('distribute.public_history', array('user' => $user, 'distros' => $distros));
+    }
+
 }

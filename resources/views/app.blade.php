@@ -56,7 +56,13 @@
 					</ul>
 				</li>
 			@endif
-			  <li><a href=" {{route('distribute.history')}}"><i class="fa fa-list"></i> Public distributions</a></li>
+			  <li class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-list"></i> Public Distributions <span class="caret"></span></a>
+				  <ul class="dropdown-menu" role="menu">
+					  <li><a href="{{route('distribute.history')}}">All distributions</a></li>
+					  <li><a href="{{route('distribute.official_fldc_history')}}" target="_blank">Official FLDC distributions</a></li>
+				  </ul>
+			  </li>
 		  </ul>
 		</nav>
 	  </div>

@@ -36,6 +36,7 @@ Route::post('distribute/{address}', array('as' => 'distribute.details.update', '
 Route::get('distribute/delete/{id}', array('as' => 'distribute.delete', 'uses' => 'DistributeController@deleteDistribution'));
 Route::get('distribute/duplicate/{address}', array('as' => 'distribute.duplicate', 'uses' => 'DistributeController@duplicateDistribution'));
 Route::get('distributions', array('as' => 'distribute.history', 'uses' => 'DistributeController@getDistributionsHistory'));
+Route::get('official-distributions', array('as' => 'distribute.official_fldc_history', 'uses' => 'DistributeController@getOfficialFldcDistributionsHistory'));
 
 
 //tokenly accounts stuff
