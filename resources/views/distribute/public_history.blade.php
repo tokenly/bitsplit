@@ -3,10 +3,10 @@
 @section('content')
     <div class="row">
         <div class="col-lg-6">
-            <h3>Distribution History</h3>
-            @if(empty($distros))
+            <h3>{{$type}} Distributions</h3>
+            @if($distros->isEmpty())
             <p>
-                You have made no distributions yet.
+                No distributions found.
             </p>
             @else
                 <table class="table table-bordered table-striped distro-history-table" style="font-size: 12px;">

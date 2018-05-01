@@ -548,12 +548,10 @@ class DistributeController extends Controller {
     function getDistributionsHistory()
     {
         $user = \Illuminate\Support\Facades\Auth::user();
-
-        $distros = Distro::where('complete', 1)->paginate(35);
-        if(!$distros){
-            return $this->return_error('home', 'Distribution not found');
-        }
-        return view('distribute.public_history', array('user' => $user, 'distros' => $distros));
+        $distros = Distro::whereDoesntHave('user', function ($query) {
+            $query->where('email', '=', 'foldingcoin.net@gmail.com');
+        })->where('complete', 1)->paginate(35);
+        return view('distribute.public_history', array('user' => $user, 'distros' => $distros, 'type' => 'Public'));
     }
 
     function getOfficialFldcDistributionsHistory()
@@ -562,10 +560,7 @@ class DistributeController extends Controller {
         $distros = Distro::whereHas('user', function ($query) {
             $query->where('email', '=', 'foldingcoin.net@gmail.com');
         })->where('complete', 1)->paginate(35);
-        if(!$distros){
-            return $this->return_error('home', 'Distribution not found');
-        }
-        return view('distribute.public_history', array('user' => $user, 'distros' => $distros));
+        return view('distribute.public_history', array('user' => $user, 'distros' => $distros, 'type' => 'Official FoldingCoin'));
     }
 
 }
