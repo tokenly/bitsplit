@@ -262,8 +262,12 @@ class DistributeController extends Controller {
         }
 
         $extra = json_decode($distro->extra, true);
-		
-		$address_list = DistroTx::where('distribution_id', $distro->id)->orderBy('quantity', 'desc')->get();
+
+		if($distro->calculation_type === 'Static') {
+            $address_list = DistroTx::where('distribution_id', $distro->id)->orderBy('folding_credit', 'desc')->get();
+        } else {
+		    $address_list = DistroTx::where('distribution_id', $distro->id)->orderBy('quantity', 'desc')->get();
+        }
 
 		$address_count = 0;
 		$num_complete = 0;
