@@ -549,7 +549,7 @@ class DistributeController extends Controller {
     {
         $user = \Illuminate\Support\Facades\Auth::user();
         $distros = Distro::whereDoesntHave('user', function ($query) {
-            $query->where('email', '=', 'foldingcoin.net@gmail.com');
+            $query->where('email', '=', config('settings.official_fldc_email'));
         })->where('complete', 1)->paginate(35);
         return view('distribute.public_history', array('user' => $user, 'distros' => $distros, 'type' => 'Public'));
     }
@@ -558,7 +558,7 @@ class DistributeController extends Controller {
     {
         $user = \Illuminate\Support\Facades\Auth::user();
         $distros = Distro::whereHas('user', function ($query) {
-            $query->where('email', '=', 'foldingcoin.net@gmail.com');
+            $query->where('email', '=', config('settings.official_fldc_email'));
         })->where('complete', 1)->paginate(35);
         return view('distribute.public_history', array('user' => $user, 'distros' => $distros, 'type' => 'Official FoldingCoin'));
     }
