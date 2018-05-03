@@ -7,6 +7,7 @@ use Tokenly\CurrencyLib\CurrencyUtil;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use User, Auth, Config, UserMeta, Redirect, Response;
 use Ramsey\Uuid\Uuid;
+use Tokenly\TokenmapClient\TokenmapClient;
 
 class DistributeController extends Controller {
 
@@ -192,6 +193,8 @@ class DistributeController extends Controller {
 		if(isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
 			$use_fuel = 1;
 		}
+        
+
 
 		//save distribution
 		$distro = new Distro;
@@ -222,6 +225,19 @@ class DistributeController extends Controller {
 
         //Stats
         $distro->total_folders = $total_folders;
+        
+        //save FLDC value in USD $
+        try{
+            $tokenmap_client = app(TokenmapClient::class);
+            $usd_quote = $tokenmap_client->getSimpleQuote('USD', $asset, 'counterparty')->getFloatValue();
+        }
+        catch(Exception $e){
+            //just log error
+			Log::error('Failed looking up latest USD:'.$asset.' rate distribution '.$deposit_address.' for user '.$user->id);
+			//return $this->return_error('home', 'Error looking up latest USD:'.$asset.' rate');
+        }
+        
+        $distro->fiat_token_quote = $usd_quote;
 
         // save
 		$save = $distro->save();
@@ -258,7 +274,7 @@ class DistributeController extends Controller {
 		$user = Auth::user();
 
 		$distro = Distro::where('deposit_address', $address)->first();
-
+     
 		//Only allow public view if distribution is completed
 		if(!$distro OR (!$user AND !$distro->complete)){
             return $this->return_error('home', 'Distribution not found');

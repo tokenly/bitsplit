@@ -172,6 +172,8 @@ return [
         Tokenly\FluentdLogger\FluentdLoggerServiceProvider::class,
         Tokenly\PlatformAdmin\Provider\PlatformAdminServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        
+        Tokenly\TokenmapClient\ServiceProvider\TokenmapServiceProvider::class,
 
 
     ],

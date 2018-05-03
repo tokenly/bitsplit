@@ -36,6 +36,14 @@
 			<li>
 				<strong>Amount to Distribute:</strong> {{ rtrim(rtrim(number_format($distro->asset_total / 100000000, 8),"0"),".") }} {{ $distro->asset }}
 			</li>
+            @if($distro->fiat_token_quote != null)
+            <li>
+                <strong>Estimated USD value per {{ $distro->asset }}:</strong> ${{ number_format($distro->fiat_token_quote, 4) }}
+            </li>
+            <li>
+                <strong>Estimated total USD value:</strong> ${{ number_format(($distro->asset_total / 100000000) * $distro->fiat_token_quote, 2) }}
+            </li>
+            @endif
 			<li>
 				<strong>BTC Fuel Cost:</strong> {{ rtrim(rtrim(number_format($distro->fee_total / 100000000, 8),"0"),".") }} BTC
 			</li>
@@ -176,6 +184,7 @@
                     <th>F@H Username</th>
 					<th>Address</th>
 					<th>Quantity</th>
+                    @if($distro->fiat_token_quote != null)<th>USD Value</th>@endif
 					<th>F@H Points</th>
 					<th>TX</th>
 				</thead>
@@ -196,6 +205,7 @@
                                 @endif
                             </td>
 							<td>{{ rtrim(rtrim(number_format($row->quantity / 100000000, 8),"0"),".") }}</td>
+                            @if($distro->fiat_token_quote != null) <td>${{ number_format(($row->quantity / 100000000) * $distro->fiat_token_quote, 4) }}</td> @endif
 							<td>{{ number_format($row->folding_credit) }}</td>
 							<td id="distro-tx-{{ $row->id }}-status">
 								@if($row->confirmed == 1)
