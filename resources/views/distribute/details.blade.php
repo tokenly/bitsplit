@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="row">
-	<div class="col-lg-6" id="distro-details" data-address="{{ $distro->deposit_address }}">
+	<div class="col-lg-12" id="distro-details" data-address="{{ $distro->deposit_address }}">
 		<h2>Distribution #{{ $distro->id }}</h2>
 		@if(trim($distro->label) != '')
 			<h3>{{ $distro->label }}</h3>
@@ -224,9 +224,6 @@
 			</table>
 		@endif
 	</div>
-	@if($user)
-		@include('inc.dash-sidebar')
-	@endif
 </div>
 @stop
 
