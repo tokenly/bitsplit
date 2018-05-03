@@ -102,6 +102,7 @@ class DistributeController extends Controller {
 
         $folding_list = array();
         $list_new_credits = array();
+        $list_usernames = array();
         
         foreach ($folding_address_list as $daily_folder) {
             //Array to store new credits for each address
@@ -109,6 +110,12 @@ class DistributeController extends Controller {
                 $list_new_credits[$daily_folder->bitcoin_address] += $daily_folder->new_credit;
             } else {
                 $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
+            }
+            if(isset($list_usernames[$daily_folder->bitcoin_address])){
+                $list_usernames[$daily_folder->bitcoin_address] .= ', '.$daily_folder->username;
+            }
+            else{
+                $list_usernames[$daily_folder->bitcoin_address] = $daily_folder->username;
             }
         }
         
@@ -232,6 +239,7 @@ class DistributeController extends Controller {
 			$tx->destination = $row['address'];
 			$tx->quantity = (string)$row['amount'];
 			$tx->folding_credit = (string)$list_new_credits[$row['address']];
+            $tx->fldc_usernames = $list_usernames[$row['address']];
 			$tx->save();
 		}
 		

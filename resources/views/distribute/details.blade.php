@@ -173,6 +173,7 @@
 		@else
 			<table class="table table-bordered table-striped">
 				<thead>
+                    <th>F@H Username</th>
 					<th>Address</th>
 					<th>Quantity</th>
 					<th>F@H Points</th>
@@ -181,6 +182,13 @@
 				<tbody>
 					@foreach($address_list as $row)
 						<tr>
+                            <td>
+                                @if(trim($row->fldc_usernames) == '')
+                                    N/A
+                                @else
+                                    {{ $row->fldc_usernames }}
+                                @endif
+                            </td>
 							<td>
                                 <a href="https://xchain.io/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a>
                                 @if($row->tokenpass_user)
