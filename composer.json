@@ -29,7 +29,8 @@
         "tokenly/fluentd-logger": "^0.2.2",
         "laravelcollective/html": "^5.4",
         "league/flysystem-aws-s3-v3": "~1.0",
-        "doctrine/dbal": "^2.5"
+        "doctrine/dbal": "2.6.3",
+        "tokenly/tokenmap-client": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
