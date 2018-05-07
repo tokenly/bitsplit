@@ -250,4 +250,12 @@ $(document).ready(function(){
             default:
         }
     })
+
+    $('#calculation_type').change(function () {
+        var calculation_type = this.value;
+        $('#scan_distros_from').hide();
+        if(calculation_type === 'unique') {
+            $('#scan_distros_from').show();
+        }
+    })
 });

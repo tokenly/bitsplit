@@ -5,6 +5,7 @@ use App\Models\DailyFolder;
 use App\Models\FAHFolder;
 use Illuminate\Database\Eloquent\Model;
 use DB, Mail, User, Log, Exception, Config;
+use Illuminate\Support\Facades\Auth;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use Distribute\Initialize;
 use App\Jobs\NotificationReturnJob;
@@ -360,12 +361,52 @@ class Distribution extends Model
     }
     
     public static function getFoldingAddressList($folding_start_date, $folding_end_date, $asset, $distribution_class, $extra) {
-	    //TODO: Make parameters less flexible by having named params instead on an "extra" array
+	    //Pass user as a parameter
+        $user = Auth::user();
+        //Set general query
+        $query = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date]);
+        if($extra['calculation_type'] === 'unique') {
+            switch ($extra['scan_distros_from']) {
+                case 'My Account':
+                    $old_rows = DB::table('distribution_tx')
+                        ->join('distributions', 'distribution_tx.distribution_id', '=', 'distributions.id')
+                        ->where('distributions.complete', 1)
+                        ->where('distributions.user_id', $user->id)
+                        ->where('distributions.asset', $asset)
+                        ->groupBy('distribution_tx.destination')
+                        ->get(['distribution_tx.destination']);
+                        break;
+                case 'Official FLDC':
+                    $old_rows = DB::table('distribution_tx')
+                        ->join('distributions', 'distribution_tx.distribution_id', '=', 'distributions.id')
+                        ->join('users', 'users.id', '=', 'distributions.user_id')
+                        ->where('distributions.complete', 1)
+                        ->where('distributions.asset', $asset)
+                        ->where('users.email', \Illuminate\Support\Facades\Config::get('settings.official_fldc_email'))
+                        ->groupBy('distribution_tx.destination')
+                        ->get(['distribution_tx.destination']);
+                        break;
+                case 'All Accounts':
+                    $old_rows = DB::table('distribution_tx')
+                        ->join('distributions', 'distribution_tx.distribution_id', '=', 'distributions.id')
+                        ->where('distributions.complete', 1)
+                        ->where('distributions.asset', $asset)
+                        ->groupBy('distribution_tx.destination')
+                        ->get(['distribution_tx.destination']);
+                        break;
+            }
+            $addresses = [];
+            foreach ($old_rows as $row) {
+                $addresses[] = $row->destination;
+            }
+            $query->whereNotIn('daily_folders.bitcoin_address', $addresses);
+        }
+        //TODO: Make parameters less flexible by having named params instead on an "extra" array
 	    switch ($distribution_class) {
             case 'Minimum FAH points':
-                $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
-                    ->where(function ($query) use ($asset, $extra)  {
-                        $query->where('reward_token', 'ALL')
+                $folding_address_list = $query
+                    ->where(function ($sub_query) use ($asset, $extra)  {
+                        $sub_query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
                     ->selectRaw('*, SUM(new_credit) AS new_credit')
@@ -374,9 +415,9 @@ class Distribution extends Model
                     ->get();
                 break;
             case 'Top Folders':
-                $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
-                    ->where(function ($query) use ($asset, $extra)  {
-                        $query->where('reward_token', 'ALL')
+                $folding_address_list = $query
+                    ->where(function ($sub_query) use ($asset, $extra)  {
+                        $sub_query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
                     ->selectRaw('*, SUM(new_credit) AS new_credit')
@@ -386,9 +427,9 @@ class Distribution extends Model
                     ->get();
                 break;
             case 'Random':
-                $query = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
-                    ->where(function ($query) use ($asset, $extra)  {
-                        $query->where('reward_token', 'ALL')
+                $query = $query
+                    ->where(function ($sub_query) use ($asset, $extra)  {
+                        $sub_query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     } )
                     ->where('new_credit', '>', 0)
@@ -439,9 +480,9 @@ class Distribution extends Model
                 $folding_address_list = array_values($folding_address_list);
                 break;
             default:
-                $folding_address_list = DailyFolder::whereBetween('date', [$folding_start_date, $folding_end_date])
-                    ->where(function ($query) use ($asset) {
-                        $query->where('reward_token', 'ALL')
+                $folding_address_list = $query
+                    ->where(function ($sub_query) use ($asset) {
+                        $sub_query->where('reward_token', 'ALL')
                             ->orWhere('reward_token',  $asset);
                     })
                     ->selectRaw('*, SUM(new_credit) AS new_credit')
