@@ -7,6 +7,7 @@ use Tokenly\CurrencyLib\CurrencyUtil;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use User, Auth, Config, UserMeta, Redirect, Response;
 use Ramsey\Uuid\Uuid;
+use Tokenly\TokenmapClient\TokenmapClient;
 
 class DistributeController extends Controller {
 
@@ -102,6 +103,7 @@ class DistributeController extends Controller {
 
         $folding_list = array();
         $list_new_credits = array();
+        $list_usernames = array();
         
         foreach ($folding_address_list as $daily_folder) {
             //Array to store new credits for each address
@@ -109,6 +111,12 @@ class DistributeController extends Controller {
                 $list_new_credits[$daily_folder->bitcoin_address] += $daily_folder->new_credit;
             } else {
                 $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
+            }
+            if(isset($list_usernames[$daily_folder->bitcoin_address])){
+                $list_usernames[$daily_folder->bitcoin_address] .= ', '.$daily_folder->username;
+            }
+            else{
+                $list_usernames[$daily_folder->bitcoin_address] = $daily_folder->username;
             }
         }
         
@@ -185,6 +193,8 @@ class DistributeController extends Controller {
 		if(isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
 			$use_fuel = 1;
 		}
+        
+
 
 		//save distribution
 		$distro = new Distro;
@@ -215,6 +225,19 @@ class DistributeController extends Controller {
 
         //Stats
         $distro->total_folders = $total_folders;
+        
+        //save FLDC value in USD $
+        try{
+            $tokenmap_client = app(TokenmapClient::class);
+            $usd_quote = $tokenmap_client->getSimpleQuote('USD', $asset, 'counterparty')->getFloatValue();
+        }
+        catch(Exception $e){
+            //just log error
+			Log::error('Failed looking up latest USD:'.$asset.' rate distribution '.$deposit_address.' for user '.$user->id);
+			//return $this->return_error('home', 'Error looking up latest USD:'.$asset.' rate');
+        }
+        
+        $distro->fiat_token_quote = $usd_quote;
 
         // save
 		$save = $distro->save();
@@ -232,6 +255,7 @@ class DistributeController extends Controller {
 			$tx->destination = $row['address'];
 			$tx->quantity = (string)$row['amount'];
 			$tx->folding_credit = (string)$list_new_credits[$row['address']];
+            $tx->fldc_usernames = $list_usernames[$row['address']];
 			$tx->save();
 		}
 		
@@ -250,7 +274,7 @@ class DistributeController extends Controller {
 		$user = Auth::user();
 
 		$distro = Distro::where('deposit_address', $address)->first();
-
+     
 		//Only allow public view if distribution is completed
 		if(!$distro OR (!$user AND !$distro->complete)){
             return $this->return_error('home', 'Distribution not found');

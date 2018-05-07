@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="row">
-	<div class="col-lg-6" id="distro-details" data-address="{{ $distro->deposit_address }}">
+	<div class="col-lg-12" id="distro-details" data-address="{{ $distro->deposit_address }}">
 		<h2>Distribution #{{ $distro->id }}</h2>
 		@if(trim($distro->label) != '')
 			<h3>{{ $distro->label }}</h3>
@@ -36,6 +36,14 @@
 			<li>
 				<strong>Amount to Distribute:</strong> {{ rtrim(rtrim(number_format($distro->asset_total / 100000000, 8),"0"),".") }} {{ $distro->asset }}
 			</li>
+            @if($distro->fiat_token_quote != null)
+            <li>
+                <strong>Estimated USD value per {{ $distro->asset }}:</strong> ${{ number_format($distro->fiat_token_quote, 4) }}
+            </li>
+            <li>
+                <strong>Estimated total USD value:</strong> ${{ number_format(($distro->asset_total / 100000000) * $distro->fiat_token_quote, 2) }}
+            </li>
+            @endif
 			<li>
 				<strong>BTC Fuel Cost:</strong> {{ rtrim(rtrim(number_format($distro->fee_total / 100000000, 8),"0"),".") }} BTC
 			</li>
@@ -173,14 +181,23 @@
 		@else
 			<table class="table table-bordered table-striped">
 				<thead>
+                    <th>F@H Username</th>
 					<th>Address</th>
 					<th>Quantity</th>
+                    @if($distro->fiat_token_quote != null)<th>USD Value</th>@endif
 					<th>F@H Points</th>
 					<th>TX</th>
 				</thead>
 				<tbody>
 					@foreach($address_list as $row)
 						<tr>
+                            <td>
+                                @if(trim($row->fldc_usernames) == '')
+                                    N/A
+                                @else
+                                    {{ $row->fldc_usernames }}
+                                @endif
+                            </td>
 							<td>
                                 <a href="https://xchain.io/address/{{ $row->destination }}" target="_blank">{{ $row->destination }}</a>
                                 @if($row->tokenpass_user)
@@ -188,6 +205,7 @@
                                 @endif
                             </td>
 							<td>{{ rtrim(rtrim(number_format($row->quantity / 100000000, 8),"0"),".") }}</td>
+                            @if($distro->fiat_token_quote != null) <td>${{ number_format(($row->quantity / 100000000) * $distro->fiat_token_quote, 4) }}</td> @endif
 							<td>{{ number_format($row->folding_credit) }}</td>
 							<td id="distro-tx-{{ $row->id }}-status">
 								@if($row->confirmed == 1)
@@ -206,9 +224,6 @@
 			</table>
 		@endif
 	</div>
-	@if($user)
-		@include('inc.dash-sidebar')
-	@endif
 </div>
 @stop
 
