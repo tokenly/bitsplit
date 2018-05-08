@@ -227,6 +227,7 @@ class DistributeController extends Controller {
         $distro->total_folders = $total_folders;
         
         //save FLDC value in USD $
+        $usd_quote = null;
         try{
             $tokenmap_client = app(TokenmapClient::class);
             $usd_quote = $tokenmap_client->getSimpleQuote('USD', $asset, 'counterparty')->getFloatValue();
