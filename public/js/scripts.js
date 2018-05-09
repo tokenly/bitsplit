@@ -237,6 +237,7 @@ $(document).ready(function(){
         $('#minimum_fah_points_wrapper').hide()
         $('#amount_top_folders_wrapper').hide()
         $('#amount_random_folders_wrapper').hide()
+        $('#scan_distros_from').hide();
         switch (distribution_class) {
             case 'Minimum FAH points':
                 $('#minimum_fah_points_wrapper').show()
@@ -247,15 +248,10 @@ $(document).ready(function(){
             case 'Random':
                 $('#amount_random_folders_wrapper').show()
                 break;
+            case 'unique':
+                $('#scan_distros_from').show();
+                break;
             default:
-        }
-    })
-
-    $('#calculation_type').change(function () {
-        var calculation_type = this.value;
-        $('#scan_distros_from').hide();
-        if(calculation_type === 'unique') {
-            $('#scan_distros_from').show();
         }
     })
 });

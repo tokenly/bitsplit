@@ -44,15 +44,6 @@
 					<select name="calculation_type" id="calculation_type" class="form-control">
 						<option value="even">Proportional</option>
 						<option value="static">Uniform</option>
-						<option value="unique">Unique Distribution</option>
-					</select>
-				</div>
-				<div id="scan_distros_from" class="form-group dropdown" style="display: none;">
-					<label for="scan_distros_from_select">Scan Previous Distributions From</label>
-					<select id="scan_distros_from_select" name="scan_distros_from" class="form-control">
-						<option value="My Account">My Account</option>
-						<option value="Official FLDC">Official FLDC</option>
-						<option value="All Accounts">All Acounts</option>
 					</select>
 				</div>
 				<div class="form-group dropdown">
@@ -62,6 +53,15 @@
 						<option value="Minimum FAH points">Minimum FAH points</option>
 						<option value="Top Folders">Top Folders</option>
 						<option value="Random">Random</option>
+						<option value="unique">Unique Distribution</option>
+					</select>
+				</div>
+				<div id="scan_distros_from" class="form-group dropdown" style="display: none;">
+					<label for="scan_distros_from_select">Scan Previous Distributions From</label>
+					<select id="scan_distros_from_select" name="scan_distros_from" class="form-control">
+						<option value="My Account">My Account</option>
+						<option value="Official FLDC">Official FLDC</option>
+						<option value="All Accounts">All Acounts</option>
 					</select>
 				</div>
 				<div id="minimum_fah_points_wrapper" class="form-group" style="display: none;">
