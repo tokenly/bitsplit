@@ -9,7 +9,7 @@
         "doctrine/dbal": "2.6.3",
         "fideloper/proxy": "^3.1",
         "guzzlehttp/guzzle": "~6.0",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.5.*",
         "laravel/socialite": "^3.0",
         "laravelcollective/html": "^5.4",
         "league/flysystem-aws-s3-v3": "~1.0",
@@ -40,7 +40,8 @@
         "mockery/mockery": "^1.0",
         "phpunit/phpunit": "^6",
         "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*"
+        "symfony/dom-crawler": "2.8.*|3.0.*",
+        "filp/whoops": "~2.0"
         
     },
     "minimum-stability": "dev",
@@ -64,7 +65,15 @@
 		{
 			"type": "vcs",
 			"url": "https://github.com/tokenly/tokenslot-client"
-		}
+		},
+        {
+            "type": "vcs",
+            "url": "git@github.com:tokenly/signal-client.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/tokenly/laravel-queue-rabbitmq"
+        }
 	],    
     "scripts": {
         "post-root-package-install": [
@@ -74,12 +83,14 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
         ]
     },
     "config": {

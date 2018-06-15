@@ -34,7 +34,7 @@ class PumpFuel extends Command
         parent::__construct();
     }
 
-    public function fire()
+    public function handle()
     {
         $username = $this->argument('username');
         $address = $this->argument('address');

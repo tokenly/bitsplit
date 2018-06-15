@@ -162,23 +162,15 @@ return [
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
         Fideloper\Proxy\TrustedProxyServiceProvider::class,
-        Tokenly\TokenpassClient\Provider\TokenpassServiceProvider::class,
 		Tokenly\XChainClient\XChainServiceProvider::class,
 		Tokenly\HmacAuth\ServiceProvider\HmacAuthServiceProvider::class,
-		Tokenly\LaravelEventLog\EventLogServiceProvider::class,
-		Tokenly\LaravelApiProvider\APIServiceProvider::class,
 		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
-        Tokenly\ConsulHealthDaemon\ServiceProvider\ConsulHealthDaemonServiceProvider::class,
         Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
         Tokenly\FluentdLogger\FluentdLoggerServiceProvider::class,
         Tokenly\PlatformAdmin\Provider\PlatformAdminServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         
         Tokenly\TokenmapClient\ServiceProvider\TokenmapServiceProvider::class,
-
-        Tokenly\RecordLock\Provider\RecordLockServiceProvider::class,
-        Tokenly\SubstationClient\SubstationClientServiceProvider::class,
-
 
     ],
 
