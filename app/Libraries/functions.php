@@ -31,9 +31,5 @@ function timestamp()
 
 function xchain()
 {
-	$client = new \Tokenly\XChainClient\Client(
-				env('XCHAIN_CONNECTION_URL'),
-				env('XCHAIN_API_TOKEN'),
-				env('XCHAIN_API_KEY'));
-	return $client;
+    throw new Exception("XChain is no longer supported", 1);
 }

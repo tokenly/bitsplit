@@ -171,6 +171,9 @@ return [
         Tokenly\ConsulHealthDaemon\ServiceProvider\ConsulHealthDaemonServiceProvider::class,
         Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
 
+        Tokenly\RecordLock\Provider\RecordLockServiceProvider::class,
+        Tokenly\SubstationClient\SubstationClientServiceProvider::class,
+
 
     ],
 
