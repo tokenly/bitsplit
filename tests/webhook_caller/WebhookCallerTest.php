@@ -1,6 +1,6 @@
 <?php
 
-use PHPUnit_Framework_Assert as PHPUnit;
+use PHPUnit\Framework\Assert as PHPUnit;
 
 
 class WebhookCallerTest extends TestCase

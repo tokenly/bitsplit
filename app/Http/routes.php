@@ -50,8 +50,8 @@ $router->get('/account/logout', array('as' => 'account.auth.logout', 'uses' => '
 $router->get('/account/sync', 'AccountController@sync');
 
 // oAuth handlers
-$router->get('/account/authorize', array('as' => 'account.authorize', 'uses' => 'AccountController@redirectToProvider'));
-$router->get('/account/authorize/callback', array('as' => 'account.authcallback', 'uses' => 'AccountController@handleProviderCallback'));
+Route::get('/account/authorize', array('as' => 'account.authorize', 'uses' => 'AccountController@redirectToProvider'));
+Route::get('/account/authorize/callback', array('as' => 'account.authcallback', 'uses' => 'AccountController@handleProviderCallback'));
 
 //API key management
 Route::get('api-keys', array('as' => 'account.api-keys', 'uses' => 'APIKeyController@index'));
@@ -59,12 +59,19 @@ Route::get('api-keys/create', array('as' => 'account.api-keys.create', 'uses' =>
 Route::get('api-keys/delete/{key}', array('as' => 'account.api-keys.delete', 'uses' => 'APIKeyController@delete'));
 
 //API methods
-Route::post('api/v1/distribute/create', array('as' => 'api.distribute.create', 'uses' => 'APIController@createDistribution'));
-Route::get('api/v1/distribute', array('as' => 'api.distribute.list', 'uses' => 'APIController@getDistributionList'));
-Route::get('api/v1/distribute/{id}', array('as' => 'api.distribute.get', 'uses' => 'APIController@getDistribution'));
-Route::patch('api/v1/distribute/{id}', array('as' => 'api.distribute.update', 'uses' => 'APIController@updateDistribution'));
-Route::delete('api/v1/distribute/{id}', array('as' => 'api.distribute.delete', 'uses' => 'APIController@deleteDistribution'));
-Route::get('api/v1/self', array('as' => 'api.user-info', 'uses' => 'APIController@getLoggedAPIUserInfo'));
+Route::middleware(['tls','cors'])->group(function () {
+    Route::middleware(['auth.api'])->group(function () {
+        Route::get('api/v1/distribute', array('as' => 'api.distribute.list', 'uses' => 'APIController@getDistributionList'));
+        Route::get('api/v1/distribute/{id}', array('as' => 'api.distribute.get', 'uses' => 'APIController@getDistribution'));
+        Route::get('api/v1/self', array('as' => 'api.user-info', 'uses' => 'APIController@getLoggedAPIUserInfo'));
+    });
+
+    Route::middleware(['auth.api.signed'])->group(function () {
+        Route::post('api/v1/distribute/create', array('as' => 'api.distribute.create', 'uses' => 'APIController@createDistribution'));
+        Route::patch('api/v1/distribute/{id}', array('as' => 'api.distribute.update', 'uses' => 'APIController@updateDistribution'));
+        Route::delete('api/v1/distribute/{id}', array('as' => 'api.distribute.delete', 'uses' => 'APIController@deleteDistribution'));
+    });
+});
 
 Route::get('/', ['middleware' => 'tls', function () {
     return view('welcome');

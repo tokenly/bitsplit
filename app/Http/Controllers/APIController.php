@@ -11,25 +11,11 @@ use Ramsey\Uuid\Uuid;
 class APIController extends Controller
 {
     
-    protected $signed_routes = array('api.distribute.create',
-                                     'api.distribute.update',
-                                     'api.distribute.delete'
-                                     );
-    
     public static $api_user = false;
     
     function __construct()
     {
         parent::__construct();
-        $action = Route::current()->getAction();
-        if(in_array($action['as'], $this->signed_routes)){
-            $this->middleware('auth.api.signed');
-        }
-        else{
-            $this->middleware('auth.api');
-        }
-        $this->middleware('tls');
-        $this->middleware('cors');
     }
     
     
