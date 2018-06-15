@@ -18,6 +18,12 @@ class WebhookCaller {
     }
 
     public function sendWebhook($event_type, User $user, $webhook_url, $payload_vars=[]) {
+        EventLog::warning('webhook.disabled', [
+            'event' => $event_type,
+            'userId' => $user['id'],
+        ]);
+        return;
+
         try {
             // get api keys
             $api_key_model = $user->firstActiveAPIKey();

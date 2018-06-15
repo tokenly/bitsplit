@@ -160,6 +160,7 @@ return [
         /*
          * Vendor Service Providers...
          */
+        Laravel\Socialite\SocialiteServiceProvider::class,
         Fideloper\Proxy\TrustedProxyServiceProvider::class,
         Tokenly\TokenpassClient\Provider\TokenpassServiceProvider::class,
 		Tokenly\XChainClient\XChainServiceProvider::class,
@@ -174,6 +175,9 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         
         Tokenly\TokenmapClient\ServiceProvider\TokenmapServiceProvider::class,
+
+        Tokenly\RecordLock\Provider\RecordLockServiceProvider::class,
+        Tokenly\SubstationClient\SubstationClientServiceProvider::class,
 
 
     ],
