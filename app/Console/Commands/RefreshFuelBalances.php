@@ -36,7 +36,7 @@ class RefreshFuelBalances extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $get = UserMeta::where('metaKey', 'fuel_address')->get();
         if(!$get OR count($get) == 0){
