@@ -55,15 +55,6 @@ class DistributeController extends Controller {
 			$value_type = 'percent';
 		}
 		$max_fixed_decimals = Config::get('settings.amount_decimals');
-
-        // btc_dust_override
-        $btc_dust_satoshis = Config::get('settings.default_dust');
-        if(isset($input['btc_dust_override']) AND strlen($input['btc_dust_override']) > 0){
-            $btc_dust_satoshis = CurrencyUtil::valueToSatoshis($input['btc_dust_override']);
-            if ($btc_dust_satoshis < self::BTC_DUST_MINIMUM) {
-                return $this->return_error('home', 'The Custom BTC Dust Size must be at least '.CurrencyUtil::satoshisToFormattedString(self::BTC_DUST_MINIMUM));
-            }
-        }
         
         //fee rate override
         $btc_fee_rate = null;
@@ -173,7 +164,6 @@ class DistributeController extends Controller {
 		$distro->asset_total = $asset_total;
         $distro->label = $label;
         $distro->use_fuel = $use_fuel;
-		$distro->btc_dust = $btc_dust_satoshis;
         $distro->uuid = Uuid::uuid4()->toString();
         $distro->fee_rate = $btc_fee_rate;
 

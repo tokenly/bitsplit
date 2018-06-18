@@ -151,15 +151,7 @@ class APIController extends Controller
 		if(isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
 			$use_fuel = 1;
 		}
-        
-        if(isset($input['btc_dust'])){
-            $btc_dust = intval($input['btc_dust']);
-            if($btc_dust < Config::get('settings.default_dust')){
-                $output['error'] = 'Dust value too low';
-                return Response::json($output, 400);
-            }
-        }
-        
+                
         $btc_fee_rate = null;
         if(isset($input['btc_fee_rate'])){
             $btc_fee_rate = intval($input['btc_fee_rate']);
@@ -187,11 +179,7 @@ class APIController extends Controller
         $distro->hold = $hold;
         $distro->uuid = Uuid::uuid4()->toString();
         $distro->fee_rate = $btc_fee_rate;
-        
-        if(isset($btc_dust)){
-            $distro->btc_dust = $btc_dust;
-        }
-        
+                
 
         //estimate fees
         $num_tx = count($address_list);

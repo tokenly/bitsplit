@@ -75,13 +75,6 @@
 					<label for="use_fuel" style="padding-left: 35px; font-size: 13px;" >Use available fuel for BTC fee?</label>
 				</div>				
 				<div class="form-group">
-					<label for="btc_dust_override">Custom BTC Dust Size</label>
-					<input type="text" class="form-control" id="btc_dust_override" name="btc_dust_override" placeholder="0.00005430" />
-					<small>
-						* This is an advanced feature.  Enter a value here to override the standard dust size of 0.00005430 BTC.
-					</small>
-				</div>	
-				<div class="form-group">
 					<label for="btc_fee_rate">Custom Miner Fee Rate</label>
 					<input type="text" class="form-control" id="btc_fee_rate" name="btc_fee_rate" placeholder="{{ Config::get('settings.miner_satoshi_per_byte') }}" />
 					<small>
