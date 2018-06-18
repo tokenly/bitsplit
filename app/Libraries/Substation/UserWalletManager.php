@@ -28,7 +28,7 @@ class UserWalletManager
             if (!$wallet_uuid) {
                 // create a new wallet
                 $name = ucfirst(env('APP_CODE', 'bitsplit')) . " User " . $user['username'];
-                $notification_queue_name = env('SIGNAL_NOTIFICATION_QUEUE', 'bitsplit');
+                $notification_queue_name = env('RABBITMQ_SIGNAL_QUEUE', 'bitsplit');
 
                 $wallet_info = $this->substation_client->createServerManagedWallet($chain, $name, $_unlock_phrase = null, $notification_queue_name);
 
