@@ -1,12 +1,14 @@
 <?php
 namespace App\Http\Controllers;
-use User, Auth, Config, UserMeta, Redirect, Response, Route;
-use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
-use Input, Session, Exception, Log;
-use Tokenly\TokenpassClient\TokenpassAPI;
-use Tokenly\CurrencyLib\CurrencyUtil;
+use App\Libraries\Substation\UserAddressManager;
 use Distribute\Initialize as DistroInit;
+use Input, Session, Exception, Log;
+use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
 use Ramsey\Uuid\Uuid;
+use Tokenly\AssetNameUtils\Validator as AssetValidator;
+use Tokenly\CurrencyLib\CurrencyUtil;
+use Tokenly\TokenpassClient\TokenpassAPI;
+use User, Auth, Config, UserMeta, Redirect, Response, Route;
 
 class APIController extends Controller
 {
@@ -40,7 +42,6 @@ class APIController extends Controller
         $user = self::$api_user;
         $output = array('result' => false);
         $input = Input::all();
-        $xchain = xchain();
         $min_addresses = Config::get('settings.min_distribution_addresses');
         $max_fixed_decimals = Config::get('settings.amount_decimals');               
         
@@ -49,15 +50,14 @@ class APIController extends Controller
             $output['error'] = 'Asset name required';
             return Response::json($output, 400);
         }
-        try{
-            $getAsset = $xchain->getAsset(strtoupper(trim($input['asset'])));
-        }
-        catch(Exception $e){
-            Log::error('API - Distro Asset "'.$input['asset'].'" error '.$e->getMessage());
+
+        $asset = strtoupper(trim($input['asset']));
+        if (!AssetValidator::isValidAssetName($asset)) {
+            Log::error('API - Distro Asset "'.$input['asset'].'" error.');
             $getAsset = false;
         }
         if(!$getAsset){
-        $output['error'] = 'Asset not found';
+            $output['error'] = 'Asset not found';
             return Response::json($output, 400);
         }
         $asset = $getAsset['asset'];
@@ -129,18 +129,18 @@ class APIController extends Controller
         }
 	
 		//generate deposit address
-		$deposit_address = false;
-		$address_uuid = false;
-		try{
-			$get_address = $xchain->newPaymentAddress();
-			if($get_address AND isset($get_address['address'])){
-				$deposit_address = $get_address['address'];
-				$address_uuid = $get_address['id'];
-			}
-		}
-		catch(Exception $e){
-			Log::error('Error getting distro deposit address (API) : '.$e->getMessage());
-		}
+		$deposit_address = null;
+		$address_uuid = null;
+        try{
+            $deposit_address_details = app(UserAddressManager::class)->newPaymentAddressForUser($user);
+            $deposit_address = $deposit_address_details['address'];
+            $address_uuid = $deposit_address_details['uuid'];
+        }
+        catch(Exception $e){
+            EventLog::logError('depositAddress.API.error', $e, [
+                'userId' => $user['id'],
+            ]);
+        }
 		if(!$deposit_address){
 			$output['error'] = 'Error generating deposit address';
             return Response::json($output, 500);

@@ -17,6 +17,7 @@
         "ramsey/uuid": "^3",
         "simplesoftwareio/simple-qrcode": "1.4.*",        
         "tokenly/bitcoin-currency-lib": "^1",
+        "tokenly/crypto-quantity": "^2.2",
         "tokenly/consul-health-daemon": "^0.2",
         "tokenly/laravel-api-provider": "^3.3",
         "tokenly/laravel-event-log": "^3.1",
@@ -25,10 +26,11 @@
         "tokenly/tokenslot-client": "dev-master",
         "tokenly/xcaller-client": "^0.3",
         "tokenly/xchain-client": "dev-master",
-        "tokenly/substation-client": "^0.4.0",
+        "tokenly/substation-client": "^0.4.1",
         "tokenly/substation-distribution-client": "dev-master@dev",
         "tokenly/laravel-record-lock": "^1.1",
-        "tokenly/signal-client": "^0.2.2"
+        "tokenly/signal-client": "^0.2.2",
+        "tokenly/asset-name-utils": "^0.2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

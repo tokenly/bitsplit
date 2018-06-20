@@ -1,14 +1,18 @@
 <?php
 namespace Models;
+use App\Libraries\Substation\Substation;
+use App\Libraries\Substation\UserWalletManager;
 use DB, Models\Distribution, Models\DistributionTx, User, UserMeta, Exception, Log, Config;
+use Tokenly\CryptoQuantity\CryptoQuantity;
 class Fuel
 {
 	
-	public static function pump($userId, $address, $amount, $asset = 'BTC', $fee = null, $amount_satoshis = true)
+	public static function pump($userId, $destination_address, $amount_float, $asset = 'BTC', $fee = null, $amount_satoshis = true)
 	{
+        $user = null;
 		if($userId == 'MASTER'){
-			$uuid = env('MASTER_FUEL_ADDRESS_UUID');
-			if(!$uuid){
+			$fuel_address_uuid = env('MASTER_FUEL_ADDRESS_UUID');
+			if(!$fuel_address_uuid){
 				Log::error('Fuel pump - master fuel address not found');
 				throw new Exception('Master fuel address not found');
 			}
@@ -20,7 +24,7 @@ class Fuel
 				Log::error('Fuel pump - distro not found '.$userId);
 				throw new Exception($userId.' distribution not found');
 			}
-			$uuid = $get->address_uuid;
+			$fuel_address_uuid = $get->address_uuid;
 		}
 		else{
 			$user = User::where('id', $userId)->orWhere('username', $userId)->first();
@@ -28,64 +32,83 @@ class Fuel
 				Log::error('Fuel pump - user not found '.$userId);
 				throw new Exception($userId.' user not found');
 			}
-			$uuid = UserMeta::getMeta($user->id, 'fuel_address_uuid');
-			if(!$uuid){
+			$fuel_address_uuid = UserMeta::getMeta($user->id, 'fuel_address_uuid');
+			if(!$fuel_address_uuid){
 				Log::error('Fuel pump - fuel address not found '.$userId);
 				throw new Exception($userId.' fuel address not found');
 			}
 		}
-		if($address == 'MASTER'){
-			$address = env('MASTER_FUEL_ADDRESS');
+		if($destination_address == 'MASTER'){
+			$destination_address = env('MASTER_FUEL_ADDRESS');
 		}
-		elseif($address == 'HOUSE'){
-			$address = env('HOUSE_INCOME_ADDRESS');
-			if(!$address){
+		elseif($destination_address == 'HOUSE'){
+			$destination_address = env('HOUSE_INCOME_ADDRESS');
+			if(!$destination_address){
 				Log::error('Fuel pump - house income address not found');
 				throw new Exception('House income address not found');
 			}
 		}
-		elseif(strpos($address, 'user:') === 0){
-			$address = substr($address, 5);
-			$user = User::where('id', $address)->orWhere('username', $address)->first();
+		elseif(strpos($destination_address, 'user:') === 0){
+			$destination_address = substr($destination_address, 5);
+			$user = User::where('id', $destination_address)->orWhere('username', $destination_address)->first();
 			if(!$user){
-				Log::error('Fuel pump - user not found '.$address);
-				throw new Exception($address.' user not found');
+				Log::error('Fuel pump - user not found '.$destination_address);
+				throw new Exception($destination_address.' user not found');
 			}
-			$address = UserMeta::getMeta($user->id, 'fuel_address');
-			if(!$address){
+			$destination_address = UserMeta::getMeta($user->id, 'fuel_address');
+			if(!$destination_address){
 				Log::error('Fuel pump - fuel address not found '.$user->id);
 				throw new Exception($user->id.' fuel address not found');
 			}
 		}
 		else{
-			if(is_int($address)){
-				$distro = Distribution::where('id', $address)->first();
+			if(is_int($destination_address)){
+				$distro = Distribution::where('id', $destination_address)->first();
 				if($distro){
-					$address = $distro->deposit_address;
+					$destination_address = $distro->deposit_address;
 				}
 			}
 		}
-		$xchain = xchain();
-		if(strtolower($amount) == 'sweep'){
-			Log::info('Sweeping assets from '.$uuid.' to '.$address);
-			return $xchain->sweepAllAssets($uuid, $address);
+		if(strtolower($amount_float) == 'sweep'){
+            throw new Exception("Sweeping is not implemented", 1);
+			// Log::info('Sweeping assets from '.$fuel_address_uuid.' to '.$destination_address);
+			// return $xchain->sweepAllAssets($fuel_address_uuid, $destination_address);
 		}
 		if($amount_satoshis){
-			$amount = round($amount / 100000000, 8); 	
-		}
-        if($fee === null){
-            $per_byte = Config::get('settings.miner_satoshi_per_byte');
+            $destination_quantity = CryptoQuantity::fromSatoshis($amount_satoshis);
+        } else {
+			$destination_quantity = CryptoQuantity::fromFloat($amount_float);
+
         }
-        else{
-            $per_byte = $fee;
+
+        // fee is ignored for fuel pump
+        // if($fee === null){
+        //     $per_byte = Config::get('settings.miner_satoshi_per_byte');
+        // }
+        // else{
+        //     $per_byte = $fee;
+        // }
+
+        // ensure user and wallet id
+        if (!$user) {
+            throw new Exception("Fuel pump requires a user", 1);
         }
-		Log::info('Pumping '.$amount.' '.$asset.' from '.$uuid.' to '.$address.' (fee rate: '.$per_byte.')');
+        $wallet_uuid = app(UserWalletManager::class)->ensureSubstationWalletForUser($user);
+
+        Log::info('Pumping '.$destination_quantity.' '.$asset.' from '.$fuel_address_uuid.' to '.$destination_address.' (fee rate: '.$per_byte.')');
         
-        return $xchain->sendFromAccount($uuid, $address, $amount, $asset, 'default', false, null, null, null, null, $per_byte);
+        $substation = Substation::instance();
+        $send_parameters = [
+            'feeRate' => 'medlow',
+        ];
+        $substation->sendImmediatelyToSingleDestination($wallet_uuid, $fuel_address_uuid, $asset, $destination_quantity, $destination_address, $send_parameters);
+        // return $xchain->sendFromAccount($uuid, $destination_address, $amount, $asset, 'default', false, null, null, null, null, $per_byte);
 	}
 	
 	public static function masterFuelSwap($userId, $token_in, $token_out, $in_amount, $out_amount)
 	{
+        throw new Exception("masterFuelSwap is unimplemented", 1);
+
 		$output = array();
 		Fuel::pump('MASTER', 'user:'.$userId, Config::get('settings.miner_fee'), 'BTC'); //pump a bit of BTC to pay for TX fee
 		$output['in_swap'] = Fuel::pump($userId, 'MASTER', $in_amount, $token_in);
@@ -145,7 +168,7 @@ class Fuel
         }
 		$max_txos = Config::get('settings.max_tx_outputs');
         if($dust_size == null){        
-            $dust_size = Config::get('settings.default_dust');
+            $dust_size = 0;
         }
         $extra_bytes = Config::get('settings.tx_extra_bytes');
         $input_bytes = Config::get('settings.tx_input_bytes');

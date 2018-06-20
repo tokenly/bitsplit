@@ -1,6 +1,12 @@
 <?php
 namespace Distribute\Stages;
-use Config, UserMeta, DB, Exception, Log, Models\Fuel, Models\Distribution as Distro, Models\DistributionTx as DistroTx;
+use App\Libraries\Substation\Substation;
+use App\Libraries\Substation\UserWalletManager;
+use Config, UserMeta, DB, Exception, Log, Models\Fuel, Models\Distribution as Distro;
+use Models\DistributionTx;
+use Tokenly\CryptoQuantity\CryptoQuantity;
+use Tokenly\LaravelEventLog\Facade\EventLog;
+use User;
 
 class BroadcastTxs extends Stage
 {
@@ -8,7 +14,6 @@ class BroadcastTxs extends Stage
 	public function init()
 	{
 		$distro = $this->distro;
-		$xchain = xchain();
 		$per_byte = Config::get('settings.miner_satoshi_per_byte');
         if($distro->fee_rate != null){
             $per_byte = $distro->fee_rate;
@@ -18,27 +23,23 @@ class BroadcastTxs extends Stage
 		$dust_size_float = round($dust_size/100000000,8);
         $tx_fee = $xcp_tx_bytes * $per_byte;
         $fee_float = round($tx_fee/100000000,8);
-				
-		$address_list = DistroTx::where('distribution_id', $distro->id)->get();
-		if(!$address_list OR count($address_list) == 0){
-			Log::error('No distribution addresses found for distro '.$distro->id);
-			return false;
-		}
-		$send_list = array();
-		foreach($address_list as $row){
-			if(trim($row->txid) == '' AND trim($row->utxo) != ''){
-				$send_list[] = $row;
-			}
-		}
+
+        $send_list = $this->buildSendList($distro);
+        if ($send_list === null) {
+        	return false;
+        }
 		if(count($send_list) == 0){
-			//all transactions signed, proceed
-			$distro->incrementStage();
-            $distro->sendWebhookUpdateNotification();
+			// all transactions are broadcasted
+            $this->goToNextStage($distro);
 			return true;
 		}
 		
+		$substation = Substation::instance();
+		$user = User::find($distro->user_id);
+		$wallet_uuid = app(UserWalletManager::class)->ensureSubstationWalletForUser($user);
+
 		foreach($send_list as $row){
-			$send = false;
+			$sent_txid = null;
 			try{
 				$exp_utxos = explode(',', $row->utxo);
 				$utxos = array();
@@ -48,35 +49,78 @@ class BroadcastTxs extends Stage
 						Log::error('Malformed utxo entry for distro '.$distro->id.' -> '.$row->destination);
 						continue 2;
 					}
-					$utxos[] = array('txid' => $exp_utxo[0], 'n' => $exp_utxo[1]);
+					// $utxos[] = array('txid' => $exp_utxo[0], 'n' => $exp_utxo[1]);
+					$utxos[] = "{$exp_utxo[0]}:{$exp_utxo[1]}";
 				}
 				
-				$quantity_float = round($row->quantity/100000000, 8, PHP_ROUND_HALF_DOWN);
-                $send = $xchain->send($distro->address_uuid, $row->destination, $quantity_float, $distro->asset, $fee_float, $dust_size_float, null, $utxos);
-                //$send = $xchain->sendFromAccount($distro->address_uuid, $row->destination, $quantity_float, $distro->asset, 'default', false, null, $dust_size_float, null, $utxos, $per_byte);
+				$send_parameters = [
+					'requestId' => $distro->id.':'.$row->id, // the requestId prevents duplicate transactions
+					'txos' => $utxos,
+				];
+				$destination_quantity = CryptoQuantity::fromSatoshis($row->quantity);
+                $send_result = $substation->sendImmediatelyToSingleDestination($wallet_uuid, $distro->address_uuid, $distro->asset, $destination_quantity, $row->destination, $send_parameters);
+                $sent_txid = $send_result['txid'];
 			}
 			catch(Exception $e){
-				Log::error('Error sending tx for distro '.$distro->id.' to address '.$row->destination.': '.$e->getMessage());
+				EventLog::logError('distribution.txSendError', $e, [
+				    'distributionId' => $distro->id,
+					'quantity' => $row->quantity,
+					'asset' => $distro->asset,
+					'destination' => $row->destination,
+				]);
+
 				continue;
 			}
-			if(!$send){
-				Log::error('Unknown error sending tx for distro '.$distro->id.' to address '.$row->destination);
-				continue;
-			}
-			if(!isset($send['txid']) OR trim($send['txid']) == '' OR trim($send['txid']) == 'NULL'){
-				Log::error('Failed broadcasting tx for distro '.$distro->id.' to address '.$row->destination);
-				continue;
-			}
-			$row->txid = $send['txid'];
+
+			$row->txid = $sent_txid;
 			$save = $row->save();
-			if(!$save){
-				Log::error('Failed saving tx '.$send['txid'].' for distro '.$distro->id.' to address '.$row->destination);
-			}
-			else{
-				Log::info('Distro '.$distro->id.' tx sent to '.$row->destination.' -> '.$send['txid']);
-			}
+			EventLog::debug('distribution.txSent', [
+			    'distributionId' => $distro->id,
+				'quantity' => $row->quantity,
+				'asset' => $distro->asset,
+				'destination' => $row->destination,
+				'txid' => $sent_txid,
+			]);
 		}
+
+		// see if it is complete now
+        $send_list = $this->buildSendList($distro);
+		if($send_list !== null and count($send_list) == 0){
+            $this->goToNextStage($distro);
+			return true;
+		}
+
 		return true;
 	}
+
+	protected function buildSendList($distribution)
+	{
+	    $address_list = DistributionTx::where('distribution_id', $distribution->id)->get();
+	    if(!$address_list OR count($address_list) == 0){
+	    	Log::error('No distribution addresses found for distro '.$distribution->id);
+	    	return null;
+	    }
+	    $send_list = [];
+	    foreach($address_list as $row){
+	    	if(trim($row->txid) == '' AND trim($row->utxo) != ''){
+	    		$send_list[] = $row;
+	    	}
+	    }
+
+	    return $send_list;
+	}
 	
+	protected function goToNextStage($distribution)
+	{
+		EventLog::info('distribution.stageComplete', [
+		    'distributionId' => $distribution->id,
+		    'stage' => 'BroadcastTxs',
+		]);
+
+		$distribution->incrementStage();
+        $distribution->sendWebhookUpdateNotification();
+
+		return true;
+	}
+
 }

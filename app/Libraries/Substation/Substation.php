@@ -4,6 +4,7 @@ namespace App\Libraries\Substation;
 
 use Tokenly\CryptoQuantity\CryptoQuantity;
 use Tokenly\SubstationClient\SubstationClient;
+use Tokenly\SubstationDistributionClient\SubstationDistributionClient;
 
 class Substation
 {
@@ -13,14 +14,24 @@ class Substation
         return app(SubstationClient::class);
     }
 
+    public static function distributionClientInstance(): SubstationDistributionClient
+    {
+        return app(SubstationDistributionClient::class);
+    }
+
     public static function chain(): string
     {
-        $livenet = env('SUBSTATION_USE_LIVENET', true);
+        $livenet = self::useLivenet();
         if ($livenet) {
             return 'counterparty';
         } else {
             return 'counterpartyTestnet';
         }
+    }
+
+    public static function useLivenet()
+    {
+        return env('SUBSTATION_USE_LIVENET', true);
     }
 
     /**
