@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18670957eed4d0a569766f5bdb69022c",
+    "content-hash": "d75e21b5c3e27688e1292e39aefb1a6e",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4416,7 +4416,7 @@
         },
         {
             "name": "tokenly/substation-distribution-client",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-distribution-client.git",
@@ -6493,7 +6493,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "tokenly/substation-distribution-client": 20,
         "tokenly/tokenslot-client": 20,
         "tokenly/xchain-client": 20
     },
