@@ -98,13 +98,6 @@
                         See <a href="https://bitcoinfees.earn.com" target="_blank">https://bitcoinfees.earn.com</a> for help determining a rate.
 					</small>
 				</div>
-				<div class="form-group">
-					<label for="btc_dust_override">Custom BTC Dust Size</label>
-					<input type="text" class="form-control" id="btc_dust_override" name="btc_dust_override" placeholder="0.00005430" />
-					<small>
-						* This is an advanced feature.  Enter a value here to override the standard dust size of 0.00005430 BTC.
-					</small>
-				</div>	
 				<div class="form-submit">
 					<button type="submit" class="btn btn-lg btn-success"><i class="fa fa-check"></i> Initiate Distribution</button>
 				</div>															
