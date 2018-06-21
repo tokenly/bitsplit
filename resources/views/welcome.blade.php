@@ -19,10 +19,6 @@
             <p>
                 <a href="{{ route('home') }}" class="btn btn-lg btn-success"><i class="fa fa-rocket"></i> Get Started</a>
             </p>
-            <h2>Payment Routing</h2>
-            <p>
-                Coming soon...
-            </p>
         </div>
     </div>
 
@@ -30,5 +26,5 @@
 
 
 @section('title')
-    Token Distributions & Payment Routing
+    Token Distributions
 @stop

@@ -1,12 +1,14 @@
 <?php
 namespace Models;
 
-use Illuminate\Database\Eloquent\Model;
-use DB, Mail, User, Log, Exception, Config;
-use Tokenly\TokenpassClient\TokenpassAPI;
-use Distribute\Initialize;
 use App\Jobs\NotificationReturnJob;
+use App\Libraries\Substation\Substation;
+use DB, Mail, User, Log, Exception, Config;
+use Distribute\Initialize;
+use Illuminate\Database\Eloquent\Model;
+use LinusU\Bitcoin\AddressValidator;
 use Tokenly\CurrencyLib\CurrencyUtil;
+use Tokenly\TokenpassClient\TokenpassAPI;
 
 class Distribution extends Model
 {
@@ -76,9 +78,9 @@ class Distribution extends Model
 		return $decode;
 	}
 
+    // BTC dust is now always 0
     public function getBTCDustSatoshis() {
-        if ($this->btc_dust == 0) { return Config::get('settings.default_dust'); }
-        return $this->btc_dust;
+        return 0;
     }
 	
 	public function addressCount()
@@ -143,7 +145,7 @@ class Distribution extends Model
             $initer->stopMonitor($this);            
         }
         catch(Exception $e){
-            Log::error('Error closing xchain monitor when completing distro #'.$this->id.': '.$e->getMessage()); 
+            Log::error('Error closing monitor when completing distro #'.$this->id.': '.$e->getMessage()); 
         }
         
 		return true;
@@ -199,7 +201,6 @@ class Distribution extends Model
     
     public static function processAddressList($list, $value_type, $csv = false, $cut_csv_head = false)
     {
-		$xchain = xchain();
         $array = true;
         if(!is_array($list)){
             $array = false;
@@ -212,7 +213,7 @@ class Distribution extends Model
                 }
             }
         }
-		$tokenpass = new TokenpassAPI;
+		$tokenpass = app(TokenpassAPI::class);
 		$address_list = array();
 		foreach($list as $lk => $row){
             if($array){
@@ -234,8 +235,9 @@ class Distribution extends Model
 			if(isset($parse_row[0]) AND isset($parse_row[1])){
 				$address = trim($parse_row[0]);
 				try{
-					$valid_address = $xchain->validateAddress($address);
-					if(!$valid_address OR !$valid_address['result']){
+                    $address_version = Substation::useLivenet() ? AddressValidator::MAINNET : AddressValidator::TESTNET;
+                    $address_is_valid = AddressValidator::isValid($address, $address_version);
+					if(!$address_is_valid){
 						$address = false;
 					}
 				}

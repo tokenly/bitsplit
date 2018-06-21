@@ -160,16 +160,8 @@ return [
         /*
          * Vendor Service Providers...
          */
-        Fideloper\Proxy\TrustedProxyServiceProvider::class,
-        Tokenly\TokenpassClient\Provider\TokenpassServiceProvider::class,
-		Tokenly\XChainClient\XChainServiceProvider::class,
-		Tokenly\HmacAuth\ServiceProvider\HmacAuthServiceProvider::class,
-		Tokenly\LaravelEventLog\EventLogServiceProvider::class,
-		Tokenly\LaravelApiProvider\APIServiceProvider::class,
 		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
-        Tokenly\ConsulHealthDaemon\ServiceProvider\ConsulHealthDaemonServiceProvider::class,
         Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
-
 
     ],
 

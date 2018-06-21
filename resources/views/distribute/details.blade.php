@@ -31,9 +31,6 @@
 			<li>
 				<strong>BTC Fuel Cost:</strong> {{ rtrim(rtrim(number_format($distro->fee_total / 100000000, 8),"0"),".") }} BTC
 			</li>
-			<li>
-				<strong>BTC Dust Size:</strong> {{ rtrim(rtrim(number_format($distro->btc_dust / 100000000, 8),"0"),".") }} BTC
-			</li>
             @if($distro->fee_rate != null)
 			<li>
 				<strong>Miner Fee Rate:</strong> {{ $distro->fee_rate }} satoshis per byte

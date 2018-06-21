@@ -1,14 +1,12 @@
 <?php 
 namespace App\Http\Controllers;
-use User, Input, Session, Hash, Redirect, Exception, Config, URL, Response;
-use LinusU\Bitcoin\AddressValidator;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Tokenly\TokenSlotClient;
-use Laravel\Socialite\Facades\Socialite;
-use Laravel\Socialite\Two\InvalidStateException;
-use App\Http\Controllers\Controller;
+use Socialite;
+use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\TokenpassClient\Facade\Tokenpass;
+use User, Input, Session, Hash, Redirect, Exception, Config, URL, Response;
 
 class AccountController extends Controller {
 
@@ -63,6 +61,10 @@ class AccountController extends Controller {
      */
     public function redirectToProvider()
     {
+        // set scopes
+        Socialite::scopes(explode(',', config('tokenpass.scopes')));
+
+        // and redirect
         return Socialite::redirect();
     }
     
@@ -81,12 +83,6 @@ class AccountController extends Controller {
     {
 
         try {
-            // check for an error returned from Tokenpass
-            $error_description = Tokenpass::checkForError($request);
-            if ($error_description) {
-                return view('account.authorization-failed', ['error_msg' => $error_description]);
-            }
-			
             // retrieve the user from Tokenpass
             $oauth_user = Socialite::user();
             
@@ -140,6 +136,7 @@ class AccountController extends Controller {
 
         } catch (Exception $e) {
             // some unexpected error happened
+            EventLog::logError('account.authFailed', $e);
             return view('account.authorization-failed', ['error_msg' => 'Failed to authenticate this user.']);
         }
     }
