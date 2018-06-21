@@ -5,39 +5,45 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=5.6.4",
-        "laravel/framework": "5.4.*",
-        "tokenly/tokenpass-client": "^1.3",
-        "laravel/socialite": "^3.0",
-		"tokenly/tokenslot-client": "dev-master@dev",
-		"linusu/bitcoin-address-validator": "~0",
-		"tokenly/xchain-client": "dev-master@dev",
-		"guzzlehttp/guzzle": "~6.0",
-		"tokenly/token-generator": "dev-master@dev",
-        "tokenly/laravel-event-log": "^1",
-        "simplesoftwareio/simple-qrcode": "1.4.*",        
-        "nesbot/carbon": "*",
-        "tokenly/laravel-api-provider": "^1.0.11",
-        "tokenly/consul-health-daemon": "^0.2",
-        "tokenly/bitcoin-currency-lib": "^1",
-        "fideloper/proxy": "^3.1",
-        "pda/pheanstalk": "~3.0",
-        "tokenly/xcaller-client": "^0.3",
-        "ramsey/uuid": "^3",
         "bitwasp/bitcoin-lib": "1.0.*",
-        "tokenly/platform-admin": "^0.5.0",
-        "tokenly/fluentd-logger": "^0.2.2",
+        "doctrine/dbal": "2.6.3",
+        "fideloper/proxy": "^3.1",
+        "guzzlehttp/guzzle": "~6.0",
+        "laravel/framework": "5.5.*",
+        "laravel/socialite": "^3.0",
         "laravelcollective/html": "^5.4",
         "league/flysystem-aws-s3-v3": "~1.0",
-        "doctrine/dbal": "2.6.3",
-        "tokenly/tokenmap-client": "^2.0"
+        "linusu/bitcoin-address-validator": "~0",
+        "nesbot/carbon": "*",
+        "pda/pheanstalk": "~3.0",
+        "php": ">=5.6.4",
+        "ramsey/uuid": "^3",
+        "simplesoftwareio/simple-qrcode": "1.4.*",        
+        "tokenly/asset-name-utils": "^0.2.0",
+        "tokenly/bitcoin-currency-lib": "^1",
+        "tokenly/consul-health-daemon": "^0.2",
+        "tokenly/crypto-quantity": "^2.2",
+        "tokenly/fluentd-logger": "^0.2.2",
+        "tokenly/laravel-api-provider": "^3.3",
+        "tokenly/laravel-event-log": "^3.1",
+        "tokenly/laravel-record-lock": "^1.1",
+        "tokenly/platform-admin": "^0.5.0",
+        "tokenly/signal-client": "^0.2.2",
+        "tokenly/substation-client": "^0.4.1",
+        "tokenly/substation-distribution-client": "^0.1.0",
+        "tokenly/token-generator": "^1",
+        "tokenly/tokenmap-client": "^2.0",
+        "tokenly/tokenpass-client": "^2",
+        "tokenly/tokenslot-client": "dev-master",
+        "tokenly/xcaller-client": "^0.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
+        "mockery/mockery": "^1.0",
+        "phpunit/phpunit": "^6",
         "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*"
+        "symfony/dom-crawler": "2.8.*|3.0.*",
+        "filp/whoops": "~2.0"
         
     },
     "minimum-stability": "dev",
@@ -61,7 +67,15 @@
 		{
 			"type": "vcs",
 			"url": "https://github.com/tokenly/tokenslot-client"
-		}
+		},
+        {
+            "type": "vcs",
+            "url": "git@github.com:tokenly/signal-client.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/tokenly/laravel-queue-rabbitmq"
+        }
 	],    
     "scripts": {
         "post-root-package-install": [
@@ -71,12 +85,14 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
         ]
     },
     "config": {

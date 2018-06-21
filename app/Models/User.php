@@ -1,4 +1,5 @@
 <?php
+use App\Libraries\Substation\UserWalletManager;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -11,7 +12,9 @@ use Tokenly\LaravelApiProvider\Contracts\APIPermissionedUserContract;
 use Tokenly\LaravelApiProvider\Model\APIUser;
 use Tokenly\LaravelApiProvider\Model\Traits\Permissioned;
 use Illuminate\Support\Facades\Log;
-class User extends APIUser implements AuthenticatableContract, CanResetPasswordContract, APIPermissionedUserContract
+use Tokenly\LaravelEventLog\Facade\EventLog;
+use Tokenly\SubstationClient\SubstationClient;
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
 	use Authenticatable, CanResetPassword;
     use Permissioned;
@@ -81,39 +84,50 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
 		return $output;
 	}
 	
-	public static function getFuelAddress($userId)
-	{
-		$get_address = UserMeta::getMeta($userId, 'fuel_address');
-		if(!$get_address){
-			$xchain = xchain();
-			try{
-				$new_address = $xchain->newPaymentAddress();
-				$monitor = false;
-				if($new_address AND isset($new_address['address'])){
-					$nonce = hash('sha256', $new_address['id'].'_'.$userId);
-					$monitor = $xchain->newAddressMonitor($new_address['address'], route('hooks.refuel').'?nonce='.$nonce);
-					$send_monitor = $xchain->newAddressMonitor($new_address['address'], route('hooks.unfuel').'?nonce='.$nonce, 'send');
-				}
-			}
-			catch(\Exception $e){
-				\Log::error('Error getting user '.$userId.' fuel address: '.$e->getMessage());
-				return false;
-			}
-			
-			if($new_address AND isset($new_address['address']) AND $monitor AND $send_monitor){
-				UserMeta::setMeta($userId, 'fuel_address', $new_address['address']);
-				UserMeta::setMeta($userId, 'fuel_address_uuid', $new_address['id']);
-				UserMeta::setMeta($userId, 'fuel_address_monitor_receive', $monitor['id']);
-				UserMeta::setMeta($userId, 'fuel_address_monitor_send', $send_monitor['id']);
-				UserMeta::setMeta($userId, 'fuel_balance', 0);
-				UserMeta::setMeta($userId, 'fuel_pending', 0);
-				UserMeta::setMeta($userId, 'fuel_spent', 0);
-				return $new_address['address'];
-			}
-			return false;
-		}
-		return $get_address;
-	}
+    public static function getFuelAddress($userId)
+    {
+        $fuel_address = UserMeta::getMeta($userId, 'fuel_address');
+        if (!$fuel_address) {
+            $fuel_address = self::newFuelAddress($userId);
+        }
+        return $fuel_address;
+    }
+
+    public static function newFuelAddress($userId)
+    {
+        $substation = app(SubstationClient::class);
+
+        // get or create a substation wallet for this user
+        $user = User::find($userId);
+        $wallet_uuid = app(UserWalletManager::class)->ensureSubstationWalletForUser($user);
+
+        try {
+            $new_address = $substation->allocateAddress($wallet_uuid);
+        } catch (\Exception $e) {
+            EventLog::logError('fuelAddress.error', $e, [
+                'userId' => $userId,
+            ]);
+            \Log::error('Error getting user ' . $userId . ' fuel address: ' . $e->getMessage());
+            return false;
+        }
+
+        EventLog::debug('fuelAddress.new', [
+            'userId' => $userId,
+            'address' => $new_address['address'],
+            'uuid' => $new_address['uuid'],
+        ]);
+
+        // "uuid": "5a83a57f-a56c-4c0b-afd4-8572516bf2fb",
+        // "address": "1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j",
+        UserMeta::setMeta($userId, 'fuel_address', $new_address['address']);
+        UserMeta::setMeta($userId, 'fuel_address_uuid', $new_address['uuid']);
+        UserMeta::setMeta($userId, 'fuel_balance', 0);
+        UserMeta::setMeta($userId, 'fuel_pending', 0);
+        UserMeta::setMeta($userId, 'fuel_spent', 0);
+
+        return $new_address['address'];
+    }
+
 
     public function firstActiveAPIKey() {
         return APIKey::where('user_id', $this['id'])

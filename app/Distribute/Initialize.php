@@ -14,59 +14,37 @@ class Initialize
 	
 	public function startMonitor($distro, $first_stage = true, $force = false)
 	{
-        if(!$force){
-            if($distro->monitor_uuid != ''){
-                return false;
-            }
+        if(!$force and $distro->stage > 0){
+            return false;
         }
-		$webhook = route('hooks.distro.deposit').'?nonce='.hash('sha256', $distro->user_id.':'.$distro->address_uuid); 
-		$send_webhook = route('hooks.distro.send').'?nonce='.hash('sha256', $distro->user_id.':'.$distro->address_uuid); 
-		try{
-			$xchain = xchain();
-			$monitor = $xchain->newAddressMonitor($distro->deposit_address, $webhook);
-			$send_monitor = $xchain->newAddressMonitor($distro->deposit_address, $send_webhook, 'send');
-		}
-		catch(Exception $e)
-		{
-			$monitor = false;
-			$send_monitor = false;
-		}
-		if(is_array($monitor) AND is_array($send_monitor)){
-			$distro->monitor_uuid = $monitor['id'];
-			$distro->send_monitor_uuid = $send_monitor['id'];
-			if($first_stage){
-				$distro->stage = 1;
-			}
-			$distro->save();
-			Log::info('Started distro monitors for #'.$distro->id);
-			return array('send' => $send_monitor['id'], 'receive' => $monitor['id']);
-		}
-		return false;
+
+        // substation automatically monitors all allocated addresses
+        //   so we don't need to explictly create a monitor
+
+        // mark the distribution as entering hte first stage
+		if($first_stage){
+			$distro->stage = 1;
+    		$distro->save();
+        }
+
+		Log::info('Started distro for #'.$distro->id);
+		return true;
+
 	}
 	
 	public function stopMonitor($distro)
 	{
-		if($distro->monitor_uuid == ''){
-			return false;
-		}
-		$xchain = xchain();
-        try{
-            $destroy = $xchain->destroyAddressMonitor($distro->monitor_uuid);
-            $destroy_sender = $xchain->destroyAddressMonitor($distro->send_monitor_uuid);
-        }
-        catch(Exception $e){
-            Log::info('Error stopping distro monitor: '.$e->getMessage());
-            return false;
-        }
+        // substation does not have a method to close down monitoring of allocated addresses
 		Log::info('Stopped distro receive monitor for #'.$distro->id);
+
 		return true;
 	}
     
     public function registerToTokenpassProvisionalWhitelist($distro)
     {
-        $tokenpass = new TokenpassAPI;
+        $tokenpass = app(TokenpassAPI::class);
         try{
-            $register = $tokenpass->registerProvisionalSourceWithProof($distro->deposit_address, $distro->asset);
+            $register = $tokenpass->registerProvisionalSource($distro->deposit_address, null, $distro->asset);
         }
         catch(Exception $e){
             Log::error('Error registering distro #'.$distro->id.' to Tokenpass provisional source whitelist: '.$e->getMessage());
@@ -82,7 +60,7 @@ class Initialize
     
     public function deleteFromTokenpassProvisionalWhitelist($distro)
     {
-        $tokenpass = new TokenpassAPI;
+        $tokenpass = app(TokenpassAPI::class);
         try{
             $delete = $tokenpass->deleteProvisionalSource($distro->deposit_address);
         }

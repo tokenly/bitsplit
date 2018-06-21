@@ -23,17 +23,7 @@ function aasort (&$array, $key) {
     $array=$ret;
 }
 
-
 function timestamp()
 {
 	return date('Y-m-d H:i:s');
-}
-
-function xchain()
-{
-	$client = new \Tokenly\XChainClient\Client(
-				env('XCHAIN_CONNECTION_URL'),
-				env('XCHAIN_API_TOKEN'),
-				env('XCHAIN_API_KEY'));
-	return $client;
 }

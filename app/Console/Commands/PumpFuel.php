@@ -15,7 +15,8 @@ class PumpFuel extends Command
      *
      * @var string
      */
-    protected $signature = 'bitsplit:pumpFuel {username} {address} {amount} {--sweep=false} {--asset=BTC}';
+    // protected $signature = 'bitsplit:pumpFuel {username} {address} {amount} {--sweep=false} {--asset=BTC} {--feerate=} ';
+    protected $signature = 'bitsplit:pumpFuel {username} {address} {amount} {--asset=BTC} {--feerate=} ';
 
     /**
      * The console command description.
@@ -34,19 +35,23 @@ class PumpFuel extends Command
         parent::__construct();
     }
 
-    public function fire()
+    public function handle()
     {
         $username = $this->argument('username');
         $address = $this->argument('address');
         $amount = $this->argument('amount');
-        $sweep = $this->option('sweep');
+        // $sweep = $this->option('sweep');
+        $sweep = false;
         $asset = $this->option('asset');
+        $feerate = $this->option('feerate');
+        
 		try{
-			if($sweep == 'true'){
-				$send = Fuel::pump($username, $address, 'sweep', $asset, null, false);
+			if($sweep){
+                $this->error("Sweeping is not implemented");
+				// $send = Fuel::pump($username, $address, 'sweep', $asset, $feerate, false);
 			}
 			else{
-				$send = Fuel::pump($username, $address, $amount, $asset, null, false);
+				$send = Fuel::pump($username, $address, $amount, $asset, $feerate, false);
 			}
 			if($send){
 				$this->info('Success: '.$send['txid']);

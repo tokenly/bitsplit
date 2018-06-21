@@ -20,8 +20,8 @@
             <strong>Attention:</strong> Transaction capacity on the Bitcoin network is at high levels of congestion.
             If your distribution is time sensitive at all, please make sure to double check that your miner fee rate
             is set appropriately, otherwise you may be stuck with a several day wait time.<br>
-            You can use <a href="https://bitcoinfees.21.co/" target="_blank">https://bitcoinfees.21.co/</a> to help
-            with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.
+            You can use <a href="https://bitcoinfees.earn.com/" target="_blank">https://bitcoinfees.earn.com/</a> to help
+            with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.<br>
         </p>
 		<hr>
 		<div id="new-distro-form">
@@ -95,7 +95,7 @@
 					<input type="text" class="form-control" id="btc_fee_rate" name="btc_fee_rate" placeholder="{{ Config::get('settings.miner_satoshi_per_byte') }}" />
 					<small>
 						* This is an advanced feature. Rates are defined in <em>satoshis per byte</em>, enter a number between {{ Config::get('settings.min_fee_per_byte') }} and {{ Config::get('settings.max_fee_per_byte') }}.<br>
-                        See <a href="https://bitcoinfees.21.co/" target="_blank">https://bitcoinfees.21.co/</a> for help determining a rate.
+                        See <a href="https://bitcoinfees.earn.com" target="_blank">https://bitcoinfees.earn.com</a> for help determining a rate.
 					</small>
 				</div>
 				<div class="form-group">

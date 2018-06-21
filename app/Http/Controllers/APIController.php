@@ -1,49 +1,32 @@
 <?php
 namespace App\Http\Controllers;
-use User, Auth, Config, UserMeta, Redirect, Response, Route;
-use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
-use Input, Session, Exception, Log;
-use Tokenly\TokenpassClient\TokenpassAPI;
-use Tokenly\CurrencyLib\CurrencyUtil;
+use App\Libraries\Substation\UserAddressManager;
 use Distribute\Initialize as DistroInit;
+use Input, Session, Exception, Log;
+use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
 use Ramsey\Uuid\Uuid;
+use Tokenly\AssetNameUtils\Validator as AssetValidator;
+use Tokenly\CurrencyLib\CurrencyUtil;
+use Tokenly\TokenpassClient\TokenpassAPI;
+use User, Auth, Config, UserMeta, Redirect, Response, Route;
 
 class APIController extends Controller
 {
-
-    protected $signed_routes = array('api.distribute.create',
-                                     'api.distribute.update',
-                                     'api.distribute.delete'
-                                     );
     
     public static $api_user = false;
     
     function __construct()
     {
         parent::__construct();
-        $action = Route::current()->getAction();
-        if(in_array($action['as'], $this->signed_routes)){
-            $this->middleware('auth.api.signed');
-        }
-        else{
-            $this->middleware('auth.api');
-        }
-        $this->middleware('tls');
-        $this->middleware('cors');
     }
     
     
     public function getDistributionList()
     {
-        $input = \Illuminate\Support\Facades\Input::all();
         $user = self::$api_user;
         $output = array('result' => false);
         $fields = Distro::$api_fields;
-        if(isset($input['all']) && $input['all'] == 1) {
-            $get = Distro::where('complete', 1)->select($fields)->orderBy('id', 'desc')->get();
-        } else {
-            $get = Distro::where('user_id', $user->id)->select($fields)->orderBy('id', 'desc')->get();
-        }
+        $get = Distro::where('user_id', $user->id)->select($fields)->orderBy('id', 'desc')->get();
         if($get){
             $get = $get->toArray();
             foreach($get as $k => $row){
@@ -59,7 +42,6 @@ class APIController extends Controller
         $user = self::$api_user;
         $output = array('result' => false);
         $input = Input::all();
-        $xchain = xchain();
         $min_addresses = Config::get('settings.min_distribution_addresses');
         $max_fixed_decimals = Config::get('settings.amount_decimals');               
         
@@ -68,114 +50,39 @@ class APIController extends Controller
             $output['error'] = 'Asset name required';
             return Response::json($output, 400);
         }
-        try{
-            $getAsset = $xchain->getAsset(strtoupper(trim($input['asset'])));
-        }
-        catch(Exception $e){
-            Log::error('API - Distro Asset "'.$input['asset'].'" error '.$e->getMessage());
+
+        $asset = strtoupper(trim($input['asset']));
+        if (!AssetValidator::isValidAssetName($asset)) {
+            Log::error('API - Distro Asset "'.$input['asset'].'" error.');
             $getAsset = false;
         }
         if(!$getAsset){
-        $output['error'] = 'Asset not found';
+            $output['error'] = 'Asset not found';
             return Response::json($output, 400);
         }
         $asset = $getAsset['asset'];
-
-        $value_type = 'percent';
-
-        //Validate folding dates
-        if(empty($input['folding_start_date'])) {
-            $output['error'] = 'Please enter a Folding Start Date';
+         
+        //check value type
+        $value_type = 'fixed';
+        if(isset($input['value_type']) AND $input['value_type'] == 'percent'){
+            $value_type = 'percent';
+        }
+ 
+        //figure out the list of addresses to send to
+        if(!isset($input['address_list'])){
+            $output['error'] = 'Address list required';
             return Response::json($output, 400);
-        }
-        if(empty($input['folding_end_date'])) {
-            $output['error'] = 'Please enter a Folding End Date';
+        }         
+        $address_list = Distro::processAddressList($input['address_list'], $value_type);
+		if(count($address_list) < $min_addresses){
+			$output['error'] = 'Please enter at least '.$min_addresses.' addresses to distribute to';
             return Response::json($output, 400);
-        }
-        $end_day_time = strtotime(date('Y-m-d').' 23:59:59');
-        if(strtotime($input['folding_start_date']) >  $end_day_time|| strtotime($input['folding_end_date']) > $end_day_time) {
-            $output['error'] = 'Both folding dates should be set before the current day';
-            return Response::json($output, 400);
-        }
-        if(strtotime($input['folding_start_date']) > strtotime($input['folding_end_date'])) {
-            $output['error'] = 'Folding end date should be set after the start';
-            return Response::json($output, 400);
-        }
-
-        $folding_start_date = date("Y-m-d", strtotime($input['folding_start_date'])).' 00:00:00';
-        $folding_end_date = date("Y-m-d", strtotime($input['folding_end_date'])).' 23:59:59';
-
-        if(empty($input['distribution_class'])) {
-            $output['error'] = 'Please enter a valid distribution class';
-            return Response::json($output, 400);
-        }
-
-        if(empty($input['asset_total'])) {
-            $output['error'] = 'Please set the Total asset';
-            return Response::json($output, 400);
-        }
-        $distribution_class = $input['distribution_class'];
-
-        $folding_address_list = Distro::getFoldingAddressList($folding_start_date, $folding_end_date, $input['asset'], $distribution_class, $input);
-
-        $total = 0;
-        foreach ($folding_address_list as $daily_folder) {
-            $total += $daily_folder->new_credit;
-        }
-
-        $folding_list = array();
-        $list_new_credits = array();
-
-        $total_folders = 0;
-        foreach ($folding_address_list as $daily_folder) {
-            //Array to store new credits for each address
-            if(isset($list_new_credits[$daily_folder->bitcoin_address])) {
-                $list_new_credits[$daily_folder->bitcoin_address] += $daily_folder->new_credit;
-            } else {
-                $list_new_credits[$daily_folder->bitcoin_address] = $daily_folder->new_credit;
-            }
-
-            //Store total folders
-            if(!empty($daily_folder->total_users)) {
-                $total_folders += $daily_folder->total_users;
-            }
-        }
-
-        if(empty($input['calculation_type'])) {
-            $output['error'] = 'Please set a calculation type';
-            return Response::json($output, 400);
-        }
-
-        $calculation_type = $input['calculation_type'];
-
-        if($calculation_type === 'even') {
-            foreach ($list_new_credits as $btc_address => $new_credit) {
-                if ($new_credit <= 0) {
-                    continue;
-                }
-                $folding_list[$btc_address] = ($new_credit / $total) * 100;
-            }
-        } else {
-            foreach($list_new_credits as $btc_address => $new_credit){
-                if($new_credit <= 0){
-                    continue;
-                }
-                $folding_list[$btc_address] = $input['asset_total'];
-            }
-        }
-
-        $get_list = Distro::processAddressList($folding_list, $value_type, false, false, $calculation_type);
-
-        if(!$get_list){
-            $output['error'] = 'Please enter a valid list of addresses and amounts';
-            return Response::json($output, 400);
-        }
-
-        $address_list = $get_list;
-
-        //figure out total to send
+		}
+        
+        
+		//figure out total to send
 		$asset_total = 0;
-		if($calculation_type == 'even'){
+		if($value_type == 'percent'){
 			$use_total = false;
 			if(isset($input['asset_total'])){
 				if(!$getAsset['divisible']){
@@ -195,11 +102,12 @@ class APIController extends Controller
 			$asset_total = $use_total;
 		}
 		else{
-            $use_total = intval(bcmul(trim($input['asset_total']), '100000000', '0'));
-            $asset_total = $use_total * count($address_list);
-
-        }
-
+			$asset_total = 0;
+			foreach($address_list as $row){
+				$asset_total += $row['amount'];
+			}
+		}
+        
         //check for custom label
         $label = '';
         if(isset($input['label'])){
@@ -221,18 +129,18 @@ class APIController extends Controller
         }
 	
 		//generate deposit address
-		$deposit_address = false;
-		$address_uuid = false;
-		try{
-			$get_address = $xchain->newPaymentAddress();
-			if($get_address AND isset($get_address['address'])){
-				$deposit_address = $get_address['address'];
-				$address_uuid = $get_address['id'];
-			}
-		}
-		catch(Exception $e){
-			Log::error('Error getting distro deposit address (API) : '.$e->getMessage());
-		}
+		$deposit_address = null;
+		$address_uuid = null;
+        try{
+            $deposit_address_details = app(UserAddressManager::class)->newPaymentAddressForUser($user);
+            $deposit_address = $deposit_address_details['address'];
+            $address_uuid = $deposit_address_details['uuid'];
+        }
+        catch(Exception $e){
+            EventLog::logError('depositAddress.API.error', $e, [
+                'userId' => $user['id'],
+            ]);
+        }
 		if(!$deposit_address){
 			$output['error'] = 'Error generating deposit address';
             return Response::json($output, 500);
@@ -243,15 +151,7 @@ class APIController extends Controller
 		if(isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
 			$use_fuel = 1;
 		}
-        
-        if(isset($input['btc_dust'])){
-            $btc_dust = intval($input['btc_dust']);
-            if($btc_dust < Config::get('settings.default_dust')){
-                $output['error'] = 'Dust value too low';
-                return Response::json($output, 400);
-            }
-        }
-        
+                
         $btc_fee_rate = null;
         if(isset($input['btc_fee_rate'])){
             $btc_fee_rate = intval($input['btc_fee_rate']);
@@ -273,30 +173,18 @@ class APIController extends Controller
 		$distro->network = 'btc';
 		$distro->asset = $asset;
 		$distro->asset_total = $asset_total;
+		$distro->label = $label;
 		$distro->use_fuel = $use_fuel;
         $distro->webhook = $webhook;
         $distro->hold = $hold;
         $distro->uuid = Uuid::uuid4()->toString();
         $distro->fee_rate = $btc_fee_rate;
-        $distro->folding_start_date = date("Y-m-d H:i:s", strtotime($input['folding_start_date']));
-        $distro->folding_end_date = date("Y-m-d H:i:s", strtotime($input['folding_end_date']));
-        $distro->label = $asset. ' - '.$input['asset_total'] . ' - '. date('Y/m/d');
-        
-        if(isset($btc_dust)){
-            $distro->btc_dust = $btc_dust;
-        }
-        
+                
 
         //estimate fees
         $num_tx = count($address_list);
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
         $distro->fee_total = $fee_total;
-
-        $distro->distribution_class = $input['distribution_class'];
-        $distro->calculation_type = ucfirst($calculation_type);
-
-        //Stats
-        $distro->total_folders = $total_folders;
 
         // save the distribution
 		$save = $distro->save();
@@ -317,8 +205,7 @@ class APIController extends Controller
 			$tx->distribution_id = $id;
 			$tx->destination = $row['address'];
 			$tx->quantity = $row['amount'];
-            $tx->folding_credit = (string)$list_new_credits[$row['address']];
-            $tx->save();
+			$tx->save();
 		}
 		
 		//run through initialization stage immediately
@@ -434,7 +321,7 @@ class APIController extends Controller
         $fields = Distro::$api_fields;
         $fields[] = 'user_id';        
         $get = Distro::where('uuid', $id)->orWhere('deposit_address', $id)->select($fields)->first();
-        if($get AND ($get->user_id == $user->id OR intval($user->admin) == 1 OR $get->complete)){
+        if($get AND ($get->user_id == $user->id OR intval($user->admin) == 1)){
             return $get;
         }
         return false;
