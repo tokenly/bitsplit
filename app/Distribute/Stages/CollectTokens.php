@@ -1,6 +1,7 @@
 <?php
 namespace Distribute\Stages;
 use Log;
+use Tokenly\LaravelEventLog\Facade\EventLog;
 class CollectTokens extends Stage
 {
 	public function init()
@@ -10,12 +11,24 @@ class CollectTokens extends Stage
 		//do simple check and increment stage
 		$distro = $this->distro;
 		if($distro->asset_received >= $distro->asset_total){
-			$distro->incrementStage();
 			$distro->setMessage(); //clear message
-			Log::info('Distro Tokens collected - #'.$distro->id);
-            $distro->sendWebhookUpdateNotification();
+			$this->goToNextStage($distro);
 			return true;		
 		}
 		return false;
 	}
+
+	protected function goToNextStage($distribution)
+	{
+		EventLog::info('distribution.stageComplete', [
+		    'distributionId' => $distribution->id,
+		    'stage' => 'CollectTokens',
+		]);
+
+		$distribution->incrementStage();
+        $distribution->sendWebhookUpdateNotification();
+
+		return true;
+	}
+
 }

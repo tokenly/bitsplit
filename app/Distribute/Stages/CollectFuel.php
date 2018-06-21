@@ -1,6 +1,7 @@
 <?php
 namespace Distribute\Stages;
 use Models\Fuel, Exception, Log, DB, UserMeta, Config;
+use Tokenly\LaravelEventLog\Facade\EventLog;
 class CollectFuel extends Stage
 {
 	public function init()
@@ -9,10 +10,8 @@ class CollectFuel extends Stage
 		//check fee received, if none then look at any pending and figure out how much fuel to pump
 		$distro = $this->distro;
 		if($distro->fee_received >= $distro->fee_total){
-			$distro->incrementStage();
 			$distro->setMessage(); //clear message
-			Log::info('Distro Fuel collected - #'.$distro->id);
-            $distro->sendWebhookUpdateNotification();
+			$this->goToNextStage($distro);
 			return true;		
 		}
 		
@@ -49,5 +48,18 @@ class CollectFuel extends Stage
 			}
 		}
 		return false;
+	}
+
+	protected function goToNextStage($distribution)
+	{
+		EventLog::info('distribution.stageComplete', [
+		    'distributionId' => $distribution->id,
+		    'stage' => 'CollectFuel',
+		]);
+
+		$distribution->incrementStage();
+        $distribution->sendWebhookUpdateNotification();
+
+		return true;
 	}
 }
