@@ -1,18 +1,20 @@
 <?php namespace App\Http\Controllers;
 use App\Models\DailyFolder;
+use App\Libraries\Substation\Substation;
+use App\Libraries\Substation\UserAddressManager;
 use Distribute\Initialize as DistroInit;
 use Input, Session, Exception, Log;
 use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
+use Ramsey\Uuid\Uuid;
+use Tokenly\AssetNameUtils\Validator as AssetValidator;
 use Tokenly\CurrencyLib\CurrencyUtil;
+use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use User, Auth, Config, UserMeta, Redirect, Response;
-use Ramsey\Uuid\Uuid;
 use Tokenly\TokenmapClient\TokenmapClient;
 
 class DistributeController extends Controller {
 
-    const BTC_DUST_MINIMUM = 5000;
-	
     public function __construct()
     {
         $this->middleware('tls');
@@ -22,29 +24,23 @@ class DistributeController extends Controller {
 	{
         $input = Input::all();
 		$user = Auth::user();
-		$xchain = xchain();
-
+		$substation = Substation::instance();
+		
 		//check if logged in
 		if(!$user){
 			return Redirect::route('account.auth');
 		}
-
-		//validate asset name
-		if(!isset($input['asset']) OR trim($input['asset']) == ''){
+		
+		//validate asset name (Counterparty/BTC only)
+        $asset = trim($input['asset'] ?? '');
+		if(strlen($asset) == 0){
 			return $this->return_error('home', 'Token name required');
 		}
-		try{
-			$getAsset = $xchain->getAsset(strtoupper(trim($input['asset'])));
-		}
-		catch(Exception $e){
-			Log::error('Asset "'.$input['asset'].'" error '.$e->getMessage());
-			$getAsset = false;
-		}
-		if(!$getAsset){
-			return $this->return_error('home', 'Invalid token name');
-		}
-		$asset = $getAsset['asset'];
+        if (!AssetValidator::isValidAssetName($asset)) {
+            return $this->return_error('home', 'Invalid token name');
+        }
 
+		
 		//check/clean label
 		$label = '';
 		if(isset($input['label'])){
@@ -54,16 +50,7 @@ class DistributeController extends Controller {
 		$value_type = 'percent';
 
 		$max_fixed_decimals = Config::get('settings.amount_decimals');
-
-        // btc_dust_override
-        $btc_dust_satoshis = Config::get('settings.default_dust');
-        if(isset($input['btc_dust_override']) AND strlen($input['btc_dust_override']) > 0){
-            $btc_dust_satoshis = CurrencyUtil::valueToSatoshis($input['btc_dust_override']);
-            if ($btc_dust_satoshis < self::BTC_DUST_MINIMUM) {
-                return $this->return_error('home', 'The Custom BTC Dust Size must be at least '.CurrencyUtil::satoshisToFormattedString(self::BTC_DUST_MINIMUM));
-            }
-        }
-
+        
         //fee rate override
         $btc_fee_rate = null;
         if(isset($input['btc_fee_rate']) AND trim($input['btc_fee_rate']) != ''){
@@ -176,19 +163,17 @@ class DistributeController extends Controller {
 		$deposit_address = false;
 		$address_uuid = false;
 		try{
-			$get_address = $xchain->newPaymentAddress();
-			if($get_address AND isset($get_address['address'])){
-				$deposit_address = $get_address['address'];
-				$address_uuid = $get_address['id'];
-			}
+			$deposit_address_details = app(UserAddressManager::class)->newPaymentAddressForUser($user);
+			$deposit_address = $deposit_address_details['address'];
+			$address_uuid = $deposit_address_details['uuid'];
 		}
 		catch(Exception $e){
-			Log::error('Error getting distro deposit address: '.$e->getMessage());
-		}
-		if(!$deposit_address){
+            EventLog::logError('depositAddress.error', $e, [
+                'userId' => $user['id'],
+            ]);
 			return $this->return_error('home', 'Error generating deposit address');
-		}
-
+        }
+		
 		$use_fuel = 0;
 		if(isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
 			$use_fuel = 1;
@@ -207,14 +192,13 @@ class DistributeController extends Controller {
 		$distro->asset_total = (string)$asset_total;
         $distro->label = $label;
         $distro->use_fuel = $use_fuel;
-		$distro->btc_dust = $btc_dust_satoshis;
         $distro->uuid = Uuid::uuid4()->toString();
         $distro->fee_rate = $btc_fee_rate;
         $distro->folding_start_date = date("Y-m-d H:i:s", strtotime($input['folding_start_date']));
         $distro->folding_end_date = date("Y-m-d H:i:s", strtotime($input['folding_end_date']));
         $distro->label = $asset. ' - '.$input['asset_total'] . ' - '. date('Y/m/d');
 
-        //estimate fees (AFTER btc_dust is set)
+        //estimate fees
         $num_tx = count($address_list);
         $fee_total = Fuel::estimateFuelCost($num_tx, $distro);
         $distro->fee_total = (string)$fee_total;
@@ -314,7 +298,7 @@ class DistributeController extends Controller {
                 }
             }
             else{
-                $tokenpass = new TokenpassAPI;
+                $tokenpass = app(TokenpassAPI::class);
                 $lookup = false;
                 try{
                     $lookup = $tokenpass->lookupUserByAddress($lookup_addresses);
@@ -454,25 +438,22 @@ class DistributeController extends Controller {
 		}
 		
 		$distro_list = DistroTx::where('distribution_id', $distro->id)->get();
-		$xchain = xchain();
 		
-		//generate deposit address
-		$deposit_address = false;
-		$address_uuid = false;
-		try{
-			$get_address = $xchain->newPaymentAddress();
-			if($get_address AND isset($get_address['address'])){
-				$deposit_address = $get_address['address'];
-				$address_uuid = $get_address['id'];
-			}
-		}
-		catch(Exception $e){
-			Log::error('Error getting distro deposit address: '.$e->getMessage());
-		}
-		if(!$deposit_address){
-			return $this->return_error('home', 'Error generating deposit address');
-		}		
-		
+        //generate deposit address
+        $deposit_address = false;
+        $address_uuid = false;
+        try{
+            $deposit_address_details = app(UserAddressManager::class)->newPaymentAddressForUser($user);
+            $deposit_address = $deposit_address_details['address'];
+            $address_uuid = $deposit_address_details['uuid'];
+        }
+        catch(Exception $e){
+            EventLog::logError('depositAddress.error', $e, [
+                'userId' => $user['id'],
+            ]);
+            return $this->return_error('home', 'Error generating deposit address');
+        }
+
 		$new = new Distro;
 		$new->user_id = $user->id;
 		$new->deposit_address = $deposit_address;

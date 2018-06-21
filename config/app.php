@@ -160,10 +160,7 @@ return [
         /*
          * Vendor Service Providers...
          */
-        Laravel\Socialite\SocialiteServiceProvider::class,
-        Fideloper\Proxy\TrustedProxyServiceProvider::class,
 		Tokenly\XChainClient\XChainServiceProvider::class,
-		Tokenly\HmacAuth\ServiceProvider\HmacAuthServiceProvider::class,
 		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
         Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
         Tokenly\FluentdLogger\FluentdLoggerServiceProvider::class,

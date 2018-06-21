@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07a0a40b6bbdbce713f532ff8b681d18",
+    "content-hash": "18670957eed4d0a569766f5bdb69022c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.61.7",
+            "version": "3.61.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "3e588fc5bed3f3e0fb48c4320883fbf5b26076af"
+                "reference": "6c6aaaede232d559b5f8b2d8af2b6fd13e490473"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3e588fc5bed3f3e0fb48c4320883fbf5b26076af",
-                "reference": "3e588fc5bed3f3e0fb48c4320883fbf5b26076af",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6c6aaaede232d559b5f8b2d8af2b6fd13e490473",
+                "reference": "6c6aaaede232d559b5f8b2d8af2b6fd13e490473",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-06-14T22:16:36+00:00"
+            "time": "2018-06-20T20:08:58+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -722,6 +722,117 @@
                 "validator"
             ],
             "time": "2018-04-10T10:11:19+00:00"
+        },
+        {
+            "name": "enqueue/amqp-lib",
+            "version": "0.8.23",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-enqueue/amqp-lib.git",
+                "reference": "02a65b6e73495fa84479724ae2b18b1766ae9d8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-enqueue/amqp-lib/zipball/02a65b6e73495fa84479724ae2b18b1766ae9d8c",
+                "reference": "02a65b6e73495fa84479724ae2b18b1766ae9d8c",
+                "shasum": ""
+            },
+            "require": {
+                "enqueue/amqp-tools": "^0.8.5@dev",
+                "php": ">=5.6",
+                "php-amqplib/php-amqplib": "^2.7@dev",
+                "queue-interop/amqp-interop": "^0.7@dev",
+                "queue-interop/queue-interop": "^0.6@dev|^1.0.0-alpha1"
+            },
+            "require-dev": {
+                "enqueue/enqueue": "^0.8@dev",
+                "enqueue/null": "^0.8@dev",
+                "enqueue/test": "^0.8@dev",
+                "phpunit/phpunit": "~5.4.0",
+                "queue-interop/queue-spec": "^0.5.3@dev",
+                "symfony/config": "^2.8|^3|^4",
+                "symfony/dependency-injection": "^2.8|^3|^4"
+            },
+            "suggest": {
+                "enqueue/enqueue": "If you'd like to use advanced features like Client abstract layer or Symfony integration features"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Enqueue\\AmqpLib\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Message Queue Amqp Transport",
+            "homepage": "https://enqueue.forma-pro.com/",
+            "keywords": [
+                "AMQP",
+                "messaging",
+                "queue"
+            ],
+            "time": "2018-03-06T10:46:03+00:00"
+        },
+        {
+            "name": "enqueue/amqp-tools",
+            "version": "0.8.23",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-enqueue/amqp-tools.git",
+                "reference": "e401314d9548a7327b78de1bf48af7b3a098a57d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-enqueue/amqp-tools/zipball/e401314d9548a7327b78de1bf48af7b3a098a57d",
+                "reference": "e401314d9548a7327b78de1bf48af7b3a098a57d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "queue-interop/amqp-interop": "^0.7@dev",
+                "queue-interop/queue-interop": "^0.6@dev|^1.0.0-alpha1"
+            },
+            "require-dev": {
+                "enqueue/null": "^0.8@dev",
+                "enqueue/test": "^0.8@dev",
+                "phpunit/phpunit": "~5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Enqueue\\AmqpTools\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Message Queue Amqp Tools",
+            "homepage": "https://enqueue.forma-pro.com/",
+            "keywords": [
+                "AMQP",
+                "messaging",
+                "queue"
+            ],
+            "time": "2018-03-06T10:46:03+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -2110,6 +2221,77 @@
             "time": "2016-04-12T05:46:52+00:00"
         },
         {
+            "name": "php-amqplib/php-amqplib",
+            "version": "v2.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-amqplib/php-amqplib.git",
+                "reference": "dfd3694a86f1a7394d3693485259d4074a6ec79b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/dfd3694a86f1a7394d3693485259d4074a6ec79b",
+                "reference": "dfd3694a86f1a7394d3693485259d4074a6ec79b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "videlalvaro/php-amqplib": "self.version"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "^2.9",
+                "phpunit/phpunit": "^4.8",
+                "scrutinizer/ocular": "^1.1",
+                "squizlabs/php_codesniffer": "^2.5"
+            },
+            "suggest": {
+                "ext-sockets": "Use AMQPSocketConnection"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpAmqpLib\\": "PhpAmqpLib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Alvaro Videla",
+                    "role": "Original Maintainer"
+                },
+                {
+                    "name": "John Kelly",
+                    "email": "johnmkelly86@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Raúl Araya",
+                    "email": "nubeiro@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Formerly videlalvaro/php-amqplib.  This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
+            "homepage": "https://github.com/php-amqplib/php-amqplib/",
+            "keywords": [
+                "message",
+                "queue",
+                "rabbitmq"
+            ],
+            "time": "2018-02-11T19:28:00+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -2302,6 +2484,87 @@
                 "simple-cache"
             ],
             "time": "2017-10-23T01:57:42+00:00"
+        },
+        {
+            "name": "queue-interop/amqp-interop",
+            "version": "0.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/queue-interop/amqp-interop.git",
+                "reference": "1a437a8efd7a6835198b0d16031d3ed38dbceeab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/queue-interop/amqp-interop/zipball/1a437a8efd7a6835198b0d16031d3ed38dbceeab",
+                "reference": "1a437a8efd7a6835198b0d16031d3ed38dbceeab",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5",
+                "queue-interop/queue-interop": "^0.6@dev|^1.0.0-alpha1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.7.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Interop\\Amqp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2018-03-06T10:44:28+00:00"
+        },
+        {
+            "name": "queue-interop/queue-interop",
+            "version": "0.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/queue-interop/queue-interop.git",
+                "reference": "38579005c0492c0275bbae31170edf30a7e740fa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/queue-interop/queue-interop/zipball/38579005c0492c0275bbae31170edf30a7e740fa",
+                "reference": "38579005c0492c0275bbae31170edf30a7e740fa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Interop\\Queue\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Promoting the interoperability of MQs objects. Based on Java JMS",
+            "homepage": "https://github.com/queue-interop/queue-interop",
+            "keywords": [
+                "MQ",
+                "jms",
+                "message queue",
+                "messaging",
+                "queue"
+            ],
+            "time": "2017-08-10T11:24:15+00:00"
         },
         {
             "name": "ramsey/uuid",
@@ -3550,6 +3813,46 @@
             "time": "2017-10-18T13:02:25+00:00"
         },
         {
+            "name": "tokenly/asset-name-utils",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tokenly/asset-name-utils.git",
+                "reference": "14a88982723ad700a06066f404a2fb75b1a6d789"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tokenly/asset-name-utils/zipball/14a88982723ad700a06066f404a2fb75b1a6d789",
+                "reference": "14a88982723ad700a06066f404a2fb75b1a6d789",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tokenly\\AssetNameUtils\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Devon Weller",
+                    "email": "devon@tokenly.com",
+                    "homepage": "http://tokenly.com"
+                }
+            ],
+            "description": "A library to validate Counterparty asset names",
+            "time": "2016-11-04T14:49:53+00:00"
+        },
+        {
             "name": "tokenly/bitcoin-currency-lib",
             "version": "v1.1.0",
             "source": {
@@ -3632,16 +3935,16 @@
         },
         {
             "name": "tokenly/crypto-quantity",
-            "version": "v2.1.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/crypto-quantity.git",
-                "reference": "24c1e65510c217957bf6872f8e737f3c8a340178"
+                "reference": "fb7f57645d42e576886f41acbdce09e3d46012ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/crypto-quantity/zipball/24c1e65510c217957bf6872f8e737f3c8a340178",
-                "reference": "24c1e65510c217957bf6872f8e737f3c8a340178",
+                "url": "https://api.github.com/repos/tokenly/crypto-quantity/zipball/fb7f57645d42e576886f41acbdce09e3d46012ad",
+                "reference": "fb7f57645d42e576886f41acbdce09e3d46012ad",
                 "shasum": ""
             },
             "require": {
@@ -3671,7 +3974,7 @@
                 }
             ],
             "description": "A quantity class for cryptocurrency values",
-            "time": "2018-02-15T13:21:37+00:00"
+            "time": "2018-06-19T12:42:44+00:00"
         },
         {
             "name": "tokenly/fluentd-logger",
@@ -3978,17 +4281,93 @@
             "time": "2017-09-30T14:30:13+00:00"
         },
         {
-            "name": "tokenly/substation-client",
-            "version": "v0.4.0",
+            "name": "tokenly/signal-client",
+            "version": "v0.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tokenly/substation-client.git",
-                "reference": "4f07f5921a96831349ee081b16bc0582165f4fe9"
+                "url": "git@github.com:tokenly/signal-client.git",
+                "reference": "74ab9f5e707212d467b84f6dee1f25af1f54d9f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/4f07f5921a96831349ee081b16bc0582165f4fe9",
-                "reference": "4f07f5921a96831349ee081b16bc0582165f4fe9",
+                "url": "https://api.github.com/repos/tokenly/signal-client/zipball/74ab9f5e707212d467b84f6dee1f25af1f54d9f4",
+                "reference": "74ab9f5e707212d467b84f6dee1f25af1f54d9f4",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.5",
+                "php": "^7.0",
+                "ramsey/uuid": "^3",
+                "vladimir-yuldashev/laravel-queue-rabbitmq": "=6.0.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0",
+                "squizlabs/php_codesniffer": "^2.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Tokenly\\SignalClient\\SignalClientServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tokenly\\SignalClient\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tokenly\\SignalClient\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ],
+                "check-style": [
+                    "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
+                ],
+                "fix-style": [
+                    "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Devon Weller",
+                    "email": "devon@tokenly.com",
+                    "homepage": "https://tokenly.com"
+                }
+            ],
+            "description": "Sends and receives messages with Tokenly Signal",
+            "homepage": "https://github.com/tokenly/signal-client",
+            "keywords": [
+                "signal",
+                "substation",
+                "tokenly"
+            ],
+            "support": {
+                "source": "https://github.com/tokenly/signal-client/tree/v0.2.2",
+                "issues": "https://github.com/tokenly/signal-client/issues"
+            },
+            "time": "2018-05-09T20:25:22+00:00"
+        },
+        {
+            "name": "tokenly/substation-client",
+            "version": "v0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tokenly/substation-client.git",
+                "reference": "c2966acd877a9d7f75f25ccf9fb4c64fae97564c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/c2966acd877a9d7f75f25ccf9fb4c64fae97564c",
+                "reference": "c2966acd877a9d7f75f25ccf9fb4c64fae97564c",
                 "shasum": ""
             },
             "require": {
@@ -4033,7 +4412,7 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-05-03T21:24:36+00:00"
+            "time": "2018-06-15T11:38:39+00:00"
         },
         {
             "name": "tokenly/substation-distribution-client",
@@ -4041,18 +4420,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-distribution-client.git",
-                "reference": "e5f8d4046f865e9958a7e588588b5a22174a003b"
+                "reference": "7ef883d0dfcf59921a5a773fbe2911eeab8c9638"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/e5f8d4046f865e9958a7e588588b5a22174a003b",
-                "reference": "e5f8d4046f865e9958a7e588588b5a22174a003b",
+                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/7ef883d0dfcf59921a5a773fbe2911eeab8c9638",
+                "reference": "7ef883d0dfcf59921a5a773fbe2911eeab8c9638",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0",
                 "tokenly/crypto-quantity": "^2",
-                "tokenly/substation-client": "^0.4.0"
+                "tokenly/substation-client": "^0.4.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "~6.0",
@@ -4088,7 +4467,7 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-06-15T11:22:20+00:00"
+            "time": "2018-06-19T11:46:53+00:00"
         },
         {
             "name": "tokenly/token-generator",
@@ -4362,6 +4741,74 @@
             ],
             "description": "A library",
             "time": "2017-10-18T16:00:11+00:00"
+        },
+        {
+            "name": "vladimir-yuldashev/laravel-queue-rabbitmq",
+            "version": "v6.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tokenly/laravel-queue-rabbitmq.git",
+                "reference": "71b38d8faf093147101fa31b6fc001f9ae5b067d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tokenly/laravel-queue-rabbitmq/zipball/71b38d8faf093147101fa31b6fc001f9ae5b067d",
+                "reference": "71b38d8faf093147101fa31b6fc001f9ae5b067d",
+                "shasum": ""
+            },
+            "require": {
+                "enqueue/amqp-lib": "^0.8.15",
+                "illuminate/database": "5.5.*",
+                "illuminate/queue": "5.5.*",
+                "illuminate/support": "5.5.*",
+                "php": ">=7.0",
+                "queue-interop/amqp-interop": "^0.7"
+            },
+            "require-dev": {
+                "illuminate/events": "5.5.*",
+                "mockery/mockery": "~1.0",
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "VladimirYuldashev\\LaravelQueueRabbitMQ\\LaravelQueueRabbitMQServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "VladimirYuldashev\\LaravelQueueRabbitMQ\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "VladimirYuldashev\\LaravelQueueRabbitMQ\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vladimir Yuldashev",
+                    "email": "misterio92@gmail.com"
+                }
+            ],
+            "description": "RabbitMQ driver for Laravel Queue",
+            "support": {
+                "source": "https://github.com/tokenly/laravel-queue-rabbitmq/tree/v6.0.4"
+            },
+            "time": "2018-01-24T16:31:17+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

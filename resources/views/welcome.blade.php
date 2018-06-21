@@ -23,5 +23,5 @@
 
 
 @section('title')
-    Token Distributions & Payment Routing
+    Token Distributions
 @stop

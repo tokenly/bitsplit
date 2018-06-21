@@ -17,17 +17,16 @@ class Processor
 			//nothing to do
 			return false;
 		}
-		Log::info('----Start Distro Processing '.timestamp().' ----');
+		Log::info('---- [Begin] Distro Processing '.timestamp().' ----');
 		foreach($get as $k => $row){
 			$this->processStage($row);
 		}
-		Log::info('----End----');
+		Log::info('---- [End] Distro Processing '.timestamp().' ----');
 		return true;
 	}
 	
 	protected function processStage($distro)
 	{
-		Log::info('Processing stage '.$distro->stage.' for distro #'.$distro->id);
 		if($distro->stage == 0){
 			//$this->initializer->init($distro);
 			return true;
@@ -36,9 +35,14 @@ class Processor
 		if(!$stage){
 			return false;
 		}
+
+		$stage_number = $distro->stage;
+		Log::debug('[Begin] processing stage '.$stage_number.' for distro #'.$distro->id);
 		$stage = '\\Distribute\\Stages\\'.$stage;
-		$load = new $stage($distro);
-		$init = $load->init();
+		$stage_handler = new $stage($distro);
+		$init = $stage_handler->init();
+		Log::debug('[End] processing stage '.$stage_number.' for distro #'.$distro->id);
+
 		return true;
 	}
 }

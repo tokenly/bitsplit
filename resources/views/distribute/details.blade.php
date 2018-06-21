@@ -48,9 +48,6 @@
 				<strong>BTC Fuel Cost:</strong> {{ rtrim(rtrim(number_format($distro->fee_total / 100000000, 8),"0"),".") }} BTC
 			</li>
 			<li>
-				<strong>BTC Dust Size:</strong> {{ rtrim(rtrim(number_format($distro->btc_dust / 100000000, 8),"0"),".") }} BTC
-			</li>
-			<li>
 				<strong>Total F@H Points:</strong> {{ number_format($distro->fah_points) }}
 			</li>
 			<li>

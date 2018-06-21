@@ -51,12 +51,11 @@ class ResetDistroMonitor extends Command
         }
         $initer = new Initialize;
         $initer->stopMonitor($get);
-        $start = $initer->startMonitor($get, false, true);
-        if(!$start){
+        $started = $initer->startMonitor($get, false, true);
+        if(!$started){
             $this->error('Error starting up fresh distribution monitors');
             return false;
         }
         $this->info('Distribution monitors reset for distro #'.$get->id);
-        dd($start);
     }
 }
