@@ -286,32 +286,48 @@ class SubstationTransactionHandler
             if ($asset == 'BTC') {
                 //see if this is a priming transaction
                 $tx_record = DB::table('distribution_primes')->where('txid', $txid)->first();
-                if ($tx_record and $confirmations >= $min_conf) {
-                    if ($tx_record->confirmed == 1) {
-                        EventLog::debug('prime.alreadyConfirmed', [
-                            'distributionId' => $distribution->id,
-                            'txid' => $txid,
-                            'address' => $address,
-                            'confirmations' => $confirmations,
-                        ]);
+                if ($tx_record) {
+                    if ($confirmations >= $min_conf) {
+                        if ($tx_record->confirmed == 1) {
+                            EventLog::debug('prime.alreadyConfirmed', [
+                                'distributionId' => $distribution->id,
+                                'txid' => $txid,
+                                'address' => $address,
+                                'confirmations' => $confirmations,
+                            ]);
+                        } else {
+                            DB::table('distribution_primes')->where('id', $tx_record->id)->update([
+                                'confirmed' => 1,
+                                'updated_at' => $time,
+                            ]);
+                            EventLog::debug('prime.confirmed', [
+                                'distributionId' => $distribution->id,
+                                'txid' => $txid,
+                                'address' => $address,
+                                'confirmations' => $confirmations,
+                            ]);
+                        }
                     } else {
-                        DB::table('distribution_primes')->where('id', $tx_record->id)->update([
-                            'confirmed' => 1,
-                            'updated_at' => $time,
-                        ]);
-                        EventLog::debug('prime.confirmed', [
+                        EventLog::debug('prime.unconfirmed', [
                             'distributionId' => $distribution->id,
                             'txid' => $txid,
                             'address' => $address,
                             'confirmations' => $confirmations,
                         ]);
                     }
+                } else {
+                    EventLog::warning('prime.noTxRecordFound', [
+                        'distributionId' => $distribution->id,
+                        'txid' => $txid,
+                        'address' => $address,
+                        'confirmations' => $confirmations,
+                    ]);
                 }
                 return;
             }
         }
 
-        EventLog::warning('distribution.unexpectedCredit', [
+        EventLog::warning('distribution.unexpectedAsset', [
             'distributionId' => $distribution->id,
             'txid' => $txid,
             'asset' => $asset,
