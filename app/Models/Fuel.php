@@ -7,7 +7,7 @@ use Tokenly\CryptoQuantity\CryptoQuantity;
 class Fuel
 {
 	
-	public static function pump($userId, $destination_address, $amount_float, $asset = 'BTC', $fee = null, $amount_satoshis = true)
+	public static function pump($userId, $destination_address, $amount, $asset = 'BTC', $fee = null, $amount_is_in_satoshis = true)
 	{
         $user = null;
 		if($userId == 'MASTER'){
@@ -69,15 +69,15 @@ class Fuel
 				}
 			}
 		}
-		if(strtolower($amount_float) == 'sweep'){
+		if(strtolower($amount) == 'sweep'){
             throw new Exception("Sweeping is not implemented", 1);
 			// Log::info('Sweeping assets from '.$fuel_address_uuid.' to '.$destination_address);
 			// return $xchain->sweepAllAssets($fuel_address_uuid, $destination_address);
 		}
-		if($amount_satoshis){
-            $destination_quantity = CryptoQuantity::fromSatoshis($amount_satoshis);
+		if ($amount_is_in_satoshis) {
+            $destination_quantity = CryptoQuantity::fromSatoshis($amount);
         } else {
-			$destination_quantity = CryptoQuantity::fromFloat($amount_float);
+			$destination_quantity = CryptoQuantity::fromFloat($amount);
 
         }
 
@@ -95,13 +95,12 @@ class Fuel
         }
         $wallet_uuid = app(UserWalletManager::class)->ensureSubstationWalletForUser($user);
 
-        Log::info('Pumping '.$destination_quantity.' '.$asset.' from '.$fuel_address_uuid.' to '.$destination_address.' (fee rate: '.$per_byte.')');
-        
         $substation = Substation::instance();
         $send_parameters = [
-            'feeRate' => 'medlow',
+            'feeRate' => 'low',
         ];
-        $substation->sendImmediatelyToSingleDestination($wallet_uuid, $fuel_address_uuid, $asset, $destination_quantity, $destination_address, $send_parameters);
+        Log::info('Pumping '.$destination_quantity.' '.$asset.' from '.$fuel_address_uuid.' to '.$destination_address.' (fee rate: '.$send_parameters['feeRate'].')');
+        return $substation->sendImmediatelyToSingleDestination($wallet_uuid, $fuel_address_uuid, $asset, $destination_quantity, $destination_address, $send_parameters);
         // return $xchain->sendFromAccount($uuid, $destination_address, $amount, $asset, 'default', false, null, null, null, null, $per_byte);
 	}
 	
@@ -119,7 +118,7 @@ class Fuel
 		return $output;
 	}
 	
-	public static function getFuelQuote($token, $amount, $amount_satoshis = true)
+	public static function getFuelQuote($token, $amount, $amount_is_in_satoshis = true)
 	{
 		$valid_assets = Config::get('settings.valid_fuel_tokens');
 		if(!isset($valid_assets[$token])){
@@ -140,7 +139,7 @@ class Fuel
 			return false;
 		}
 		$btc_amount = round($rate / $usd_rate, 8);
-		if($amount_satoshis){
+		if($amount_is_in_satoshis){
 			$amount = $amount / 100000000;
 		}
 		$quote = round($amount * $btc_amount, 8);
@@ -148,7 +147,7 @@ class Fuel
 			//too dusty
 			return false;
 		}		
-		if($amount_satoshis){
+		if($amount_is_in_satoshis){
 			$quote = intval($quote * 100000000);
 		}
 		return $quote;
