@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Libraries\Substation\Substation;
+use App\Libraries\Substation\UserWalletManager;
 use Illuminate\Console\Command;
 use Models\Distribution as Distro, User;
 
@@ -54,18 +56,19 @@ class ShowBalances extends Command
             return false;
         }
         
-        $xchain = xchain();
+        $substation = Substation::instance();
+        $user = User::find($distro->user_id);
+        $wallet_uuid = app(UserWalletManager::class)->ensureSubstationWalletForUser($user);
+        try{
+            $balances = $substation->getCombinedAddressBalanceById($wallet_uuid, $distro->address_uuid);
+        }
+        catch(Exception $e){
+            Log::error('Error checking balances: '.$e->getMessage());
+            return false;
+        }
         
-		$balances = false;
-		try{
-			$balances = $xchain->getAccountBalances($get->address_uuid, 'default');
-		}
-		catch(Exception $e){
-			Log::error('Error checking balances: '.$e->getMessage());
-			return false;
-		}		
-        
-        dd($balances);
+
+        $this->line(json_encode($balances, 192));
 		        
     }
 }

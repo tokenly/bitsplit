@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Libraries\Substation\UserAddressManager;
+use Distribute\Initialize as DistroInit;
 use Illuminate\Console\Command;
 use Models\Distribution as Distro, User, Log, Models\Fuel, Models\DistributionTx as DistroTx;
 use Ramsey\Uuid\Uuid;
-use Distribute\Initialize as DistroInit;
 
 class CloneDistro extends Command
 {
@@ -61,17 +62,14 @@ class CloneDistro extends Command
         }
 
 		$distro_list = DistroTx::where('distribution_id', $distro->id)->get();
-		$xchain = xchain();
 		
 		//generate deposit address
 		$deposit_address = false;
 		$address_uuid = false;
 		try{
-			$get_address = $xchain->newPaymentAddress();
-			if($get_address AND isset($get_address['address'])){
-				$deposit_address = $get_address['address'];
-				$address_uuid = $get_address['id'];
-			}
+            $deposit_address_details = app(UserAddressManager::class)->newPaymentAddressForUser($user);
+            $deposit_address = $deposit_address_details['address'];
+            $address_uuid = $deposit_address_details['uuid'];
 		}
 		catch(Exception $e){
 			Log::error('Error getting distro deposit address: '.$e->getMessage());

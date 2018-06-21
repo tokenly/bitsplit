@@ -25,7 +25,6 @@
         "tokenly/tokenpass-client": "^2",
         "tokenly/tokenslot-client": "dev-master",
         "tokenly/xcaller-client": "^0.3",
-        "tokenly/xchain-client": "dev-master",
         "tokenly/substation-client": "^0.4.1",
         "tokenly/substation-distribution-client": "^0.1.0",
         "tokenly/laravel-record-lock": "^1.1",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9cfc31e6af0c8ee365a1187fd8bfc7f",
+    "content-hash": "0131312a56f1718edb08c149188bbe93",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4087,49 +4087,6 @@
             "time": "2016-10-19T17:02:49+00:00"
         },
         {
-            "name": "tokenly/xchain-client",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tokenly/xchain-client.git",
-                "reference": "088925a488f6f66e9a3385c8c023987e79004c49"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/xchain-client/zipball/088925a488f6f66e9a3385c8c023987e79004c49",
-                "reference": "088925a488f6f66e9a3385c8c023987e79004c49",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "~6",
-                "php": ">=5.5.0",
-                "tokenly/bitcoin-currency-lib": "^1.1",
-                "tokenly/hmac-auth": "^0.2|^1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Tokenly\\XChainClient\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Devon Weller",
-                    "email": "dweller@tokenly.com",
-                    "homepage": "http://tokenly.com"
-                }
-            ],
-            "description": "A library",
-            "time": "2017-10-18T16:00:11+00:00"
-        },
-        {
             "name": "vladimir-yuldashev/laravel-queue-rabbitmq",
             "version": "v6.0.4",
             "source": {
@@ -5880,8 +5837,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "tokenly/tokenslot-client": 20,
-        "tokenly/xchain-client": 20
+        "tokenly/tokenslot-client": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

@@ -13,19 +13,6 @@
 
 //main pages
 Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
-
-//webhooks
-Route::post('hooks/distribution/deposit', array('as' => 'hooks.distro.deposit',
-		'uses' => 'WebhookController@DistributorDeposit'));
-		
-Route::post('hooks/distribution/send', array('as' => 'hooks.distro.send',
-		'uses' => 'WebhookController@DistributorSend'));		
-		
-Route::post('hooks/refuel', array('as' => 'hooks.refuel',
-		'uses' => 'WebhookController@FuelAddressDeposit'));		
-		
-Route::post('hooks/unfuel', array('as' => 'hooks.unfuel',
-'uses' => 'WebhookController@DebitFuelAddress'));		
 		
 //distributions
 Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'DistributeController@submitDistribution'));

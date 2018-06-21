@@ -72,7 +72,6 @@ class Fuel
 		if(strtolower($amount) == 'sweep'){
             throw new Exception("Sweeping is not implemented", 1);
 			// Log::info('Sweeping assets from '.$fuel_address_uuid.' to '.$destination_address);
-			// return $xchain->sweepAllAssets($fuel_address_uuid, $destination_address);
 		}
 		if ($amount_is_in_satoshis) {
             $destination_quantity = CryptoQuantity::fromSatoshis($amount);
@@ -101,7 +100,6 @@ class Fuel
         ];
         Log::info('Pumping '.$destination_quantity.' '.$asset.' from '.$fuel_address_uuid.' to '.$destination_address.' (fee rate: '.$send_parameters['feeRate'].')');
         return $substation->sendImmediatelyToSingleDestination($wallet_uuid, $fuel_address_uuid, $asset, $destination_quantity, $destination_address, $send_parameters);
-        // return $xchain->sendFromAccount($uuid, $destination_address, $amount, $asset, 'default', false, null, null, null, null, $per_byte);
 	}
 	
 	public static function masterFuelSwap($userId, $token_in, $token_out, $in_amount, $out_amount)
