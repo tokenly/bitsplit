@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eda01f81b20a226affd78a7b333e8ec5",
+    "content-hash": "628fe4ccce91dfc87e94af6434a10d0c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4238,26 +4238,35 @@
         },
         {
             "name": "tokenly/platform-admin",
-            "version": "v0.5.1",
+            "version": "v4.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/platform-admin.git",
-                "reference": "285146afbd92caba417bc876011ee95273de709c"
+                "reference": "0b2f5d57552d493026df94edaa250b475407d588"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/285146afbd92caba417bc876011ee95273de709c",
-                "reference": "285146afbd92caba417bc876011ee95273de709c",
+                "url": "https://api.github.com/repos/tokenly/platform-admin/zipball/0b2f5d57552d493026df94edaa250b475407d588",
+                "reference": "0b2f5d57552d493026df94edaa250b475407d588",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.0",
+                "tokenly/laravel-api-provider": "^3",
+                "tokenly/laravel-event-log": "^3",
                 "tokenly/laravel-record-lock": "~1"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4"
+                "phpunit/phpunit": "~6"
             },
             "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Tokenly\\PlatformAdmin\\Provider\\PlatformAdminServiceProvider"
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Tokenly\\PlatformAdmin\\": "src/"
@@ -4268,7 +4277,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AGPL-3.0"
+                "AGPL-3.0-only"
             ],
             "authors": [
                 {
@@ -4278,14 +4287,14 @@
                 }
             ],
             "description": "A platform administration module for Tokenly services",
-            "time": "2017-09-30T14:30:13+00:00"
+            "time": "2018-06-08T14:18:38+00:00"
         },
         {
             "name": "tokenly/signal-client",
             "version": "v0.2.2",
             "source": {
                 "type": "git",
-                "url": "git@github.com:tokenly/signal-client.git",
+                "url": "https://github.com/tokenly/signal-client.git",
                 "reference": "74ab9f5e707212d467b84f6dee1f25af1f54d9f4"
             },
             "dist": {

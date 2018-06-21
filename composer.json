@@ -27,7 +27,7 @@
         "tokenly/laravel-api-provider": "^3.3",
         "tokenly/laravel-event-log": "^3.1",
         "tokenly/laravel-record-lock": "^1.1",
-        "tokenly/platform-admin": "^0.5.0",
+        "tokenly/platform-admin": "^4.0",
         "tokenly/signal-client": "^0.2.2",
         "tokenly/substation-client": "^0.4.1",
         "tokenly/substation-distribution-client": "^0.1.0",
