@@ -6,6 +6,7 @@ use App\Libraries\Substation\Substation;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Models\Distribution;
 use Models\DistributionTx;
 use Tokenly\CryptoQuantity\CryptoQuantity;
@@ -158,53 +159,6 @@ class SubstationTransactionHandler
             // }
         }
 
-    }
-
-    protected function updateFuelBalance(User $user)
-    {
-        $user_id = $user['id'];
-
-        try {
-            $substation = Substation::instance();
-            $wallet_uuid = app(UserWalletManager::class)->ensureSubstationWalletForUser($user);
-
-            // get substation balances.  The array looks like this:
-            // [
-            //   'BTC' => [
-            //       'asset' => 'BTC',
-            //       'confirmed' => Tokenly\CryptoQuantity\CryptoQuantity::fromSatoshis('1000000'),
-            //       'unconfirmed' => Tokenly\CryptoQuantity\CryptoQuantity::fromSatoshis('1000000'),
-            //   ],
-            // ]
-            $fuel_address_uuid = UserMeta::getMeta($user_id, 'fuel_address_uuid');
-            $substation_balances = $substation->getCombinedAddressBalanceById($wallet_uuid, $fuel_address_uuid);
-
-            $confirmed_balance = 0;
-            $unconfirmed_balance = 0;
-            if (isset($substation_balances['BTC']['confirmed'])) {
-                $confirmed_balance = $substation_balances['BTC']['confirmed']->getSatoshisString();
-            }
-            if (isset($substation_balances['BTC']['unconfirmed'])) {
-                // only use the unconfirmed balance if it is different than the confirmed balance
-                if ($substation_balances['BTC']['unconfirmed']->getSatoshisString() != $confirmed_balance) {
-                    $unconfirmed_balance = $substation_balances['BTC']['unconfirmed']->getSatoshisString();
-                }
-            }
-
-            UserMeta::setMeta($user_id, 'fuel_balance', $confirmed_balance);
-            UserMeta::setMeta($user_id, 'fuel_pending', $unconfirmed_balance);
-
-            EventLog::info('fuel.balancesUpdated', [
-                'userId' => $user_id,
-                'confirmed' => $confirmed_balance,
-                'unconfirmed' => $unconfirmed_balance,
-            ]);
-        } catch (Exception $e) {
-            EventLog::logError('fuelBalance.error', $e, [
-                'userId' => $user_id,
-            ]);
-            throw $e;
-        }
     }
 
     protected function processDistributionAddressCredit($entry, $transaction)
@@ -515,25 +469,89 @@ class SubstationTransactionHandler
             }
 
             DB::table('fuel_debits')->insert($tx_data);
-        }
-        if ($tx_record and $tx_record->confirmed == 1) {
-            //already confirmed
-            EventLog::logError('fuelDebit.alreadyConfirmed', [
-                'userId' => $user_id,
-                'txid' => $txid,
-                'address' => $address,
-                'confirmations' => $confirmations,
-            ]);
-            return;
+        } else {
+            // tx record already exists
+            if ($tx_record->confirmed == 1) {
+                //already confirmed
+                EventLog::logError('fuelDebit.alreadyConfirmed', [
+                    'userId' => $user_id,
+                    'txid' => $txid,
+                    'address' => $address,
+                    'confirmations' => $confirmations,
+                ]);
+            } else {
+                // confirm
+                DB::table('fuel_debits')->where('id', $tx_record->id)->update([
+                    'confirmed' => 1,
+                    'updated_at' => $time,
+                ]);
+
+                EventLog::logError('fuelDebit.confirmed', [
+                    'userId' => $user_id,
+                    'txid' => $txid,
+                    'address' => $address,
+                    'confirmations' => $confirmations,
+                ]);
+            }
         }
 
         // update the fuel balance
         if ($asset == 'BTC') {
+            $user = User::find($user_id);
             try {
                 $this->updateFuelBalance($user);
             } catch (Exception $e) {
                 // exceptions are ok here
             }
+        }
+    }
+
+    protected function updateFuelBalance(User $user)
+    {
+        $user_id = $user['id'];
+        Log::debug("updateFuelBalance \$user_id=".json_encode($user_id, 192));
+
+        try {
+            $substation = Substation::instance();
+            $wallet_uuid = app(UserWalletManager::class)->ensureSubstationWalletForUser($user);
+
+            // get substation balances.  The array looks like this:
+            // [
+            //   'BTC' => [
+            //       'asset' => 'BTC',
+            //       'confirmed' => Tokenly\CryptoQuantity\CryptoQuantity::fromSatoshis('1000000'),
+            //       'unconfirmed' => Tokenly\CryptoQuantity\CryptoQuantity::fromSatoshis('1000000'),
+            //   ],
+            // ]
+            $fuel_address_uuid = UserMeta::getMeta($user_id, 'fuel_address_uuid');
+            $substation_balances = $substation->getCombinedAddressBalanceById($wallet_uuid, $fuel_address_uuid);
+            Log::debug("updateFuelBalance \$substation_balances=".json_encode($substation_balances, 192));
+
+            $confirmed_balance = 0;
+            $unconfirmed_balance = 0;
+            if (isset($substation_balances['BTC']['confirmed'])) {
+                $confirmed_balance = $substation_balances['BTC']['confirmed']->getSatoshisString();
+            }
+            if (isset($substation_balances['BTC']['unconfirmed'])) {
+                // only use the unconfirmed balance if it is different than the confirmed balance
+                if ($substation_balances['BTC']['unconfirmed']->getSatoshisString() != $confirmed_balance) {
+                    $unconfirmed_balance = $substation_balances['BTC']['unconfirmed']->getSatoshisString();
+                }
+            }
+
+            UserMeta::setMeta($user_id, 'fuel_balance', $confirmed_balance);
+            UserMeta::setMeta($user_id, 'fuel_pending', $unconfirmed_balance);
+
+            EventLog::info('fuel.balancesUpdated', [
+                'userId' => $user_id,
+                'confirmed' => $confirmed_balance,
+                'unconfirmed' => $unconfirmed_balance,
+            ]);
+        } catch (Exception $e) {
+            EventLog::logError('fuelBalance.error', $e, [
+                'userId' => $user_id,
+            ]);
+            throw $e;
         }
     }
 
