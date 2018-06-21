@@ -27,7 +27,7 @@
         "tokenly/xcaller-client": "^0.3",
         "tokenly/xchain-client": "dev-master",
         "tokenly/substation-client": "^0.4.1",
-        "tokenly/substation-distribution-client": "dev-master@dev",
+        "tokenly/substation-distribution-client": "^0.1.0",
         "tokenly/laravel-record-lock": "^1.1",
         "tokenly/signal-client": "^0.2.2",
         "tokenly/asset-name-utils": "^0.2.0"

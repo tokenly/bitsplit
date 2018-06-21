@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf958c9804aec1808295c455fe40f88e",
+    "content-hash": "c9cfc31e6af0c8ee365a1187fd8bfc7f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3853,22 +3853,22 @@
         },
         {
             "name": "tokenly/substation-distribution-client",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-distribution-client.git",
-                "reference": "e5f8d4046f865e9958a7e588588b5a22174a003b"
+                "reference": "7ef883d0dfcf59921a5a773fbe2911eeab8c9638"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/e5f8d4046f865e9958a7e588588b5a22174a003b",
-                "reference": "e5f8d4046f865e9958a7e588588b5a22174a003b",
+                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/7ef883d0dfcf59921a5a773fbe2911eeab8c9638",
+                "reference": "7ef883d0dfcf59921a5a773fbe2911eeab8c9638",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0",
                 "tokenly/crypto-quantity": "^2",
-                "tokenly/substation-client": "^0.4.0"
+                "tokenly/substation-client": "^0.4.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "~6.0",
@@ -3904,7 +3904,7 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-06-15T11:22:20+00:00"
+            "time": "2018-06-19T11:46:53+00:00"
         },
         {
             "name": "tokenly/token-generator",
@@ -5881,8 +5881,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "tokenly/tokenslot-client": 20,
-        "tokenly/xchain-client": 20,
-        "tokenly/substation-distribution-client": 20
+        "tokenly/xchain-client": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
