@@ -23,13 +23,7 @@ function aasort (&$array, $key) {
     $array=$ret;
 }
 
-
 function timestamp()
 {
 	return date('Y-m-d H:i:s');
-}
-
-function xchain()
-{
-    throw new Exception("XChain is no longer supported", 1);
 }

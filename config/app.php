@@ -160,7 +160,6 @@ return [
         /*
          * Vendor Service Providers...
          */
-		Tokenly\XChainClient\XChainServiceProvider::class,
 		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
         Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
         Tokenly\FluentdLogger\FluentdLoggerServiceProvider::class,
