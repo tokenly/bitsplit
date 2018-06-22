@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Libraries\Substation\Substation;
 use App\Libraries\Substation\UserWalletManager;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Models\Distribution as Distro, User;
 
 class ShowBalances extends Command
