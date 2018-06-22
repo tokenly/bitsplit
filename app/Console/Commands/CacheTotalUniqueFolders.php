@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\DailyFolder;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CacheTotalUniqueFolders extends Command
 {
