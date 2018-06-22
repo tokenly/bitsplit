@@ -96,7 +96,7 @@ class Fuel
 
         $substation = Substation::instance();
         $send_parameters = [
-            'feeRate' => 'low',
+            'feeRate' => 'medlow',
         ];
         Log::info('Pumping '.$destination_quantity.' '.$asset.' from '.$fuel_address_uuid.' to '.$destination_address.' (fee rate: '.$send_parameters['feeRate'].')');
         return $substation->sendImmediatelyToSingleDestination($wallet_uuid, $fuel_address_uuid, $asset, $destination_quantity, $destination_address, $send_parameters);

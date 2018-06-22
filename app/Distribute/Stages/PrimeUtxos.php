@@ -197,7 +197,7 @@ class PrimeUtxos extends Stage
             [$substation, $wallet_uuid] = $this->getSubstationAndWalletUuid();
             $prime_send_result = $substation->sendImmediatelyToDestinations($wallet_uuid, $distro->address_uuid, 'BTC', $destinations, [
                 // note: need to specify this as an exact rate...
-                'feeRate' => 'low',
+                'feeRate' => 'medlow',
             ]);
             $fee_paid = intval($prime_send_result['feePaid']->getSatoshisString());
         } catch (Exception $e) {
@@ -248,7 +248,7 @@ class PrimeUtxos extends Stage
             // use a calculated fee rate
             $send_parameters = [
                 // note: need to specify this as an exact rate...
-                'feeRate' => 'low',
+                'feeRate' => 'medlow',
             ];
         }
         [$substation, $wallet_uuid] = $this->getSubstationAndWalletUuid();
