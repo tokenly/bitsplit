@@ -178,6 +178,8 @@ class PrimeUtxos extends Stage
 
     protected function sendStageOnePrimeTransaction($distro, $quantities_sat)
     {
+        $fee_per_byte = $distro->fee_rate ?? Config::get('settings.miner_satoshi_per_byte');
+
         $time = timestamp();
         $prime_send_result = null;
         $total_quantity_sat = 0;
@@ -196,8 +198,8 @@ class PrimeUtxos extends Stage
             // send the stage 1 prime transaction
             [$substation, $wallet_uuid] = $this->getSubstationAndWalletUuid();
             $prime_send_result = $substation->sendImmediatelyToDestinations($wallet_uuid, $distro->address_uuid, 'BTC', $destinations, [
-                // note: need to specify this as an exact rate...
-                'feeRate' => 'medlow',
+                // use the exact rate of satoshis/byte
+                'feeRate' => (string)$fee_per_byte,
             ]);
             $fee_paid = intval($prime_send_result['feePaid']->getSatoshisString());
         } catch (Exception $e) {
@@ -245,10 +247,10 @@ class PrimeUtxos extends Stage
                 'txos' => $prime_setup['txos'],
             ];
         } else {
-            // use a calculated fee rate
+            // use a fee rate
+            $fee_per_byte = $distro->fee_rate ?? Config::get('settings.miner_satoshi_per_byte');
             $send_parameters = [
-                // note: need to specify this as an exact rate...
-                'feeRate' => 'medlow',
+                'feeRate' => (string)$fee_per_byte,
             ];
         }
         [$substation, $wallet_uuid] = $this->getSubstationAndWalletUuid();
