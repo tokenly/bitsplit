@@ -96,6 +96,7 @@ class Fuel
 
         $substation = Substation::instance();
         $send_parameters = [
+            // let substation pick a low-ish value for fuel
             'feeRate' => 'medlow',
         ];
         Log::info('Pumping '.$destination_quantity.' '.$asset.' from '.$fuel_address_uuid.' to '.$destination_address.' (fee rate: '.$send_parameters['feeRate'].')');
