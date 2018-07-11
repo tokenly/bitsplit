@@ -203,6 +203,8 @@ body {
 }
 
 .welcome-section-content {
-	max-width: 1200px;
-	margin: 0px auto;
+	padding: 30px;
+    padding-bottom: 0px;
+    max-width: 1200px;
+    margin: 0 auto;
 }

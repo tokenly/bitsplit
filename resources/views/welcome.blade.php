@@ -71,6 +71,31 @@
         </div>
     </section>
 
+    <section id="" class="welcome-section">
+        
+        <div class="welcome-section-content">
+            <div class="centered welcome-section-heading">
+                <header>Why Use Merged Folding?</header>
+                <div class="welcome-section-divider"></div>
+            </div>
+            
+            <p>This can be useful for your project for the following reasons:</p> 
+
+            <p>• Help to promote altruistic scientific research (like Protein Simulations) by giving more incentives to those that Fold to increase the overall Folding@Home network at a small cost to you. This will help your companies image as your project will be helping promote people to use computational power toward medical research rather than mining for an altcoin.</p>
+
+            <p>• Do a promotional giveaway of your token to get our community excited about your new product before it’s released. This is a good chance to advertise to our community base with a relatively low cost to perform the distributions.</p>
+
+            <p>• Create a special token that works within your platform that can only be earned via folding. This helps to incentivize people in our community to be more engaged with your project if there is a token they can only earn via folding.</p>
+
+            <p>• Rather than creating your own blockchain requiring people to maintain, you can simply use an already existing mining base that chooses to fold for science instead.</p>
+
+            <p>• If your project is looking for a way to “Airdrop” your token, and you’re not sure who should receive your token, airdropping to those that are using their mining equipment for folding is a great way for your project to help a charity with a good cause at the same time of promoting your own project. This is a win-win situation for our project, yours, and most importantly medical research.</p>
+
+            <p>• FoldingCoin, Inc. provides this service for free, you only need to pay the BTC required to confirm the transactions of your tokens to be sent to our participants.</p>
+        </div>
+
+    </section>
+
 	<p class="pull-right" style="text-align: right;">
 		<a href="https://tokenly.com" target="_blank" class="small-tokenly"><img src="{{ asset('img/Tokenly_Logo_BorderlessA_ldpi.png') }}" alt=""></a><br>
         <a href="http://foldingcoin.net" target="_blank"><img src="{{ asset('img/fldc/FLDC-Banner2.png') }}" alt=""  style="width: 200px;"></a>
