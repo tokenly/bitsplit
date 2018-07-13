@@ -2,53 +2,7 @@
 
 @section('content')
     
-    <section id="home-hero" class="welcome-section full">
-        <div id="home-hero-mask"></div>
-        <div class="welcome-section-content hero">
-            <div class="home-hero-header">
-                <div class="home-hero-content-left">
-                    <header>
-                        <!-- <span>Welcome to</span> -->
-                        <span>Merged Folding</span>
-                    </header>
-                   <!--  <div class="welcome-section-divider"></div> -->
-                    <h2>
-                        <span>Airdrops for</span>
-                        <span>Altruists</span>
-                    </h2>
-                    <div class="welcome-section-divider light"></div>
-                    <p>
-                        <span>FoldingCoin, Inc proudly offers the ability for your project to</span>
-                        <span><b>distribute your tokens</b></span>
-                        <span>to participating <a class="home-hero-link" href="https://foldingathome.org/" target="_blank">FoldingAtHome</a> users</span>
-                        <span>with the Merged Folding platform. Using this tool, you may distribute your token to some or all of the participants based on your own criteria.</span>
-                    </p>
-                    
-                    <p>We currently track contributions from between 1,500 and 2,000 participating altruists each month who could receive your token via Merged Folding.</p>
-
-                    <div class="home-hero-cta">
-                        <a class="welcome-cta blue" href="{{ route('account.authorize') }}">
-                            <span>Get Started</span>
-                        </a>
-                    </div>
-                </div>  
-                <div class="home-hero-content-right">
-                    <iframe
-                        height="315"
-                        src="https://www.youtube.com/embed/2GSe4RoEGCo"
-                        frameborder="0"
-                        allow="autoplay; encrypted-media"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-        </div>
-        <div class="centered home-hero-scroll">
-            <a href="#about">
-                <i class="fa fa-arrow-down"></i>
-            </a>
-        </div>
-    </section>
+    @include('welcome.hero')
 
     <section id="about" class="welcome-section">
         <div class="welcome-section-content">
@@ -75,27 +29,93 @@
         </div>
     </section>
 
-    <section id="" class="welcome-section">
+    <section id="use-cases" class="welcome-section">
         
         <div class="welcome-section-content">
-            <div class="centered welcome-section-heading">
+            <div class="welcome-section-heading">
                 <header>Why Use Merged Folding?</header>
                 <div class="welcome-section-divider"></div>
             </div>
-            
-            <p>This can be useful for your project for the following reasons:</p> 
 
-            <p>• Help to promote altruistic scientific research (like Protein Simulations) by giving more incentives to those that Fold to increase the overall Folding@Home network at a small cost to you. This will help your companies image as your project will be helping promote people to use computational power toward medical research rather than mining for an altcoin.</p>
+            <div class="centered">
+                <div class="use-cases">
+                    <div class="use-cases__content">
+                        <div class="use-cases__content__header">
+                            <i class="fa fa-heart"></i>
+                            <h3>Encourage Medical Research</h3>
+                        
+                            <div class="welcome-section-divider"></div>
+                        </div>
+                        <div class="use-cases__content__text">
 
-            <p>• Do a promotional giveaway of your token to get our community excited about your new product before it’s released. This is a good chance to advertise to our community base with a relatively low cost to perform the distributions.</p>
+                            <p>Promote altruistic scientific research (like Protein Simulations) by providing economic incentives to the Folding@Home network. This is excellent public relations for your company and token as your distribution will be literally helping to encourage life-saving medical research.</p>
+                        </div>
+                        <a class="use-cases__cta" href="#">
+                            <span>Learn More About Folding@Home</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="use-cases">
+                    <div class="use-cases__content">
+                        <div class="use-cases__content__header">
+                            <i class="fa fa-bullhorn"></i>
+                            <h3>Promote Your Token</h3>
 
-            <p>• Create a special token that works within your platform that can only be earned via folding. This helps to incentivize people in our community to be more engaged with your project if there is a token they can only earn via folding.</p>
+                            <div class="welcome-section-divider"></div>
+                        </div>
+                        <div class="use-cases__content__text">
+                            <p>Our community of medical research and cryptocurreny enthusiasts is one of the most .... engaged communities .... Giving away your token to our community not only assists with medical research, but also gets the attention of one of the most engaged .... Even do a pre-relaease excited about your new product before it’s released.</p>
+                        </div>
 
-            <p>• Rather than creating your own blockchain requiring people to maintain, you can simply use an already existing mining base that chooses to fold for science instead.</p>
+                        <a class="use-cases__cta" href="#">
+                            <span>See Past Distributions</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="use-cases">
+                    <div class="use-cases__content">
+                        <div class="use-cases__content__header">
+                            <i class="fa fa-check-circle"></i>
+                            <h3>It's Easy</h3>
 
-            <p>• If your project is looking for a way to “Airdrop” your token, and you’re not sure who should receive your token, airdropping to those that are using their mining equipment for folding is a great way for your project to help a charity with a good cause at the same time of promoting your own project. This is a win-win situation for our project, yours, and most importantly medical research.</p>
+                            <div class="welcome-section-divider"></div>
+                        </div>
+                        
+                        <div class="use-cases__content__text">
+                            <p>Create a special token that works within your platform that can only be earned via folding. This helps to incentivize people in our community to be more engaged with your project if there is a token they can only earn via folding.</p>
 
-            <p>• FoldingCoin, Inc. provides this service for free, you only need to pay the BTC required to confirm the transactions of your tokens to be sent to our participants.</p>
+    <!--                         <p>• Rather than creating your own blockchain requiring people to maintain, you can simply use an already existing mining base that chooses to fold for science instead.</p>
+
+                            <p>• If your project is looking for a way to “Airdrop” your token, and you’re not sure who should receive your token, airdropping to those that are using their mining equipment for folding is a great way for your project to help a charity with a good cause at the same time of promoting your own project. This is a win-win situation for our project, yours, and most importantly medical research.</p> -->
+
+                        </div>
+
+                        <a class="use-cases__cta" href="#">
+                            <span>Get Started</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="use-cases">
+                    <div class="use-cases__content">
+                        <div class="use-cases__content__header">
+                            <i class="fa fa-percent"></i>
+                            <h3>It's Free</h3>
+
+                            <div class="welcome-section-divider"></div>
+                        </div>
+                        <div class="use-cases__content__text">
+                            <p>FoldingCoin, Inc. provides this service for free, you only need to pay the BTC required to confirm the transactions of your tokens to be sent to our participants.</p>
+                        </div>
+                        <a class="use-cases__cta" href="#">
+                            <span>Signup for Free</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>            
         </div>
 
     </section>
@@ -158,45 +178,26 @@
         <section id="" class="welcome-section">
         
         <div class="welcome-section-content">
-            <div class="centered welcome-section-heading">
+            <div class="welcome-section-heading">
                 <header>About Merged Folding</header>
                 <div class="welcome-section-divider"></div>
             </div>
             
-            <p>This can be useful for your project for the following reasons:</p> 
-
-            <p>• Help to promote altruistic scientific research (like Protein Simulations) by giving more incentives to those that Fold to increase the overall Folding@Home network at a small cost to you. This will help your companies image as your project will be helping promote people to use computational power toward medical research rather than mining for an altcoin.</p>
-
-            <p>• Do a promotional giveaway of your token to get our community excited about your new product before it’s released. This is a good chance to advertise to our community base with a relatively low cost to perform the distributions.</p>
-
-            <p>• Create a special token that works within your platform that can only be earned via folding. This helps to incentivize people in our community to be more engaged with your project if there is a token they can only earn via folding.</p>
-
-            <p>• Rather than creating your own blockchain requiring people to maintain, you can simply use an already existing mining base that chooses to fold for science instead.</p>
-
-            <p>• If your project is looking for a way to “Airdrop” your token, and you’re not sure who should receive your token, airdropping to those that are using their mining equipment for folding is a great way for your project to help a charity with a good cause at the same time of promoting your own project. This is a win-win situation for our project, yours, and most importantly medical research.</p>
-
-            <p>• FoldingCoin, Inc. provides this service for free, you only need to pay the BTC required to confirm the transactions of your tokens to be sent to our participants.</p>
+            <p>MergedFolding is a free service that enables anyone to distribute Counterparty tokens to participating Folding@Home users based on their folding contributions</p> 
+            <p>The MergedFolding project is a collaboration between the <a href="https://foldingcoin.net/">FoldingCoin, Inc. (FLDC) team</a>, a 501(c)3 public charity, and <a href="https://tokenly.com">Tokenly</a>, a tech-startup that builds blockchain and cryptocurrency software for token distribution, eCommerce, and token-controlled access applications.</p>
+            <br>
+            <div class="centered">
+                <p>
+                    
+                    <a href="http://foldingcoin.net" target="_blank"><img src="{{ asset('img/fldc/FLDC-Banner2.png') }}" alt=""  style="width: 200px;"></a>
+                    <br><br>
+                    <a href="https://tokenly.com" target="_blank"><img src="{{ asset('img/Tokenly_Logo_BorderlessA_ldpi.png') }}" alt=""></a>
+                </p>
+            </div>
         </div>
-
     </section>
 
-	<p class="pull-right" style="text-align: right;">
-		<a href="https://tokenly.com" target="_blank" class="small-tokenly"><img src="{{ asset('img/Tokenly_Logo_BorderlessA_ldpi.png') }}" alt=""></a><br>
-        <a href="http://foldingcoin.net" target="_blank"><img src="{{ asset('img/fldc/FLDC-Banner2.png') }}" alt=""  style="width: 200px;"></a>
-	</p>	
-    <h1>Bitsplit - FLDC edition</h1>
-    <div class="row">
-        <div class="col col-lg-6">
-            <h2>Token Distribution</h2>
-            <p>
-                Use this service to distribute Counterparty tokens to participating Folding@Home users based on their folding contributions.
-            </p>
-            <p>
-                <a href="{{ route('home') }}" class="btn btn-lg btn-success"><i class="fa fa-rocket"></i> Get Started</a>
-            </p>
-        </div>
-    </div>
-
+		
 @stop
 
 
