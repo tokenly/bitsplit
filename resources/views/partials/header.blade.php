@@ -14,16 +14,20 @@
 			margin-top: -2px;
 			float: left;"          
 	       />
-	       	<strong>BitSplit - FLDC</strong>
+	       	<strong>MergedFolding</strong>
 	       </a>
 		</div>
 	</div>
 	<div class="navbar-right">
 		<nav class="collapse navbar-collapse" role="navigation">
 		  <ul class="nav navbar-nav">
-				<li><a href="http://foldingcoin.net/" target="_blank"><i class="fa fa-globe"></i> FoldingCoin</a></li>
 			@if (Auth::guest())
-				<li><a href="{{ route('account.authorize') }}"><i class="fa fa-user"></i> Login/Register</a></li>
+				<li>
+					<a href="{{ route('account.authorize') }}">
+						<span class="navbar-cta">Get Started</span>
+					</a></li>
+				<li><a href="{{ route('account.authorize') }}">Login</a></li>
+				<li><a href="http://foldingcoin.net/" target="_blank">What is FoldingCoin?</a></li>
 			@else
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> {{ Auth::user()->username }} <span class="caret"></span></a>
@@ -34,9 +38,10 @@
 						<li><a href="{{ url('/account/logout') }}">Logout</a></li>
 					</ul>
 				</li>
+				<li><a href="http://foldingcoin.net/" target="_blank">FoldingCoin.net</a></li>
 			@endif
 			  <li class="dropdown">
-				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-list"></i> Public Distributions <span class="caret"></span></a>
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Public Distributions <span class="caret"></span></a>
 				  <ul class="dropdown-menu" role="menu">
 					  <li><a href="{{route('distribute.history')}}">All distributions</a></li>
 					  <li><a href="{{route('distribute.official_fldc_history')}}">Official FLDC distributions</a></li>

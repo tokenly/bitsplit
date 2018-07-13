@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 		<link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+		<link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
 		<link rel="stylesheet" href="{{ asset('/css/jquery-ui.css') }}">
 		<link rel="stylesheet" href="{{ asset('/css/jquery.fancybox.css') }}">
 		<link href="{{ asset('/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -27,7 +28,6 @@
 		<div id="app">
 			<navigation></navigation>
 			
-			<!-- Begin Body -->
 			<div class="main-content">
 				@if(Session::has('message'))
 					<div class="alert-container">
@@ -35,11 +35,10 @@
 					</div>
 				@endif
 				@yield('content')
-				<footer></footer>
-				@include('partials.footer')
 			</div>
+			@include('partials.footer')
+			<footer></footer>
 		</div>
-		<!-- End Body -->
 	
 		<div class="pockets-url" style="display: none;"></div>
 		<div class="pockets-image-blue" style="display: none;"></div>	
@@ -79,6 +78,8 @@
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
 
 <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/polymer/0.5.6/polymer.min.js"></script>
 
 <script>
 	

@@ -2,47 +2,51 @@
 
 @section('content')
     
-    <section id="home-hero" class="welcome-section">
-        <div class="centered home-hero-header">
-            <header>
-                <span>Welcome to</span>
-                <span>Merged Folding</span>
-            </header>
-            <h2>
-                <span>Airdrops for</span>
-                <span>Altruists</span>
-            </h2>
-            <div class="welcome-section-divider"></div>
-        </div>
+    <section id="home-hero" class="welcome-section full">
+        <div id="home-hero-mask"></div>
+        <div class="welcome-section-content hero">
+            <div class="home-hero-header">
+                <div class="home-hero-content-left">
+                    <header>
+                        <!-- <span>Welcome to</span> -->
+                        <span>Merged Folding</span>
+                    </header>
+                   <!--  <div class="welcome-section-divider"></div> -->
+                    <h2>
+                        <span>Airdrops for</span>
+                        <span>Altruists</span>
+                    </h2>
+                    <div class="welcome-section-divider light"></div>
+                    <p>
+                        <span>FoldingCoin, Inc proudly offers the ability for your project to</span>
+                        <span><b>distribute your tokens</b></span>
+                        <span>to participating <a class="home-hero-link" href="https://foldingathome.org/" target="_blank">FoldingAtHome</a> users</span>
+                        <span>with the Merged Folding platform. Using this tool, you may distribute your token to some or all of the participants based on your own criteria.</span>
+                    </p>
+                    
+                    <p>We currently track contributions from between 1,500 and 2,000 participating altruists each month who could receive your token via Merged Folding.</p>
 
-        <div class="centered">
-            <a class="welcome-cta green" href="{{ route('account.authorize') }}">
-                <span>Get Started</span>
+                    <div class="home-hero-cta">
+                        <a class="welcome-cta blue" href="{{ route('account.authorize') }}">
+                            <span>Get Started</span>
+                        </a>
+                    </div>
+                </div>  
+                <div class="home-hero-content-right">
+                    <iframe
+                        height="315"
+                        src="https://www.youtube.com/embed/2GSe4RoEGCo"
+                        frameborder="0"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        <div class="centered home-hero-scroll">
+            <a href="#about">
+                <i class="fa fa-arrow-down"></i>
             </a>
-        </div>
-        <div class="home-hero-content">
-            <div class="home-hero-content-left">
-                
-                <p>
-                    <span>FoldingCoin, Inc proudly offers the ability for your project to</span>
-                    <span style="color: #C61410;"><b>distribute your token to participating <a href="https://foldingathome.org/" target="_blank">FoldingAtHome users</a></b></span>
-                    <span>with the Merged Folding platform. Using this tool, you may distribute your token to some or all of the participants based on your own criteria.</span>
-                </p>
-                
-                <p>We currently track contributions from between 1,500 and 2,000 participating altruists each month who could receive your token via Merged Folding.</p>
-                
-                <p>After reading this page over, please read our Terms and Conditions Page before your first distribution.</p>
-
-            </div>
-            <div class="home-hero-content-right">
-                <iframe
-                    height="315"
-                    src="https://www.youtube.com/embed/2GSe4RoEGCo"
-                    frameborder="0"
-                    allow="autoplay; encrypted-media"
-                    allowfullscreen>
-                </iframe>
-            </div>
         </div>
     </section>
 
@@ -50,7 +54,7 @@
         <div class="welcome-section-content">
             <div class="centered welcome-section-heading">
                 <header>Customized Token Distributions</header>
-                <div class="welcome-section-divider light"></div>
+                <div class="welcome-section-divider"></div>
             </div>
        
             <p>
@@ -76,6 +80,86 @@
         <div class="welcome-section-content">
             <div class="centered welcome-section-heading">
                 <header>Why Use Merged Folding?</header>
+                <div class="welcome-section-divider"></div>
+            </div>
+            
+            <p>This can be useful for your project for the following reasons:</p> 
+
+            <p>• Help to promote altruistic scientific research (like Protein Simulations) by giving more incentives to those that Fold to increase the overall Folding@Home network at a small cost to you. This will help your companies image as your project will be helping promote people to use computational power toward medical research rather than mining for an altcoin.</p>
+
+            <p>• Do a promotional giveaway of your token to get our community excited about your new product before it’s released. This is a good chance to advertise to our community base with a relatively low cost to perform the distributions.</p>
+
+            <p>• Create a special token that works within your platform that can only be earned via folding. This helps to incentivize people in our community to be more engaged with your project if there is a token they can only earn via folding.</p>
+
+            <p>• Rather than creating your own blockchain requiring people to maintain, you can simply use an already existing mining base that chooses to fold for science instead.</p>
+
+            <p>• If your project is looking for a way to “Airdrop” your token, and you’re not sure who should receive your token, airdropping to those that are using their mining equipment for folding is a great way for your project to help a charity with a good cause at the same time of promoting your own project. This is a win-win situation for our project, yours, and most importantly medical research.</p>
+
+            <p>• FoldingCoin, Inc. provides this service for free, you only need to pay the BTC required to confirm the transactions of your tokens to be sent to our participants.</p>
+        </div>
+
+    </section>
+
+    <section id="how-it-works" class="welcome-section">
+        <div class="welcome-section-content">
+            <div class="welcome-section-heading">
+                <header>How does it work?</header>
+                <div class="welcome-section-divider"></div>
+            </div>
+        
+            <div class="how-it-works-row">
+                <div class="how-it-works-row__panel">
+                    <h3 class="step-1">Create an account</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pharetra, nulla a gravida interdum, risus turpis egestas turpis, sit amet convallis elit felis id elit.</p>
+                </div>
+                <div class="how-it-works-row__panel centered">
+                    <img src="{{ asset('img/signup-form.PNG') }}" alt=""/>
+                </div>
+            </div>
+
+            <div class="how-it-works-row">
+                <div class="how-it-works-row__panel centered full-screen-only">
+                    <img src="{{ asset('img/tokenpass-add-new-address-form.PNG') }}" alt=""/>
+                </div>
+                <div class="how-it-works-row__panel">
+                    <h3 class="step-2">Add Your Wallet Address</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pharetra, nulla a gravida interdum, risus turpis egestas turpis, sit amet convallis elit felis id elit.</p>
+                </div>
+                <div class="how-it-works-row__panel centered mobile-only">
+                    <img src="{{ asset('img/tokenpass-add-new-address-form.PNG') }}" alt=""/>
+                </div>
+            </div>
+
+            <div class="how-it-works-row">
+                <div class="how-it-works-row__panel">
+                    <h3 class="step-3">Create Your Distribution</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pharetra, nulla a gravida interdum, risus turpis egestas turpis, sit amet convallis elit felis id elit.</p>
+                </div>
+                <div class="how-it-works-row__panel centered">
+                    <img src="{{ asset('img/distribution-form.PNG') }}" alt=""/>
+                </div>
+            </div>
+
+            <div class="how-it-works-row">
+                <div class="how-it-works-row__panel centered full-screen-only">
+                    <img src="{{ asset('img/distribution-details.PNG') }}" alt=""/>
+                </div>
+                <div class="how-it-works-row__panel">
+                    <h3 class="step-4">Review the Details of Your Distribution</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pharetra, nulla a gravida interdum, risus turpis egestas turpis, sit amet convallis elit felis id elit.</p>
+                </div>
+                <div class="how-it-works-row__panel centered mobile-only">
+                    <img src="{{ asset('img/distribution-details.PNG') }}" alt=""/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <section id="" class="welcome-section">
+        
+        <div class="welcome-section-content">
+            <div class="centered welcome-section-heading">
+                <header>About Merged Folding</header>
                 <div class="welcome-section-divider"></div>
             </div>
             

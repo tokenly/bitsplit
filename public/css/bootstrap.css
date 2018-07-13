@@ -4501,6 +4501,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-default .navbar-brand {
   color: #777;
+  font-size: 15px;
+    letter-spacing: -0.5px;
+    color: #424242 !important;
 }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
