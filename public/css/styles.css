@@ -311,6 +311,10 @@ body {
 	.welcome-section-content__section {
 		display: block !important;
 	}
+
+	body .distribution-details {
+		width: 49.5%;
+	}
 }
 
 .full-screen-only {
@@ -333,6 +337,20 @@ body {
 
 	.home-hero-cta {
 		text-align: center;
+	}
+
+	body .distribution-details {
+		width: 100%;
+	}
+
+	body .fancy-form-select-container {
+		display: block;
+		padding: 10px;
+	}
+
+	body .fancy-form-select-container__entry {
+		display: block;
+		padding: 10px;
 	}
 }
 
@@ -518,7 +536,7 @@ body {
 	box-shadow: 0 3px 38px 0 rgba(0,0,0,.06), 0 3px 7px 0 rgba(0,0,0,.06);
 	min-height: 17rem;
 	overflow: hidden;
-	padding: 3.5rem 6rem 3rem 7.5rem;
+	padding: 3.5rem 6rem;
 	position: relative;
 	width: 100%;
 	display: inline-block;
@@ -685,6 +703,26 @@ body .form-group:last-child {
 	body .distro-form__section {
 		display: block;
 		width: 100%;
+		padding: 15px 0px;
+	}
+
+	body .distro-form__section__content {
+		padding: 25px;
+	}
+
+	.content.padded {
+		padding: 25px;
+	}
+}
+
+@media(max-width: 600px) {
+
+	body .distro-form__section__content {
+		padding: 15px;
+	}
+
+	.content.padded {
+		padding: 15px;
 	}
 }
 
@@ -785,4 +823,60 @@ ul.yes-no-toggle.all-blue span.active {
 	background: #1E88E5 !important;
 	color: #f9f9f9 !important;
 	border: 1px solid #1976D2 !important;
+}
+
+.fancy-form-select-container {
+	display: flex;
+}
+
+.fancy-form-select-container__entry {
+	flex: 1;
+	padding: 15px;
+}
+
+.fancy-form-select-container__entry__content {
+	border: 2px solid #eee;
+	border-radius: 3px;
+	padding: 15px;
+	cursor: pointer;
+	transition: 0.5s;
+	position: relative;
+}
+
+.fancy-form-select-container__entry__content i {
+	font-size: 24px;
+}
+
+.fancy-form-select-container__entry__content .title {
+	font-weight: 600;
+	font-size: 15px;
+	margin-top: 10px;
+	display: block;
+}
+
+.fancy-form-select-container__entry__content small {
+    margin-top: 10px;
+    display: inline-block;
+    color: #757575;
+}
+
+.fancy-form-select-container__entry__content:hover {
+	border: 2px solid #00C853;
+	background: #f9f9f9;
+}
+
+.fancy-form-select-container__entry__content.active::before {
+	color: #fff;
+	background: #00C853;
+	border-radius: 50%;
+    content: '✔';
+    font-size: 16px;
+    font-weight: 700;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    left: -15px;
+    position: absolute;
+    top: -15px;
 }

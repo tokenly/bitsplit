@@ -31,16 +31,30 @@
 					/>
 				</div>
 				<div class="form-group dropdown">
-					<label for="calculation_type">Calculation Type</label>
-					<div>
-						<span
-							@click="calculationType = 'even'"
-							v-bind:class="{active: calculationType == 'even'}"
-						>Proportional</span>
-						<span
-							@click="calculationType = 'static'"
-							v-bind:class="{active: calculationType == 'static'}"
-						>Uniform</span>
+					<label for="calculation_type">How do you want to distribute your tokens?</label>
+					<div class="fancy-form-select-container">
+						<div class="fancy-form-select-container__entry centered">
+							<div
+								@click="calculationType = 'even'"
+								class="fancy-form-select-container__entry__content two"
+								v-bind:class="{active: calculationType == 'even'}"
+							>
+								<i class="fa fa-pie-chart" style="color: #E65100;"></i>
+								<span class="title">Proportionally</span>
+								<small>Recipients will receive token amounts in proportion to their contributions to Folding@Home</small>
+							</div>
+						</div>
+						<div class="fancy-form-select-container__entry centered">
+							<div
+								@click="calculationType = 'static'"
+								class="fancy-form-select-container__entry__content two"
+								v-bind:class="{active: calculationType == 'static'}"
+							>
+								<i class="fa fa-th-large" style="color: #AB47BC;"></i>
+								<span class="title">Uniformally</span>
+								<small>All recipients of your token will receive the same amount of your token.</small>
+							</div>
+						</div>
 					</div>
 					<select
 						v-show="false"
@@ -133,12 +147,38 @@
 					</div>  
 				</div>
 				<div class="form-group">
-					<label for="btc_fee_rate">Custom Miner Fee Rate</label>
-					<input type="text" class="form-control" id="btc_fee_rate" name="btc_fee_rate" placeholder="{{ Config::get('settings.miner_satoshi_per_byte') }}" />
-					<small>
-						* This is an advanced feature. Rates are defined in <em>satoshis per byte</em>, enter a number between {{ Config::get('settings.min_fee_per_byte') }} and {{ Config::get('settings.max_fee_per_byte') }}.<br>
-                        See <a href="https://bitcoinfees.earn.com" target="_blank">https://bitcoinfees.earn.com</a> for help determining a rate.
-					</small>
+					<label for="btc_fee_rate">
+						<span>Set a Custom Bitcoin Network Fee?</span>
+						<small>(Optional)</small>
+					</label>
+					<br>
+					<ul class="yes-no-toggle">
+						<li
+							@click="customBitcoinNetworkFee = true"
+						><a><span class="yes" v-bind:class="{active: customBitcoinNetworkFee}">Yes</span></a></li><li 
+						class="no"
+							@click="customBitcoinNetworkFee = false"
+						><a><span class="no" v-bind:class="{active: !customBitcoinNetworkFee}">No</span></a></li>
+					</ul>
+					<div v-show="customBitcoinNetworkFee">
+						<br>
+						<label for="btc_fee_rate">
+							<span>Bitcoin Network Fee:</span>
+						</label>
+						<input
+							type="text"
+							class="form-control"
+							id="btc_fee_rate"
+							name="btc_fee_rate"
+							placeholder="{{ Config::get('settings.miner_satoshi_per_byte') }}"
+							minimum="5"
+							maximum="600"
+						/>
+						<small>
+							* This is an advanced feature. Rates are defined in <em>satoshis per byte</em>, enter a number between {{ Config::get('settings.min_fee_per_byte') }} and {{ Config::get('settings.max_fee_per_byte') }}.<br>
+	                        See <a href="https://bitcoinfees.earn.com" target="_blank">https://bitcoinfees.earn.com</a> for help determining a rate.
+						</small>
+					</div>
 				</div>
 				<div class="form-submit">
 					<button type="submit" class="btn btn-lg btn-success button wide"><i class="fa fa-check"></i> Initiate Distribution</button>

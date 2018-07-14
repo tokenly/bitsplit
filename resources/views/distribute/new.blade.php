@@ -48,7 +48,8 @@
 			return {
 				calculationType: null,
 				distributionClass: null,
-				useAccountFuel: true
+				useAccountFuel: true,
+				customBitcoinNetworkFee: false
 			}
 		},
 		props: {
