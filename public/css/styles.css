@@ -835,7 +835,7 @@ ul.yes-no-toggle.all-blue span.active {
 }
 
 .fancy-form-select-container__entry__content {
-	border: 2px solid #eee;
+	border: 2px solid #e0e0e0;
 	border-radius: 3px;
 	padding: 15px;
 	cursor: pointer;
@@ -865,6 +865,10 @@ ul.yes-no-toggle.all-blue span.active {
 	background: #f9f9f9;
 }
 
+.fancy-form-select-container__entry__content.active {
+	border: 2px solid #00C853;
+}
+
 .fancy-form-select-container__entry__content.active::before {
 	color: #fff;
 	background: #00C853;
@@ -879,4 +883,14 @@ ul.yes-no-toggle.all-blue span.active {
     left: -15px;
     position: absolute;
     top: -15px;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #00C853;
+    border-color: #43A047;
+}
+
+.btn-success:hover {
+    background-color: #43A047 !important;
 }

@@ -50,7 +50,7 @@
 								class="fancy-form-select-container__entry__content two"
 								v-bind:class="{active: calculationType == 'static'}"
 							>
-								<i class="fa fa-th-large" style="color: #AB47BC;"></i>
+								<i class="fa fa-th" style="color: #AB47BC;"></i>
 								<span class="title">Uniformally</span>
 								<small>All recipients of your token will receive the same amount of your token.</small>
 							</div>
@@ -72,29 +72,56 @@
 		<div class="distro-form__section">
 			<div class="distro-form__section__content">
 				<div class="form-group dropdown">
-					<label for="distribution_class">Distribution Class</label>
-					<div>
-						<span
-							@click="distributionClass = 'All Folders'"
-							v-bind:class="{active: distributionClass == 'All Folders'}"
-						>All Folders</span>
-						<span
-							@click="distributionClass = 'Minimum FAH points'"
-							v-bind:class="{active: distributionClass == 'Minimum FAH points'}"
-						>Minimum FAH points</span>
-						<span
-							@click="distributionClass = 'Top Folders'"
-							v-bind:class="{active: distributionClass == 'Top Folders'}"
-						>Top Folders</span>
-						<span
-							@click="distributionClass = 'Random'"
-							v-bind:class="{active: distributionClass == 'Random'}"
-						>Random</span>
-						<span
-							@click="distributionClass = 'unique'"
-							v-bind:class="{active: distributionClass == 'unique'}"
-						>Unique Distribution</span>
-					</div>	
+					<label for="distribution_class">Who should receive your token?</label>
+					<div class="fancy-form-select-container">
+						<div class="fancy-form-select-container__entry centered">
+							<div
+								@click="distributionClass = 'All Folders'"
+								class="fancy-form-select-container__entry__content two"
+								v-bind:class="{active: distributionClass == 'All Folders'}"
+							>
+								<i class="fa fa-group" style="color: #009688;"></i>
+								<span class="title">All Folders</span>
+								<small>All Folding@Home participants will receive your token</small>
+							</div>
+						</div>
+						<div class="fancy-form-select-container__entry centered">
+							<div
+								@click="distributionClass = 'Minimum FAH points'"
+								class="fancy-form-select-container__entry__content two"
+								v-bind:class="{active: distributionClass == 'Minimum FAH points'}"
+							>
+								<i class="fa fa-list" style="color: #D4E157;"></i>
+								<span class="title">Only Folders with Minumum FAH points</span>
+								<small>Only Folding@Home participants with sufficient FAH points will receive your token</small>
+							</div>
+						</div>
+					</div>
+
+					<div class="fancy-form-select-container">
+						<div class="fancy-form-select-container__entry centered">
+							<div
+								@click="distributionClass = 'Top Folders'"
+								class="fancy-form-select-container__entry__content two"
+								v-bind:class="{active: distributionClass == 'Top Folders'}"
+							>
+								<i class="fa fa-trophy" style="color: #795548;"></i>
+								<span class="title">Only the Top Folders</span>
+								<small>Only the top contributors to the Folding@Home network will receive your token</small>
+							</div>
+						</div>
+						<div class="fancy-form-select-container__entry centered">
+							<div
+								@click="distributionClass = 'Random'"
+								class="fancy-form-select-container__entry__content two"
+								v-bind:class="{active: distributionClass == 'Random'}"
+							>
+								<i class="fa fa-random" style="color: #607D8B;"></i>
+								<span class="title">Random Folders</span>
+								<small>Recipients of your token will be randomly selected</small>
+							</div>
+						</div>
+					</div>
 
 					<select
 						v-show="false"
