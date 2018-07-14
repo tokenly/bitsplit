@@ -39,8 +39,7 @@
 				@endif
 				@yield('content')
 			</div>
-			@include('partials.footer')
-			<footer></footer>
+			<footer-section></footer-section>
 		</div>
 	
 		<div class="pockets-url" style="display: none;"></div>
@@ -75,6 +74,7 @@
 		</script>
 		<!--End of Tawk.to Script-->	
 		<script src="{{ asset('/js/vue_dev.js') }}"></script>
+		@yield('page_scripts')
 	</body>
 </html>
 
@@ -86,7 +86,7 @@
 
 <script>
 	
-	Vue.component('footer', {
+	Vue.component('footer-section', {
 
 		template: `
 			@include('partials.footer')

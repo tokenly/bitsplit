@@ -13,6 +13,7 @@
 
 //main pages
 Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
+Route::get('distributions/new', array('as' => 'distribute.new', 'uses' => 'DistributeController@newDistribution'));
 		
 //distributions
 Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'DistributeController@submitDistribution'));

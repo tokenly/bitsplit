@@ -20,6 +20,13 @@ class DistributeController extends Controller {
         $this->middleware('tls');
     }
 
+    public function newDistribution()
+    {
+
+    	$user = Auth::user();
+
+    	return view('distribute.new', array('user' => $user));
+    }
 	public function submitDistribution()
 	{
         $input = Input::all();

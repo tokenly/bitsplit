@@ -7,6 +7,7 @@ body {
     /*font-family: 'Cousine', sans-serif;*/
 	color: #424242 !important;
 	font-size: 16px;
+	background: #f9f9f9 !important;
 }
 
 .centered {
@@ -615,4 +616,173 @@ body {
 	display: inline-block;
 	margin-bottom: 10px;
 	color: #D31511;
+}
+
+.content {
+	max-width: 1200px;
+	margin: 0 auto;
+	display: block;
+	min-height: 100vh;
+	position: relative;
+}
+
+.content.padded {
+	padding: 50px;
+}
+
+.page-information h1 {
+	margin: 0px;
+	margin-bottom: 20px;
+	font-weight: 700;
+	color: #212121;
+}
+
+.dashboard__data {
+	display: inline-block;
+	width: 200px;
+}
+
+.distro-form {
+	display: flex;
+}
+.distro-form__section {
+	flex: 1;
+	padding: 15px;
+}
+
+.distro-form__section__content {
+	background: #fff;
+	border-radius: 3px;
+	padding: 25px;
+	box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
+}
+
+body .form-group {
+	margin-bottom: 25px;
+}
+
+body .form-group:last-child {
+	margin: 0px;
+}
+
+.form-group label {
+	font-size: 15px;
+}
+
+.button {
+	border-radius: 3px;
+}
+
+.button.wide {
+	width: 100%;
+}
+
+@media(max-width: 900px) {
+	body .distro-form {
+		display: block;
+	}
+	
+	body .distro-form__section {
+		display: block;
+		width: 100%;
+	}
+}
+
+
+ul.yes-no-toggle{
+	padding: 0px;
+	margin: 0px;
+	list-style: none;
+	text-align: center;
+	display: inline-block;
+	letter-spacing: -0.5px;
+}
+
+ul.yes-no-toggle li{
+	display: inline-block;
+	width: 50%;
+}
+
+ul.yes-no-toggle li > a {
+	text-decoration: none;
+	color: #616161;
+}
+
+ul.yes-no-toggle li > a > span, ul.yes-no-toggle li > span{
+	padding: 3px 10px;
+	background-color: #f9f9f9;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#f9f9f9),to(#eeeeee));
+    background-image: -webkit-linear-gradient(top,#f9f9f9,#eeeeee);
+    background-image: linear-gradient(top,#f9f9f9,#eeeeee);
+    cursor: pointer;
+    border: 1px solid #ccc;
+	transition: 0.2s;
+	border-radius: 2px;
+	display: block;
+	box-shadow: 0px 1px 1px rgba(100,100,100,0.1);
+	line-height: 20px;
+	font-size: 14px;
+}
+
+ul.yes-no-toggle li > a > span.active, ul.yes-no-toggle li > span.active{
+	box-shadow: inset 0px 0px 2px rgba(0,0,0,0.1);
+	border-radius: 3px 0px 0px 3px;
+}
+
+ul.yes-no-toggle li > a > span.inactive, ul.yes-no-toggle li > span.inactive{
+	box-shadow: 0px 0px 2px rgba(250,250,250,0.1);
+	border-radius: 0px 3px 3px 0px;
+}
+
+ul.yes-no-toggle li > a > span.yes, ul.yes-no-toggle li > span.yes{
+	border-radius: 3px 0px 0px 3px;
+}
+
+ul.yes-no-toggle li > a > span.no, ul.yes-no-toggle li > span.no{
+	border-radius: 0px 3px 3px 0px;
+}
+
+ul.yes-no-toggle li > a > span.no, ul.yes-no-toggle li > span.no:hover {
+	box-shadow: 0px 1px 3px #e0e0e0;
+	border: 1px solid #bdbdbd;
+}
+
+ul.yes-no-toggle li > a > span.yes.active, ul.yes-no-toggle li > span.yes.active{
+	background: #1E88E5;
+	color: #f9f9f9;
+	border: 1px solid #1976D2;
+	margin-right: -2px;
+}
+
+ul.yes-no-toggle li > a > span.no.active, ul.yes-no-toggle li > span.no.active{
+	background: #EF5350;
+	color: #f9f9f9;
+	border: 1px solid #E53935;
+	margin-left: -2px;
+}
+
+ul.yes-no-toggle.hide-inactive li{
+	width: 100%;
+}
+
+ul.yes-no-toggle.hide-inactive li span{
+	display: none;
+}
+
+ul.yes-no-toggle.hide-inactive li span.active{
+	display: inline-block;
+}
+
+ul.yes-no-toggle.hide-inactive:hover li{
+	width: 50%;
+}
+
+ul.yes-no-toggle.hide-inactive:hover li span{
+	display: inline-block;
+}
+
+ul.yes-no-toggle.all-blue span.active {
+	background: #1E88E5 !important;
+	color: #f9f9f9 !important;
+	border: 1px solid #1976D2 !important;
 }
