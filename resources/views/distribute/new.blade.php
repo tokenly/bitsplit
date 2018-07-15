@@ -65,7 +65,8 @@
 				showRandomInput: null,
 				showTopFoldersInput: null,
 				amountRandomFolders: null,
-				weightChanceByFAHPoints: null
+				weightChanceByFAHPoints: null,
+				invalidInputWarning: null
 			}
 		},
 		props: {
@@ -79,11 +80,19 @@
 			selectTopFolders(n) {
 				this.amountTopFolders = n;
 				this.showTopFoldersInput = false;
+			},
+			checkValid(e) {
+				if(this.validConfiguration) {
+    				return true;
+    			} else {
+    				this.invalidInputWarning = true;
+    				e.preventDefault();
+    			}
 			}
 		},
 		computed: {
 			validToken() {
-				return (this.tokenName.length > 1);
+				return (this.tokenName && this.tokenName.length > 2);
 			},
 			validTokenAmount() {
 				return (!isNaN(this.tokenAmount) && this.tokenAmount > 0);
@@ -95,13 +104,25 @@
 							return true;
 							break;
 						case 'Minimum FAH points':
-							return true;
+							if(this.minFAHPoints) {
+								return true;
+							} else {
+								return false;
+							}
 							break;
 						case 'Top Folders':
-							return true;
+							if(this.amountTopFolders) {
+								return true;
+							} else {
+								return false;
+							}
 							break;
 						case 'Random':
-							return true;
+							if(this.amountRandomFolders) {
+								return true;
+							} else {
+								return false;
+							}
 							break;
 						case 'unique':
 							return true;

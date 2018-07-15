@@ -1,15 +1,67 @@
-<form action="{{ route('distribute.post') }}" method="post" enctype="multipart/form-data">
+<form
+	action="{{ route('distribute.post') }}"
+	method="post"
+	enctype="multipart/form-data"
+	v-on:submit="checkValid"
+>
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	<div class="distro-form">
 		<div class="distro-form__section">
 			<div class="distro-form__section__content">
-				<div class="form-group">
+				<div 
+					class="form-group"
+					v-bind:class="{'action-required': invalidInputWarning && !validToken}"
+				>
 					<label for="asset">Name of Token You Want to Distribute</label>
-					<input v-model="tokenName" type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" value="{{ old('asset') }}" required />
+					<input
+						v-model="tokenName"
+						type="text"
+						class="form-control"
+						id="asset"
+						name="asset"
+						placeholder="(e.g LTBCOIN)"  
+					/>
+					<div 
+						v-if="invalidInputWarning && !validToken"
+						class="action-required-container"
+					>
+						<span class="action-required-notice">
+							<i class="fa fa-exclamation-circle"></i>
+							<span>Please enter a valid token name</span>
+						</span>
+					</div>
 				</div>
-				<div class="form-group" id="percent_asset_total">
-					<label for="asset_total">Total Amount of Tokens You Want to Distribute</label>
-					<input type="text" class="form-control numeric-only" id="asset_total" name="asset_total" value="{{ old('asset_total') }}" placeholder="" style="width: 150px;"/>
+				<div 
+					class="form-group"
+					id="percent_asset_total"
+					v-bind:class="{'action-required': invalidInputWarning && !validTokenAmount}"
+				>
+					<label for="asset_total">
+						<span>Total Amount of</span>
+						<span v-if="!validToken">Tokens</span>
+						<span v-if="validToken" style="color: #1E88E5;">@{{ tokenName }}</span>
+						<span>You Want to Distribute</span>
+					</label>
+					<input
+						v-model="tokenAmount"
+						type="text"
+						class="form-control numeric-only"
+						id="asset_total"
+						name="asset_total" 
+						placeholder="" 
+						style="width: 150px;"
+					/>
+					<div 
+						v-if="invalidInputWarning && !validTokenAmount"
+						class="action-required-container"
+					>
+						<span class="action-required-notice">
+							<i class="fa fa-exclamation-circle"></i>
+							<span>Please enter a valid amount of</span>
+							<span v-if="validToken">@{{ tokenName }}</span>
+							<span v-if="!validToken">tokens</span>
+						</span>
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="use_fuel">Use available fuel in your account for BTC fee?</label><br>
@@ -30,7 +82,10 @@
 						value="1"
 					/>
 				</div>
-				<div class="form-group dropdown">
+				<div 
+					class="form-group dropdown"
+					v-bind:class="{'action-required': invalidInputWarning && !calculationType}"
+				>
 					<label for="calculation_type">How do you want to distribute your tokens?</label>
 					<div class="fancy-form-select-container">
 						<div class="fancy-form-select-container__entry centered">
@@ -56,6 +111,18 @@
 							</div>
 						</div>
 					</div>
+
+					<div 
+						v-if="invalidInputWarning && !calculationType"
+						class="action-required-container"
+					>
+						<span class="action-required-notice">
+							<i class="fa fa-exclamation-circle"></i>
+							<span>Please choose how to distribute your</span>
+							<span v-if="validToken">@{{ tokenName }}</span>
+							<span v-if="!validToken">tokens</span>
+						</span>
+					</div>
 					<select
 						v-show="false"
 						v-model="calculationType"
@@ -71,7 +138,10 @@
 		</div>
 		<div class="distro-form__section">
 			<div class="distro-form__section__content">
-				<div class="form-group dropdown">
+				<div 
+					class="form-group dropdown"
+					v-bind:class="{'action-required': invalidInputWarning && !distributionClass}"
+				>
 					<label for="distribution_class">Who should receive your token?</label>
 					<div class="fancy-form-select-container">
 						<div class="fancy-form-select-container__entry centered">
@@ -123,6 +193,18 @@
 						</div>
 					</div>
 
+					<div 
+						v-if="invalidInputWarning && !distributionClass"
+						class="action-required-container"
+					>
+						<span class="action-required-notice">
+							<i class="fa fa-exclamation-circle"></i>
+							<span>Please choose the recipients of your</span>
+							<span v-if="validToken">@{{ tokenName }}</span>
+							<span v-if="!validToken">tokens</span>
+						</span>
+					</div>
+
 					<select
 						v-show="false"
 						v-model="distributionClass"
@@ -149,6 +231,7 @@
 					v-if="distributionClass == 'Minimum FAH points'"
 					id="minimum_fah_points_wrapper"
 					class="form-group"
+					v-bind:class="{'action-required': invalidInputWarning && !minFAHPoints}"
 				>
 					<label for="minimum_fah_points">Minimum Required FAH Points (New credit)</label>
 					<input 
@@ -160,11 +243,23 @@
 						class="form-control"
 						style="width: 150px;"
 					>
+					<div 
+						v-if="invalidInputWarning && !minFAHPoints"
+						class="action-required-container"
+					>
+						<span class="action-required-notice">
+							<i class="fa fa-exclamation-circle"></i>
+							<span>Please choose minimum FAH points required to receive your</span>
+							<span v-if="validToken">@{{ tokenName }}</span>
+							<span v-if="!validToken">tokens</span>
+						</span>
+					</div>
 				</div>
 				<div 
 					v-if="distributionClass == 'Top Folders'"
 					id="amount_top_folders_wrapper" 
 					class="form-group"
+					v-bind:class="{'action-required': invalidInputWarning && !amountTopFolders}"
 				>
 					<label for="amount_top_folders">Number of Top Folders to Select</label>
 					<div>
@@ -228,13 +323,28 @@
 						class="form-control" 
 						style="width: 150px;"
 					/>
+
+					<div 
+						v-if="invalidInputWarning && !amountTopFolders"
+						class="action-required-container"
+					>
+						<span class="action-required-notice">
+							<i class="fa fa-exclamation-circle"></i>
+							<span>Please choose the number of top folders who should receive your</span>
+							<span v-if="validToken">@{{ tokenName }}</span>
+							<span v-if="!validToken">tokens</span>
+						</span>
+					</div>
 				</div>
 				<div 
 					v-if="distributionClass == 'Random'"
 					id="amount_random_folders_wrapper"
 					class="form-group"
 				>
-					<div class="form-group">
+					<div
+						class="form-group"
+						v-bind:class="{'action-required': invalidInputWarning && !amountRandomFolders}"
+					>
 						<label for="amount_random_folders">Number of Random Folders to Select</label>
 						<div>
 							<span
@@ -294,7 +404,18 @@
 							name="amount_random_folders"
 							id="amount_random_folders"
 							class="form-control"
-							style="width: 150px;">
+							style="width: 150px;"/>
+						<div 
+							v-if="invalidInputWarning && !amountRandomFolders"
+							class="action-required-container"
+						>
+							<span class="action-required-notice">
+								<i class="fa fa-exclamation-circle"></i>
+								<span>Please choose the number of random folders who should receive your</span>
+								<span v-if="validToken">@{{ tokenName }}</span>
+								<span v-if="!validToken">tokens</span>
+							</span>
+						</div>	
 					</div>
 					<div class="form-group">
 						<label for="weight_cache_by_fah">Weight chance by FAH points?</label><br>
@@ -316,15 +437,44 @@
 							value="1" />
 					</div>
 				</div>
-				<div style="display: flex;">
-					<div class="form-group" style="flex: 1; padding-right: 10px;">
-						<label for="folding_start_date">Folding Start Date</label>
-						<input type="text" id="folding_start_date" name="folding_start_date" value="{{ old('folding_start_date') }}" class="form-control datetimepicker_folding" />
-	                </div>
-	                <div class="form-group" style="flex: 1; padding-left: 10px;">
-						<label for="folding_end_date">Folding End Date</label>
-						<input type="text" id="folding_end_date" name="folding_end_date" value="{{ old('folding_end_date') }}" class="form-control datetimepicker_folding" />
-					</div>  
+				<div 
+					class="form-group"
+					v-bind:class="{'action-required': invalidInputWarning && (!startDate || !endDate)}"
+				>
+					<div style="display: flex;">
+						<div 
+							class="form-group" 
+							style="flex: 1; padding-right: 10px; margin-bottom: 0px;"
+						>
+							<label for="folding_start_date">Folding Start Date</label>
+							<input
+								v-model="startDate"
+								type="text"
+								id="folding_start_date"
+								name="folding_start_date"
+								class="form-control datetimepicker_folding"
+							/>
+		                </div>
+		                <div class="form-group" style="flex: 1; padding-left: 10px; margin-bottom: 0px;">
+							<label for="folding_end_date">Folding End Date</label>
+							<input 
+								v-model="endDate"
+								type="text" 
+								id="folding_end_date" 
+								name="folding_end_date" 
+								class="form-control datetimepicker_folding" 
+							/>
+						</div>  
+					</div>
+					<div 
+						v-if="invalidInputWarning &&  (!startDate || !endDate)"
+						class="action-required-container"
+					>
+						<span class="action-required-notice">
+							<i class="fa fa-exclamation-circle"></i>
+							<span>Please enter valid start/end dates</span>
+						</span>
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="btc_fee_rate">
@@ -361,7 +511,14 @@
 					</div>
 				</div>
 				<div class="form-submit">
-					<button type="submit" class="btn btn-lg btn-success button wide"><i class="fa fa-check"></i> Initiate Distribution</button>
+					<button
+						type="submit"
+						class="btn btn-lg btn-success button wide"
+						v-bind:class="{'disabled': !validConfiguration}"
+					>
+						<span>Initiate Distribution</span>
+						<i class="fa fa-arrow-right"></i>
+					</button>
 				</div>	
 			</div>
 		</div>
