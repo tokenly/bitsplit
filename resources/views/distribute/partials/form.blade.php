@@ -163,7 +163,7 @@
 							>
 								<i class="fa fa-list" style="color: #D4E157;"></i>
 								<span class="title">Only Folders with Minumum FAH points</span>
-								<small>Only Folding@Home participants with sufficient FAH points will receive your token</small>
+								<small>Only Folding@Home participants with enough FAH points will receive your token</small>
 							</div>
 						</div>
 					</div>
