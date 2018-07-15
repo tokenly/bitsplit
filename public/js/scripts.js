@@ -231,27 +231,27 @@ $(document).ready(function(){
         maxDate: '0D',
     })
 
-    //Distribution Class
-    $('#distribution_class').change(function () {
-        var distribution_class = this.value
-        $('#minimum_fah_points_wrapper').hide()
-        $('#amount_top_folders_wrapper').hide()
-        $('#amount_random_folders_wrapper').hide()
-        $('#scan_distros_from').hide();
-        switch (distribution_class) {
-            case 'Minimum FAH points':
-                $('#minimum_fah_points_wrapper').show()
-                break;
-            case 'Top Folders':
-                $('#amount_top_folders_wrapper').show()
-                break;
-            case 'Random':
-                $('#amount_random_folders_wrapper').show()
-                break;
-            case 'unique':
-                $('#scan_distros_from').show();
-                break;
-            default:
-        }
-    })
+    // //Distribution Class
+    // $('#distribution_class').change(function () {
+    //     var distribution_class = this.value
+    //     $('#minimum_fah_points_wrapper').hide()
+    //     $('#amount_top_folders_wrapper').hide()
+    //     $('#amount_random_folders_wrapper').hide()
+    //     $('#scan_distros_from').hide();
+    //     switch (distribution_class) {
+    //         case 'Minimum FAH points':
+    //             $('#minimum_fah_points_wrapper').show()
+    //             break;
+    //         case 'Top Folders':
+    //             $('#amount_top_folders_wrapper').show()
+    //             break;
+    //         case 'Random':
+    //             $('#amount_random_folders_wrapper').show()
+    //             break;
+    //         case 'unique':
+    //             $('#scan_distros_from').show();
+    //             break;
+    //         default:
+    //     }
+    // })
 });

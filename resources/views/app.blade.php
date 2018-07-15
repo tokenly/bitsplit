@@ -82,8 +82,6 @@
 
 <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/polymer/0.5.6/polymer.min.js"></script>
-
 <script>
 	
 	Vue.component('footer-section', {

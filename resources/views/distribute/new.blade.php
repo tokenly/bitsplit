@@ -39,6 +39,12 @@
 @section('page_scripts')
 
 <script>
+
+	var oldTokenName = {!! json_encode(old('asset')) !!};
+	var oldTokenAmount = {!! json_encode(old('asset_total')) !!};
+	var oldStartDate = {!! json_encode(old('folding_start_date')) !!};
+	var oldEndDate = {!! json_encode(old('folding_end_date')) !!};
+
 	Vue.component('distro-form', {
 
 		template: `
@@ -46,21 +52,85 @@
 		`,
 		data() {
 			return {
+				tokenName: null,
+				tokenAmount: null,
 				calculationType: null,
 				distributionClass: null,
 				useAccountFuel: true,
-				customBitcoinNetworkFee: false
+				customBitcoinNetworkFee: false,
+				startDate: null,
+				endDate: null,
+				minFAHPoints: null,
+				amountTopFolders: null,
+				showRandomInput: null,
+				showTopFoldersInput: null,
+				amountRandomFolders: null,
+				weightChanceByFAHPoints: null
 			}
 		},
 		props: {
 
 		},
 		methods: {
-
+			selectRandomNumber(n) {
+				this.amountRandomFolders = n;
+				this.showRandomInput = false;
+			},
+			selectTopFolders(n) {
+				this.amountTopFolders = n;
+				this.showTopFoldersInput = false;
+			}
 		},
 		computed: {
+			validToken() {
+				return (this.tokenName.length > 1);
+			},
+			validTokenAmount() {
+				return (!isNaN(this.tokenAmount) && this.tokenAmount > 0);
+			},
+			validDistributionClassConfig() {
+				if(this.distributionClass) {
+					switch(this.distributionClass) {
+						case 'All Folders':
+							return true;
+							break;
+						case 'Minimum FAH points':
+							return true;
+							break;
+						case 'Top Folders':
+							return true;
+							break;
+						case 'Random':
+							return true;
+							break;
+						case 'unique':
+							return true;
+							break;
+					}
+				} else {
+					return false;
+				}
+			},
+			validConfiguration() {
+				return (this.validToken && this.validTokenAmount && this.calculationType && this.validDistributionClassConfig && this.startDate && this.endDate);
+			}
 		},
 		created: function(){
+			if(oldTokenName) {
+				this.tokenName = oldTokenName;
+			}
+
+			if(oldTokenAmount) {
+				this.tokenAmount = oldTokenAmount;
+			}
+
+			if(oldStartDate) {
+				this.startDate = oldStartDate;
+			}
+
+			if(oldEndDate) {
+				this.endDate = oldEndDate;
+			}
 		}
 	});
 </script>

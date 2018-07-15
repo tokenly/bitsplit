@@ -5,7 +5,7 @@
 			<div class="distro-form__section__content">
 				<div class="form-group">
 					<label for="asset">Name of Token You Want to Distribute</label>
-					<input type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" value="{{ old('asset') }}" required />
+					<input v-model="tokenName" type="text" class="form-control" id="asset" name="asset" placeholder="(e.g LTBCOIN)" value="{{ old('asset') }}" required />
 				</div>
 				<div class="form-group" id="percent_asset_total">
 					<label for="asset_total">Total Amount of Tokens You Want to Distribute</label>
@@ -145,22 +145,175 @@
 						<option value="All Accounts">All Acounts</option>
 					</select>
 				</div>
-				<div id="minimum_fah_points_wrapper" class="form-group" style="display: none;">
+				<div 
+					v-if="distributionClass == 'Minimum FAH points'"
+					id="minimum_fah_points_wrapper"
+					class="form-group"
+				>
 					<label for="minimum_fah_points">Minimum Required FAH Points (New credit)</label>
-					<input type="text" min="0" name="minimum_fah_points" id="minimum_fah_points" class="form-control">
+					<input 
+						v-model="minFAHPoints"
+						type="text"
+						min="0"
+						name="minimum_fah_points"
+						id="minimum_fah_points"
+						class="form-control"
+						style="width: 150px;"
+					>
 				</div>
-				<div id="amount_top_folders_wrapper" class="form-group" style="display: none;">
-					<label for="amount_top_folders">Amount of Top Folders to Select</label>
-					<input type="number" min="3" value="100" name="amount_top_folders" id="amount_top_folders" class="form-control">
+				<div 
+					v-if="distributionClass == 'Top Folders'"
+					id="amount_top_folders_wrapper" 
+					class="form-group"
+				>
+					<label for="amount_top_folders">Number of Top Folders to Select</label>
+					<div>
+							<span
+								@click="selectTopFolders(3)"
+								class="select-button"
+								v-bind:class="{'active': amountTopFolders == 3 && !showTopFoldersInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>3</span>
+							</span>
+							<span
+								@click="selectTopFolders(10)"
+								class="select-button"
+								v-bind:class="{'active': amountTopFolders == 10 && !showTopFoldersInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>10</span>
+							</span>
+							<span
+								@click="selectTopFolders(50)"
+								class="select-button"
+								v-bind:class="{'active': amountTopFolders == 50 && !showTopFoldersInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>50</span>
+							</span>
+							<span
+								@click="selectTopFolders(100)"
+								class="select-button"
+								v-bind:class="{'active': amountTopFolders == 100 && !showTopFoldersInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>100</span>
+							</span>
+							<span
+								@click="selectTopFolders(500)" 
+								class="select-button"
+								v-bind:class="{'active': amountTopFolders == 500 && !showTopFoldersInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>500</span>
+							</span>
+							<span
+								@click="showTopFoldersInput = true"
+								class="select-button"
+								v-bind:class="{'active': showTopFoldersInput == true}"
+							>
+								<i class="fa fa-check"></i>
+								<span>Other Number</span>
+							</span>
+						</div>
+					<input 
+						v-show="showTopFoldersInput"
+						v-model="amountTopFolders" 
+						type="number" 
+						min="3" 
+						value="100" 
+						name="amount_top_folders" 
+						id="amount_top_folders" 
+						class="form-control" 
+						style="width: 150px;"
+					/>
 				</div>
-				<div id="amount_random_folders_wrapper" style="display: none;">
+				<div 
+					v-if="distributionClass == 'Random'"
+					id="amount_random_folders_wrapper"
+					class="form-group"
+				>
 					<div class="form-group">
-						<label for="amount_random_folders">Amount of Random Folders to Select</label>
-						<input type="number" min="3" name="amount_random_folders" id="amount_random_folders" value="3" class="form-control" style="width: 150px;">
+						<label for="amount_random_folders">Number of Random Folders to Select</label>
+						<div>
+							<span
+								@click="selectRandomNumber(3)"
+								class="select-button"
+								v-bind:class="{'active': amountRandomFolders == 3 && !showRandomInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>3</span>
+							</span>
+							<span
+								@click="selectRandomNumber(10)"
+								class="select-button"
+								v-bind:class="{'active': amountRandomFolders == 10 && !showRandomInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>10</span>
+							</span>
+							<span
+								@click="selectRandomNumber(50)"
+								class="select-button"
+								v-bind:class="{'active': amountRandomFolders == 50 && !showRandomInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>50</span>
+							</span>
+							<span
+								@click="selectRandomNumber(100)"
+								class="select-button"
+								v-bind:class="{'active': amountRandomFolders == 100 && !showRandomInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>100</span>
+							</span>
+							<span
+								@click="selectRandomNumber(500)" 
+								class="select-button"
+								v-bind:class="{'active': amountRandomFolders == 500 && !showRandomInput}"
+							>
+								<i class="fa fa-check"></i>
+								<span>500</span>
+							</span>
+							<span
+								@click="showRandomInput = true"
+								class="select-button"
+								v-bind:class="{'active': showRandomInput == true}"
+							>
+								<i class="fa fa-check"></i>
+								<span>Other Number</span>
+							</span>
+						</div>
+						<input
+							v-show="showRandomInput" 
+							v-model="amountRandomFolders"
+							type="number"
+							min="3"
+							name="amount_random_folders"
+							id="amount_random_folders"
+							class="form-control"
+							style="width: 150px;">
 					</div>
-					<div class="form-group checkbox">
-						<input type="checkbox" style="margin-left: 10px; margin-top: 2px;" name="weight_cache_by_fah" id="weight_cache_by_fah" value="1" />
-						<label for="weight_cache_by_fah" style="padding-left: 35px; font-size: 13px;" >Weight chance by FAH points?</label>
+					<div class="form-group">
+						<label for="weight_cache_by_fah">Weight chance by FAH points?</label><br>
+						<ul class="yes-no-toggle">
+							<li
+								@click="weightChanceByFAHPoints = true"
+							><a><span class="yes" v-bind:class="{active: weightChanceByFAHPoints}">Yes</span></a></li><li 
+							class="no"
+								@click="weightChanceByFAHPoints = false"
+							><a><span class="no" v-bind:class="{active: !weightChanceByFAHPoints}">No</span></a></li>
+						</ul>
+						<input 
+							v-show="false"
+							v-model="weightChanceByFAHPoints"
+							type="checkbox"
+							style="margin-left: 10px; margin-top: 2px;"
+							name="weight_cache_by_fah"
+							id="weight_cache_by_fah"
+							value="1" />
 					</div>
 				</div>
 				<div style="display: flex;">
