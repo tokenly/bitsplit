@@ -1,8 +1,8 @@
 @extends('app')
 
 @section('content')
-<div class="row">
-	<div class="col-lg-12" id="distro-details" data-address="{{ $distro->deposit_address }}">
+<div class="content padded">
+	<div id="distro-details" data-address="{{ $distro->deposit_address }}">
 		<h2>Distribution #{{ $distro->id }}</h2>
 		@if(trim($distro->label) != '')
 			<h3>{{ $distro->label }}</h3>

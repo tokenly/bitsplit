@@ -1124,6 +1124,27 @@ ul.yes-no-toggle.all-blue span.active {
 	color: #9e9e9e;
 }
 
+.distribution-index__container {
+	display: inline-block;
+}
+
+.distribution-index__container.half {
+	width: 49.5%;
+	padding: 10px;	
+}
+
+@media(max-width: 900px) {
+	.distribution-index__container.half {
+		width: 100%;
+		padding: 10px;	
+	}
+
+	.distribution-index__row__cta {
+		width: inherit !important;
+	}
+
+}
+
 .distribution-index__row {
 	display: inline-block;
 	padding: 15px;
@@ -1131,8 +1152,95 @@ ul.yes-no-toggle.all-blue span.active {
 	background: #fff;
 	box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
 	margin-bottom: 15px;
+	width: 100%;
 }
 
 .distribution-index__row:last-child {
 	margin-bottom: 0px;
+}
+
+.distribution-index__row__date {
+	font-size: 14px;
+	color: #757575;
+}
+
+.distribution-index__row__title {
+	font-size: 15px;
+	font-weight: 700;
+}
+
+.distribution-index__row__address {
+	font-size: 14px;
+	font-weight: 400;
+}
+
+.distribution-index__row__status {
+	margin-bottom: 10px;
+}
+
+.distribution-index__row__cta {
+	padding: 5px 15px;
+	border-radius: 4px;
+	background: #1976D2;
+	display: inline-block;
+	color: #fff !important;
+    text-decoration: none !important;
+    width: 100%;
+    text-align: center;
+}
+
+.fa-check-circle.success {
+	color: #00AE48;
+}
+
+.spinner {
+	display: inline-block;
+}
+
+.spinner > div {
+  width: 12px;
+  height: 12px;
+  background-color: #616161;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner.light > div {
+  background-color: #fff;
+}
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% { 
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+
+.text-success.filled {
+	background: #00AE48;
+	color: #fff;
+	padding: 0px 10px;
+	border-radius: 20px;
+	font-size: 14px;
 }
