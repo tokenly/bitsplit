@@ -176,7 +176,7 @@
 				No distribution addresses found.
 			</p>
 		@else
-			<table class="table table-bordered table-striped">
+			<table class="table table-bordered table-striped" style="background: #fff; box-shadow: 0px 1px 3px #eee;">
 				<thead>
                     <th>F@H Username</th>
 					<th>Address</th>
