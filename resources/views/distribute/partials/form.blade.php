@@ -476,7 +476,10 @@
 						</span>
 					</div>
 				</div>
-				<div class="form-group">
+				<div 
+					class="form-group"
+					v-bind:class="{'action-required': invalidInputWarning &&  !validBTCNetworkFee}"
+				>
 					<label for="btc_fee_rate">
 						<span>Set a Custom Bitcoin Network Fee?</span>
 						<small>(Optional)</small>
@@ -495,19 +498,38 @@
 						<label for="btc_fee_rate">
 							<span>Bitcoin Network Fee:</span>
 						</label>
-						<input
-							type="text"
-							class="form-control"
-							id="btc_fee_rate"
-							name="btc_fee_rate"
-							placeholder="{{ Config::get('settings.miner_satoshi_per_byte') }}"
-							minimum="5"
-							maximum="600"
-						/>
+						<div>
+							<div class="inline-input-container">
+								<div style="display: flex;">
+									<input
+										v-model="btcNetworkFee"
+										type="text"
+										id="btc_fee_rate"
+										name="btc_fee_rate"
+										minimum="{{ Config::get('settings.min_fee_per_byte') }}"
+										maximum="{{ Config::get('settings.max_fee_per_byte') }}"
+										style="width: 75px;"
+									/>
+									<span class="inline-input-label">Satoshis per byte</span>
+								</div>
+							</div>
+						</div>
 						<small>
-							* This is an advanced feature. Rates are defined in <em>satoshis per byte</em>, enter a number between {{ Config::get('settings.min_fee_per_byte') }} and {{ Config::get('settings.max_fee_per_byte') }}.<br>
-	                        See <a href="https://bitcoinfees.earn.com" target="_blank">https://bitcoinfees.earn.com</a> for help determining a rate.
+							<span>Min: {{ Config::get('settings.min_fee_per_byte') }}</span>
+							<span>Max: {{ Config::get('settings.max_fee_per_byte') }}</span>
+							<br>
+							<span>See <a href="https://bitcoinfees.earn.com" target="_blank">https://bitcoinfees.earn.com</a> for help determining a rate.</span>
 						</small>
+					</div>
+
+					<div 
+						v-if="invalidInputWarning &&  !validBTCNetworkFee"
+						class="action-required-container"
+					>
+						<span class="action-required-notice">
+							<i class="fa fa-exclamation-circle"></i>
+							<span>Please enter valid btc network fee of between {{ Config::get('settings.min_fee_per_byte') }} and {{ Config::get('settings.max_fee_per_byte') }} satoshis per byte</span>
+						</span>
 					</div>
 				</div>
 				<div class="form-submit">

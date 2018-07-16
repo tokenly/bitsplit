@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="content padded">
-	<div class="">
+	<div class="page-information">
 		<h1>Distribute Tokens</h1>
         <p>
             Use this tool to distribute Counterparty tokens to participating Folding@Home users based on their folding contributions in the given time period. 
@@ -17,18 +17,17 @@
             <strong>Participating folders:</strong> {{ number_format(\App\Models\DailyFolder::countUniqueFolders(true)) }}
         </p>
 		<hr>
-		<div id="new-distro-form">
-			<distro-form></distro-form>
-		</div>
-
-		<p class="text-danger">
-            <strong>Attention:</strong> Transaction capacity on the Bitcoin network is at high levels of congestion.
-            If your distribution is time sensitive at all, please make sure to double check that your miner fee rate
-            is set appropriately, otherwise you may be stuck with a several day wait time.<br>
-            You can use <a href="https://bitcoinfees.earn.com/" target="_blank">https://bitcoinfees.earn.com/</a> to help
-            with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.<br>
-        </p>
 	</div>
+	<div id="new-distro-form">
+		<distro-form></distro-form>
+	</div>
+	<p class="text-danger">
+        <strong>Attention:</strong> Transaction capacity on the Bitcoin network is at high levels of congestion.
+        If your distribution is time sensitive at all, please make sure to double check that your miner fee rate
+        is set appropriately, otherwise you may be stuck with a several day wait time.<br>
+        You can use <a href="https://bitcoinfees.earn.com/" target="_blank">https://bitcoinfees.earn.com/</a> to help
+        with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.<br>
+    </p>
 </div>
 @endsection
 
@@ -44,6 +43,9 @@
 	var oldTokenAmount = {!! json_encode(old('asset_total')) !!};
 	var oldStartDate = {!! json_encode(old('folding_start_date')) !!};
 	var oldEndDate = {!! json_encode(old('folding_end_date')) !!};
+	var standardBTCNetworkFee = {!! Config::get('settings.miner_satoshi_per_byte') !!};
+	var minBTCNetworkFee = {!! Config::get('settings.min_fee_per_byte') !!};
+	var maxBTCNetworkFee = {!! Config::get('settings.max_fee_per_byte') !!};
 
 	Vue.component('distro-form', {
 
@@ -66,7 +68,8 @@
 				showTopFoldersInput: null,
 				amountRandomFolders: null,
 				weightChanceByFAHPoints: null,
-				invalidInputWarning: null
+				invalidInputWarning: null,
+				btcNetworkFee: standardBTCNetworkFee
 			}
 		},
 		props: {
@@ -132,9 +135,12 @@
 					return false;
 				}
 			},
+			validBTCNetworkFee() {
+				return (this.btcNetworkFee && this.btcNetworkFee >= minBTCNetworkFee && this.btcNetworkFee <= maxBTCNetworkFee)
+			},
 			validConfiguration() {
-				return (this.validToken && this.validTokenAmount && this.calculationType && this.validDistributionClassConfig && this.startDate && this.endDate);
-			}
+				return (this.validToken && this.validTokenAmount && this.calculationType && this.validDistributionClassConfig && this.startDate && this.endDate && this.validBTCNetworkFee);
+			},
 		},
 		created: function(){
 			if(oldTokenName) {

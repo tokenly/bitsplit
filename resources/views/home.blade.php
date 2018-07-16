@@ -10,6 +10,7 @@
 	<div class="page-information">
 		<h1>Dashboard</h1>
 	</div>
+	<a href="{{ route('distribute.new') }}">Create a New Distribution</a>
 	<div>
 		<div class="dashboard__data">
 			<div class="dashboard__data__entry">
