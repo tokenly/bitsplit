@@ -449,20 +449,16 @@
 							<label for="folding_start_date">Folding Start Date</label>
 							<input
 								v-model="startDate"
-								type="text"
-								id="folding_start_date"
+								type="date"
 								name="folding_start_date"
-								class="form-control datetimepicker_folding"
 							/>
 		                </div>
 		                <div class="form-group" style="flex: 1; padding-left: 10px; margin-bottom: 0px;">
 							<label for="folding_end_date">Folding End Date</label>
 							<input 
 								v-model="endDate"
-								type="text" 
-								id="folding_end_date" 
+								type="date" 
 								name="folding_end_date" 
-								class="form-control datetimepicker_folding" 
 							/>
 						</div>  
 					</div>

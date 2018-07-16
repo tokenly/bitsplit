@@ -138,6 +138,22 @@
 			validBTCNetworkFee() {
 				return (this.btcNetworkFee && this.btcNetworkFee >= minBTCNetworkFee && this.btcNetworkFee <= maxBTCNetworkFee)
 			},
+			validDates() {
+				var q = new Date();
+				var m = q.getMonth()+1;
+				var d = q.getDay();
+				var y = q.getFullYear();
+
+				var _date = new Date(y,m,d);
+
+				_startDate = new Date(this.startDate);
+				_endDate = new Date(this.endDate);
+
+				console.log(_endDate <= _date);
+				console.log(_startDate <= _date);
+
+				return ((this.startDate && this.endDate) && (_endDate <= _date) && (_startDate <= _date) && (_endDate > _startDate));
+			},
 			validConfiguration() {
 				return (this.validToken && this.validTokenAmount && this.calculationType && this.validDistributionClassConfig && this.startDate && this.endDate && this.validBTCNetworkFee);
 			},
