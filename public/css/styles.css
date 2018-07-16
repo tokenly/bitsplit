@@ -658,7 +658,7 @@ body {
 }
 
 .page-information {
-	margin-bottom: 50px;
+	margin-bottom: 40px;
 }
 
 .page-information h1 {
@@ -1122,4 +1122,17 @@ ul.yes-no-toggle.all-blue span.active {
 .blank-state-text {
 	font-size: 18px;
 	color: #9e9e9e;
+}
+
+.distribution-index__row {
+	display: inline-block;
+	padding: 15px;
+	border-radius: 4px;
+	background: #fff;
+	box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
+	margin-bottom: 15px;
+}
+
+.distribution-index__row:last-child {
+	margin-bottom: 0px;
 }

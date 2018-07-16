@@ -1,14 +1,20 @@
 @extends('app')
 
 @section('content')
-    <div class="row">
+    <div class="content padded">
+        <div class="page-information">
+            <h1>{{$type}} Token Distributions</h1>
+        </div>
         <div class="col-lg-6">
-            <h3>{{$type}} Distributions</h3>
             @if($distros->isEmpty())
             <p>
                 No distributions found.
             </p>
             @else
+                @foreach($distros as $row)
+                    @include('distribute.partials.distribution')
+                @endforeach
+
                 <table class="table table-bordered table-striped distro-history-table" style="font-size: 12px;">
                     <thead>
                     <tr>
