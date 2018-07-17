@@ -34,7 +34,7 @@
                         <div class="welcome-section-divider"></div>
                     </div>
                     <div class="use-cases__content__text">
-                        <p>Our community of medical research and cryptocurreny enthusiasts is one of the most .... engaged communities .... Giving away your token to our community not only assists with medical research, but also gets the attention of one of the most engaged .... Even do a pre-relaease excited about your new product before it’s released.</p>
+                        <p>Giving away your token to our community not only assists with medical research, but also gets the attention of one of the most engaged communities of medical research and cryptocurreny enthusiasts. Even do a pre-release distribution of your token to get our community excited about your new product.</p>
                     </div>
 
                     <a href="{{ route('distribute.history') }}" class="use-cases__cta" href="#">

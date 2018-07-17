@@ -11,7 +11,7 @@
         <div class="centered">
             <p>
                 
-                <a href="http://foldingcoin.net" target="_blank"><img src="{{ asset('img/fldc/FLDC-Banner2.png') }}" alt=""  style="width: 200px;"></a>
+                <a href="http://foldingcoin.net" target="_blank"><img src="https://foldingcoin.net/images/FLDC-logo.png" alt=""  style="width: 200px;"></a>
                 <br><br><br>
                 <a href="https://tokenly.com" target="_blank"><img src="{{ asset('img/Tokenly_Logo_BorderlessA_ldpi.png') }}" alt=""></a>
             </p>

@@ -16,7 +16,7 @@
                 <p>
                     <span>FoldingCoin, Inc proudly offers the ability for your project to</span>
                     <span><b>distribute your tokens</b></span>
-                    <span>to participating <a class="home-hero-link" href="https://foldingathome.org/" target="_blank">FoldingAtHome</a> users</span>
+                    <span>to participating <a class="home-hero-link" href="https://foldingathome.org/" target="_blank">Folding@Home</a> users</span>
                     <span>with the Merged Folding platform. Using this tool, you may distribute your token to some or all of the participants based on your own criteria.</span>
                 </p>
                 
