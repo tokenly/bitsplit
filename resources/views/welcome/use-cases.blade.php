@@ -19,7 +19,7 @@
 
                         <p>Promote altruistic scientific research (like Protein Simulations) by providing economic incentives to the Folding@Home network. This is excellent public relations for your company and token as your distribution will be literally helping to encourage life-saving medical research.</p>
                     </div>
-                    <a class="use-cases__cta" href="#">
+                    <a href="https://foldingathome.org/" class="use-cases__cta" href="#">
                         <span>Learn More About Folding@Home</span>
                         <i class="fa fa-arrow-right"></i>
                     </a>
@@ -37,7 +37,7 @@
                         <p>Our community of medical research and cryptocurreny enthusiasts is one of the most .... engaged communities .... Giving away your token to our community not only assists with medical research, but also gets the attention of one of the most engaged .... Even do a pre-relaease excited about your new product before it’s released.</p>
                     </div>
 
-                    <a class="use-cases__cta" href="#">
+                    <a href="{{ route('distribute.history') }}" class="use-cases__cta" href="#">
                         <span>See Past Distributions</span>
                         <i class="fa fa-arrow-right"></i>
                     </a>
@@ -61,7 +61,7 @@
 
                     </div>
 
-                    <a class="use-cases__cta" href="#">
+                    <a href="{{ route('account.authorize') }}" class="use-cases__cta">
                         <span>Get Started</span>
                         <i class="fa fa-arrow-right"></i>
                     </a>
@@ -78,7 +78,7 @@
                     <div class="use-cases__content__text">
                         <p>FoldingCoin, Inc. provides this service for free, you only need to pay the BTC required to confirm the transactions of your tokens to be sent to our participants.</p>
                     </div>
-                    <a class="use-cases__cta" href="#">
+                    <a href="{{ route('account.authorize') }}" class="use-cases__cta">
                         <span>Signup for Free</span>
                         <i class="fa fa-arrow-right"></i>
                     </a>
