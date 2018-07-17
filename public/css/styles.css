@@ -319,6 +319,10 @@ body {
 	.welcome-section-divider {
 		padding-bottom: 20px;
 	}
+
+	body #how-it-works h3 {
+		font-size: 24px;
+	}
 }
 
 .full-screen-only {
@@ -357,8 +361,19 @@ body {
 		padding: 10px;
 	}
 
+	.welcome-section-heading {
+		text-align: center;
+	}
+	.welcome-section header {
+		font-size: 24px;
+	}
+
 	.welcome-section-divider {
 		padding-bottom: 15px;
+	}
+
+	body #how-it-works h3 {
+		font-size: 20px;
 	}
 }
 
