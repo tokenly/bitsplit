@@ -70,13 +70,30 @@ class AccountController extends Controller {
         }
     }
     
-    public function complete() {
-
-        // if the user is already signed in, go straight to the welcome page
+    public function getComplete() {
         $user = Auth::user();
         if (!$user) { return redirect('/account/welcome'); }
         \Session::put('embed_body', false);
         return view('user_meta.get_user_meta_data', ['user' => $user]);
+    }
+
+    public function complete() {
+
+        // // if the user is not signed in, go to the welcome page
+        $user = Auth::user();
+        if (!$user) { return redirect('/account/welcome'); }
+
+        $input = Input::all();
+
+        $save_user_meta = $user->saveUserAccountData($input);
+
+        if($save_user_meta) {
+            return Redirect::route('home');
+        } else {
+            return Redirect::back();
+        }
+        // \Session::put('embed_body', false);
+        
     }
 
     /**

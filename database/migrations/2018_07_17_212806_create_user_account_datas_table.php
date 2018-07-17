@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersMetaTable extends Migration
+class CreateUserAccountDatasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateUsersMetaTable extends Migration
      */
     public function up()
     {
-        Schema::create('users_meta', function (Blueprint $table) {
+        Schema::create('user_account_datas', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
 
@@ -26,7 +26,9 @@ class CreateUsersMetaTable extends Migration
             $table->string('token_name')->nullable();
             $table->text('token_description')->nullable();
             $table->text('token_exchanges_listed')->nullable();
-            
+
+            $table->integer('user_id')->unsigned()->nullable()->index();
+            $table->string('phone_number')->nullable();
         });
     }
 
@@ -37,6 +39,6 @@ class CreateUsersMetaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users_meta');
+        Schema::dropIfExists('user_account_datas');
     }
 }

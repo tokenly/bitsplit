@@ -22,9 +22,7 @@ class DistributeController extends Controller {
 
     public function newDistribution()
     {
-
-    	$user = Auth::user();
-    	
+    	$user = Auth::user();	
     	return view('distribute.new', array('user' => $user));
     }
 	public function submitDistribution()

@@ -1,5 +1,13 @@
 <?php
-class UserMeta extends Eloquent
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Exception;
+
+class UserMeta extends Model
 {
 	protected $table = 'user_meta';
 	

@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Models\Distribution, Models\DistributionTx;
+use App\Models\UserMeta;
+use App\Models\UserAccountData;
 use Tokenly\CurrencyLib\CurrencyUtil;
 use Tokenly\LaravelApiProvider\Contracts\APIPermissionedUserContract;
 use Tokenly\LaravelApiProvider\Model\APIUser;
@@ -72,6 +74,97 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         catch (Exception $e) {
             return false;
         }
+    }
+
+    public function saveUserAccountData($data)
+    {
+        $user = Auth::user();
+
+        if(!$user) {
+            return false;
+        }
+
+        $user_account_data = UserAccountData::where('user_id', $user->id);
+
+        if($user_account_data) {
+            $user_account_data = $user_account_data->first();
+        }
+
+        if(!$user_account_data) {
+            $user_account_data = UserAccountData::create();
+            $user_account_data->user_id = $user->id;
+        }
+
+        if(isset($data['first_name'])) {
+            $user_account_data->first_name = $data['first_name'];
+        }
+
+        if(isset($data['last_name'])) {
+            $user_account_data->last_name = $data['last_name'];
+        }
+
+        if(isset($data['company_name'])) {
+            $user_account_data->company_name = $data['company_name'];
+        }
+
+        if(isset($data['website'])) {
+            $user_account_data->website = $data['website'];
+        }
+
+        if(isset($data['email'])) {
+            $user_account_data->email = $data['email'];
+        }
+
+        if(isset($data['company_address'])) {
+            $user_account_data->company_address = $data['company_address'];
+        }
+
+        if(isset($data['token_name'])) {
+            $user_account_data->token_name = $data['token_name'];
+        }
+
+        if(isset($data['token_description'])) {
+            $user_account_data->token_description = $data['token_description'];
+        }
+
+        if(isset($data['token_exchanges_listed'])) {
+            $user_account_data->token_exchanges_listed = $data['token_exchanges_listed'];
+        }
+
+        if(isset($data['phone_number'])) {
+            $user_account_data->phone_number = $data['phone_number'];
+        }
+
+        try {
+            $accept = $user_account_data->save();
+            if($accept) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getCurrentUserAccountData()
+    {
+        $user = Auth::user();
+
+        if(!$user) {
+            return false;
+        }
+
+        $user_account_data = UserAccountData::where('user_id', $user->id);
+
+        if($user_account_data) {
+            $user_account_data = $user_account_data->first();
+            return $user_account_data;
+        } else {
+            return null;
+        }
+
     }
 
 	public static function getDashInfo($userId = 0, $no_history = false)

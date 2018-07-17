@@ -27,6 +27,15 @@ class Authenticate
 
         if(Auth::guard($guard)->user()) {
             $user = Auth::guard($guard)->user();
+
+            $user_account_data = $user->getCurrentUserAccountData();
+
+            if(!$user_account_data)
+            {
+                return redirect()->route('account.complete');
+            }
+
+
             $user_tac_accept = $user->checkTACAccept();
             if(!$user_tac_accept) {
                 Session::put('return_route_after_tac', url()->full());

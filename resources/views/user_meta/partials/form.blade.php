@@ -1,4 +1,8 @@
-<form v-on:submit="checkIfValid">
+<form 
+	method="post"
+	v-bind:action="actionPath"
+	v-on:submit="checkIfValid"
+>
 	<div 
 		class="form-group"
 		v-bind:class="{'action-required': inputWarning && (!validFirstName || !validLastName)}"
@@ -31,7 +35,7 @@
 				v-model="lastName"
 			/>
 			<div 
-				v-if="inputWarning && !validLasttName"
+				v-if="inputWarning && !validLastName"
 				class="action-required-container"
 			>
 				<span class="action-required-notice">
@@ -191,7 +195,7 @@
 		</div>
 		<input 
 			type="text"
-			name="token_description"
+			name="token_exchanges_listed"
 			v-model="tokenExchangesListed"
 			v-show="false"
 		/>
@@ -201,10 +205,11 @@
 		<button 
 			type="submit" 
 			class="btn btn-lg btn-success button wide"
-			v-bind:class="{'disabled': !validConfiguration}"
+			v-bind:class="{'disabled': !formIsValid}"
 		>
 			<span>Complete My Account</span>
 			<i class="fa fa-arrow-right"></i>
 		</button>
 	</div>
+	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 </form>

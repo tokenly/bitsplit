@@ -19,6 +19,7 @@
 @section('page_scripts')
 	
 	<script>
+		var userMetaSubmitRoute = {!! json_encode(route('account.complete')) !!};
 		Vue.component('user-meta-form', {
 			template: `
 				@include('user_meta.partials.form')
@@ -27,6 +28,7 @@
 			},
 			data() {
 			  return {
+			  	actionPath: userMetaSubmitRoute,
 			  	firstName: '',
 			  	lastName: '',
 				companyName: '',

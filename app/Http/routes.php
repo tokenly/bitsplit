@@ -40,7 +40,9 @@ $router->get('/account/welcome', 'AccountController@welcome');
 $router->get('/account/login', array('as' => 'account.auth', 'uses' => 'AccountController@login'));
 $router->get('/account/logout', array('as' => 'account.auth.logout', 'uses' => 'AccountController@logout'));
 
-Route::get('/account/complete', array('as' => 'account.complete', 'uses' => 'AccountController@complete'));
+Route::get('/account/complete', array('as' => 'account.get_complete', 'uses' => 'AccountController@getcomplete'));
+
+Route::post('/account/complete', array('as' => 'account.complete', 'uses' => 'AccountController@complete'));
 
 // This is a route to sync the user with their Tokenpass information
 //   Redirect the user here to update their local user information with their Tokenpass information
