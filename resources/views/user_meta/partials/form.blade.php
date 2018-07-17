@@ -1,5 +1,9 @@
-<div>
-	<div style="display: flex;">
+<form v-on:submit="checkIfValid">
+	<div 
+		class="form-group"
+		v-bind:class="{'action-required': inputWarning && (!validFirstName || !validLastName)}"
+		style="display: flex;"
+	>
 		<div class="form-group" style="flex: 1; padding-right: 10px;">
 			<label>First Name</label><br />
 			<input 
@@ -8,6 +12,15 @@
 				class="form-control"
 				v-model="firstName"
 			/>
+			<div 
+				v-if="inputWarning && !validFirstName"
+				class="action-required-container"
+			>
+				<span class="action-required-notice">
+					<i class="fa fa-exclamation-circle"></i>
+					<span>Please enter your first name</span>
+				</span>
+			</div>
 		</div>
 		<div class="form-group" style="flex: 1; padding-left: 10px;"> 
 			<label>Last Name</label><br />
@@ -17,9 +30,22 @@
 				class="form-control"
 				v-model="lastName"
 			/>
+			<div 
+				v-if="inputWarning && !validLasttName"
+				class="action-required-container"
+			>
+				<span class="action-required-notice">
+					<i class="fa fa-exclamation-circle"></i>
+					<span>Please enter your last name</span>
+				</span>
+			</div>
 		</div>
 	</div>
-	<div style="display: flex;">
+	<div
+		class="form-group"
+		v-bind:class="{'action-required': inputWarning && !validEmail}"
+		style="display: flex;"
+	>
 		<div class="form-group" style="flex: 1; padding-right: 10px;">
 			<label>Email</label><br />
 			<input 
@@ -28,6 +54,15 @@
 				class="form-control"
 				v-model="email"
 			/>
+			<div 
+				v-if="inputWarning && !validEmail"
+				class="action-required-container"
+			>
+				<span class="action-required-notice">
+					<i class="fa fa-exclamation-circle"></i>
+					<span>Please enter your email address</span>
+				</span>
+			</div>
 		</div>
 		<div class="form-group" style="flex: 1; padding-left: 10px;">
 			<label>
@@ -81,7 +116,10 @@
 		/>
 	</div>
 
-	<div class="form-group">
+	<div 
+		class="form-group"
+		v-bind:class="{'action-required': inputWarning && !validTokenName}"
+	>
 		<label>Name of Token You Want to Distribute</label><br />
 		<input 
 			type="text"
@@ -89,9 +127,21 @@
 			class="form-control"
 			v-model="tokenName"
 		/>
+		<div 
+			v-if="inputWarning && !validTokenName"
+			class="action-required-container"
+		>
+			<span class="action-required-notice">
+				<i class="fa fa-exclamation-circle"></i>
+				<span>Please provide the name of the token you want to distribute</span>
+			</span>
+		</div>
 	</div>
 
-	<div class="form-group">
+	<div 
+		class="form-group"
+		v-bind:class="{'action-required': inputWarning && !validTokenDescription}"
+	>
 		<label>A description of the token you want to distribute</label><br />
 		<textarea 
 			type="text"
@@ -99,6 +149,15 @@
 			class="form-control"
 			v-model="tokenDescription"
 		/>
+		<div 
+			v-if="inputWarning && !validTokenDescription"
+			class="action-required-container"
+		>
+			<span class="action-required-notice">
+				<i class="fa fa-exclamation-circle"></i>
+				<span>Please add a description of the token you want to distribute</span>
+			</span>
+		</div>
 	</div>
 
 	<div class="form-group">
@@ -148,4 +207,4 @@
 			<i class="fa fa-arrow-right"></i>
 		</button>
 	</div>
-</div>
+</form>

@@ -44,7 +44,8 @@
 					'Binance',
 					'Kraken',
 					'Ethex'
-				]
+				],
+				inputWarning: null
 			  }
 			},
 	    	methods: {
@@ -54,6 +55,14 @@
 	    				this.tokenExchangesListed.splice(_arrayIndex, 1);
 	    			} else {
 	    				this.tokenExchangesListed.push(exchange);
+	    			}
+	    		},
+	    		checkIfValid(e) {
+	    			if(this.formIsValid) {
+	    				return true;
+	    			} else {
+	    				this.inputWarning = true;
+	    				e.preventDefault();
 	    			}
 	    		}
 	    	},
@@ -71,7 +80,7 @@
 					return (this.tokenName && this.tokenName.length > 1);
 				},
 				validTokenDescription() {
-					return(this.tokenDescription && this.tokenDescription.length > 25);
+					return(this.tokenDescription && this.tokenDescription.length > 10);
 				},
 				formIsValid() {
 					return (this.validFirstName && this.validLastName && this.validEmail && this.validTokenName && this.validTokenDescription);
