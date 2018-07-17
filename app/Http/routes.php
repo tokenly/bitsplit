@@ -26,6 +26,11 @@ Route::get('distribute/duplicate/{address}', array('as' => 'distribute.duplicate
 Route::get('distributions', array('as' => 'distribute.history', 'uses' => 'DistributeController@getDistributionsHistory'));
 Route::get('official-distributions', array('as' => 'distribute.official_fldc_history', 'uses' => 'DistributeController@getOfficialFldcDistributionsHistory'));
 
+//Terms of use
+Route::get('/terms-and-conditions', array('as' => 'terms-and-conditions', 'uses' => 'AccountController@termsAndConditions'));
+
+Route::post('/account/accept_tac', array('as' => 'account.accept_tac', 'uses' => 'AccountController@acceptTac'));
+
 
 //tokenly accounts stuff
 // The welcome page for the user that requires a logged in user

@@ -24,7 +24,7 @@ class DistributeController extends Controller {
     {
 
     	$user = Auth::user();
-
+    	
     	return view('distribute.new', array('user' => $user));
     }
 	public function submitDistribution()

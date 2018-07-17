@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
+use Closure, Session;
 use Illuminate\Support\Facades\Auth;
 
 class Authenticate
@@ -22,6 +22,15 @@ class Authenticate
                 return response('Unauthorized.', 401);
             } else {
                 return redirect()->guest(route('account.auth'));
+            }
+        }
+
+        if(Auth::guard($guard)->user()) {
+            $user = Auth::guard($guard)->user();
+            $user_tac_accept = $user->checkTACAccept();
+            if(!$user_tac_accept) {
+                Session::put('return_route_after_tac', url()->full());
+                return redirect()->route('terms-and-conditions');
             }
         }
 

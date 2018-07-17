@@ -45,6 +45,35 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return true;
 	}
 	
+    public function checkTACAccept()
+    {
+        $user = Auth::user();
+
+        if(isset($user->tac_accept) AND $user->tac_accept != NULL)
+        {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function acceptTAC()
+    {
+        $user = Auth::user();
+        $user->tac_accept = new DateTime();
+        try {
+            $accept = $user->save();
+            if($accept) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        catch (Exception $e) {
+            return false;
+        }
+    }
+
 	public static function getDashInfo($userId = 0, $no_history = false)
 	{
         $time_start = microtime(true);

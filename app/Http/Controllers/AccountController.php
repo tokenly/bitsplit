@@ -32,7 +32,44 @@ class AccountController extends Controller {
         return Redirect::route('home');
     }
 
+    public function termsAndConditions()
+    {
+        $user = Auth::user();
 
+        $accept_cta = false;
+
+        if($user) {
+            $accept_cta = !($user->checkTACAccept());
+        }
+
+        return view('terms_and_conditions.terms_and_conditions', ['user' => $user, 'accept_cta' => $accept_cta]);
+    }
+    
+    public function acceptTac() {
+        $user = Auth::user();
+        if($user) {
+            
+            $new_accept = $user->acceptTAC();
+
+            if($new_accept) {
+                $return_route = Session::get('return_route_after_tac');
+                if($return_route && ($return_route != route('terms-and-conditions'))) {
+                    Session::put('return_route_after_tac', null);
+                    return redirect($return_route);
+                } else {
+                    return redirect()->route('home');
+                }
+                // return redirect()->route('home');
+            } else {
+                Session::flash('message', 'Error accepting Terms and Conditions. Please refresh and try again.');
+                Session::flash('message-class', 'alert-danger');
+                return Redirect::back(); 
+            }
+        } else {
+            return Redirect::back();
+        }
+    }
+    
 
     /**
      * Login or redirect
@@ -67,8 +104,6 @@ class AccountController extends Controller {
         // and redirect
         return Socialite::redirect();
     }
-    
-    
     
     /**
      * Obtain the user information from Accounts.
