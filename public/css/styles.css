@@ -735,6 +735,13 @@ body .form-group:last-child {
 	width: 100%;
 }
 
+.button.disabled, .button.disabled:hover, .button.disabled:focus  {
+	background: #ccc;
+	color: #424242 !important;
+	border: 1px solid #bdbdbd;
+	outline: none;
+}
+
 @media(max-width: 900px) {
 	body .distro-form {
 		display: block;

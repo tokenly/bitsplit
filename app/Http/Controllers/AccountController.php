@@ -70,6 +70,14 @@ class AccountController extends Controller {
         }
     }
     
+    public function complete() {
+
+        // if the user is already signed in, go straight to the welcome page
+        $user = Auth::user();
+        if (!$user) { return redirect('/account/welcome'); }
+        \Session::put('embed_body', false);
+        return view('user_meta.get_user_meta_data', ['user' => $user]);
+    }
 
     /**
      * Login or redirect
