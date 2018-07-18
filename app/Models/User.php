@@ -146,7 +146,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             if($user->checkTACAccept()) {
                 User::sendApproveAccountEmailToAdmins($user->id);
             }
-            
+
             if($accept) {
                 return true;
             } else {
@@ -174,6 +174,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         } else {
             return null;
         }
+    }
+
+    public static function needsApprovalCount()
+    {
+        $users_that_need_approval = User::whereNull('approval_admin_id');
+        $users_that_need_approval = $users_that_need_approval->whereNotIn('tac_accept', [null]);
+
+        return $users_that_need_approval->count();
     }
 
     public static function getUserAccountData($userId =0)

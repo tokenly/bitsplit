@@ -1056,7 +1056,7 @@ ul.yes-no-toggle.all-blue span.active {
 
 .action-required-notice {
   background: #E53935;
-  color: #fff;
+  color: #fff !important;;
   padding: 3px 15px;
   border-radius: 30px;
   display: inline-block;
@@ -1134,6 +1134,11 @@ ul.yes-no-toggle.all-blue span.active {
 	border-radius: 4px;
 	box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
 	position: relative;
+	margin-bottom: 15px;
+}
+
+.dashboard__main__content:last-child, .dashboard__secondary__content:last-child {
+	margin-bottom: 0px;
 }
 
 .dashbaord__main__content__cta {
