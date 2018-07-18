@@ -4,7 +4,7 @@
 
 <div class="content padded document">
 	@if($accept_cta)
-	<div class="alert-container centered"
+	<div class="alert-container centered">
 		<p class="tac-alert">Please accept our terms and conditions before continuing to use Merged Folding.</p>
 	</div>
 	@endif
