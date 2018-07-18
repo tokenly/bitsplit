@@ -1273,9 +1273,9 @@ ul.yes-no-toggle.all-blue span.active {
 }
 
 .spinner > div {
-  width: 12px;
-  height: 12px;
-  background-color: #616161;
+  width: 10px;
+  height: 10px;
+  background-color: #757575;
 
   border-radius: 100%;
   display: inline-block;

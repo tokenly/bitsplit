@@ -16,6 +16,12 @@
         <p class="distribution-index__row__title">
             @if($row->complete == 1)
                 <i class="fa fa-check-circle success"></i>
+            @else
+                <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
             @endif
             <span>
                 <span>{{ rtrim(rtrim(number_format($row->asset_total / 100000000, 8),"0"),".") }}</span>
@@ -32,23 +38,12 @@
             <span>Status:</span>
             <?php
                 if($row->complete == 1){
-                    echo '<span class="text-success">
-                            <i class="fa fa-check"></i> 
-                            <span>Complete</span>
-                        </span>
-                    ';
+                    echo '<span>Complete</span>';
                 }
                 elseif($row->hold == 1){
                     echo '<strong>HOLD</strong>';
                 }
                 else{
-                    echo '
-                            <div class="spinner">
-                                <div class="bounce1"></div>
-                                <div class="bounce2"></div>
-                                <div class="bounce3"></div>
-                            </div>
-                        ';
                     switch($row->stage){
                         case 0:
                             echo '<span class="text-warning">Initializing</span>';
