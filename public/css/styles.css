@@ -1273,8 +1273,8 @@ ul.yes-no-toggle.all-blue span.active {
 }
 
 .spinner > div {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   background-color: #757575;
 
   border-radius: 100%;
@@ -1542,4 +1542,8 @@ background: linear-gradient(to right, #001510, #00bf8f); /* W3C, IE 10+/ Edge, F
 color: #fff !important;
 padding: 10px;
 border-radius: 3px;
+}
+
+.alert-container {
+	padding: 10px 0px;
 }

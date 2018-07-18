@@ -3,9 +3,11 @@
 @section('content')
 
 <div class="content padded document">
-	<div class="alert-container centered" style="padding: 10px 0px;">
+	@if($accept_cta)
+	<div class="alert-container centered"
 		<p class="tac-alert">Please accept our terms and conditions before continuing to use Merged Folding.</p>
 	</div>
+	@endif
 	<div class="document--paper @if($accept_cta) document-scroll @endif">
 		<div class="tou-header">
 			<h1>Terms and Conditions</h1>

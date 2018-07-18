@@ -23,18 +23,41 @@ class DistributeController extends Controller {
     public function newDistribution()
     {
     	$user = Auth::user();	
+    	
+    	//check if logged in
+		if(!$user){
+			return Redirect::route('account.auth');
+		}
+
+		//check if user has been approved to initiate distribution
+		if(!$user->approval_admin_id) {
+			Session::flash('message', 'You may not initiate a token distribution until your account is approved. Please be patient.');
+            Session::flash('message-class', 'alert-danger'); 
+    		return Redirect::route('home');
+    	}
+
     	return view('distribute.new', array('user' => $user));
     }
 	public function submitDistribution()
 	{
         $input = Input::all();
 		$user = Auth::user();
+
+		$user = Auth::user();	
+
 		$substation = Substation::instance();
 		
 		//check if logged in
 		if(!$user){
 			return Redirect::route('account.auth');
 		}
+
+		//check if user has been approved to initiate distribution
+		if(!$user->approval_admin_id) {
+			Session::flash('message', 'You may not initiate a token distribution until your account is approved. Please be patient.');
+            Session::flash('message-class', 'alert-danger');
+    		return Redirect::route('home');
+    	}
 		
 		//validate asset name (Counterparty/BTC only)
         $asset = trim($input['asset'] ?? '');

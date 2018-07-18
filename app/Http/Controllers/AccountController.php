@@ -141,7 +141,6 @@ class AccountController extends Controller {
             //session fail
             return redirect(route('account.admin.users'));
         }
-
     }
     /**
      * Login or redirect
