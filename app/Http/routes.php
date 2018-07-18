@@ -44,6 +44,15 @@ Route::get('/account/complete', array('as' => 'account.get_complete', 'uses' => 
 
 Route::post('/account/complete', array('as' => 'account.complete', 'uses' => 'AccountController@complete'));
 
+
+//Admin
+Route::get('/account/admin/users', array('as' => 'account.admin.users', 'uses' => 'AccountController@admin_users'));
+
+Route::get('/account/admin/users/approve/{id}', array('as' => 'account.admin.users.approve', 'uses' => 'AccountController@admin_users_approve'));
+
+//END Admin
+
+
 // This is a route to sync the user with their Tokenpass information
 //   Redirect the user here to update their local user information with their Tokenpass information
 $router->get('/account/sync', 'AccountController@sync');

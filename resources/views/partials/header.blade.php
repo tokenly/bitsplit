@@ -35,6 +35,9 @@
 						<li><a href="{{ URL::to('/home') }}">BitSplit Dashboard</a></li>
 						<li><a href="{{ env('TOKENPASS_PROVIDER_HOST') }}/dashboard" target="_blank">Account Settings</a></li>
 	                    <li><a href="{{ route('account.api-keys') }}">API Keys</a></li>
+	                    @if(Auth::user()->admin)
+							<li><a href="{{ route('account.admin.users') }}">User Dashboard (Admin)</a></li>
+	                    @endif
 						<li><a href="{{ url('/account/logout') }}">Logout</a></li>
 					</ul>
 				</li>

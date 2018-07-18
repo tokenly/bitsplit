@@ -96,6 +96,41 @@ class AccountController extends Controller {
         
     }
 
+    public function admin_users() {
+        $user = Auth::user();
+        if (!$user) { return redirect('/account/welcome'); }
+
+        if(!$user->admin) { return redirect('/home'); }
+
+        $all_users = User::all()->reverse();
+
+        return view('admin.admin-users-dashboard', ['user' => $user, 'all_users' => $all_users]);
+    }
+
+    public function admin_users_approve($userId) {
+        $user = Auth::user();
+        if (!$user) { return redirect('/account/welcome'); }
+
+        // if(!$user->admin) { return redirect('/home'); }
+        $user_to_approve = User::find($userId);
+
+        if(!$user_to_approve) {
+            //session alert
+            return redirect(route('account.admin.users'));
+        }
+
+        $approved = User::approveAccount($userId);
+
+        if($approved)
+        {   
+            //session success
+            return redirect(route('account.admin.users')); 
+        } else {
+            //session fail
+            return redirect(route('account.admin.users'));
+        }
+
+    }
     /**
      * Login or redirect
      */

@@ -164,7 +164,56 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         } else {
             return null;
         }
+    }
 
+    public static function getUserAccountData($userId =0)
+    {
+        if($userId == 0){
+            $user = Auth::user();
+        }
+        else{
+            $user = User::find($userId);
+        }
+
+        $user_account_data = UserAccountData::where('user_id', $user->id);
+
+        if($user_account_data) {
+            $user_account_data = $user_account_data->first();
+            return $user_account_data;
+        } else {
+            return null;
+        }
+    }
+
+    public static function approveAccount($userId = 0)
+    {
+        $current_user = Auth::user();
+        
+        if($userId == 0){
+            return false;
+        }
+        else{
+            $user_to_approve = User::find($userId);
+        }
+
+        if($current_user->admin) {
+            $user_to_approve->approval_admin_id = $current_user->id;
+        } else {
+            return false;
+        }
+
+        try {
+            $accept = $user_to_approve->save();
+
+            if($accept) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        catch (Exception $e) {
+            return false;
+        }
     }
 
 	public static function getDashInfo($userId = 0, $no_history = false)

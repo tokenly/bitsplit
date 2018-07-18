@@ -1,4 +1,4 @@
-<section id="home-hero" class="welcome-section full">
+<section id="home-hero" class="welcome-section">
     <div id="home-hero-mask"></div>
     <div class="welcome-section-content hero">
         <div class="home-hero-header">
