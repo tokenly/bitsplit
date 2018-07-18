@@ -14,7 +14,9 @@
             <span>{{ $row->created_at->format('F j, Y')  }}</span>
         </p>
         <p class="distribution-index__row__title">
-            <i class="fa fa-check-circle success"></i>
+            @if($row->complete == 1)
+                <i class="fa fa-check-circle success"></i>
+            @endif
             <span>
                 <span>{{ rtrim(rtrim(number_format($row->asset_total / 100000000, 8),"0"),".") }}</span>
                 <span>{{ $row->asset }}</span>
