@@ -37,8 +37,9 @@
 				<div class="dashboard__secondary__content">
 					<h2>Admin</h2>
 					<div class="welcome-section-divider"></div>
-					<div>
-						@if(User::needsApprovalCount())
+					@if(User::needsApprovalCount())
+						<div>
+						
 							<a
 								href="{{ route('account.admin.users') }}"
 								class="action-required-notice centered" 
@@ -48,10 +49,14 @@
 								<span>{{ User::needsApprovalCount() }}</span>
 								<span>new users need admin approval</span>
 							</a>
-						@else
-							<p>No action required right now.</p>
-						@endif
-					</div>	
+						</div>
+					@else
+						<div class="blank-state-container centered">
+							<p class="blank-state-text">
+								<span>No action required right now.</span>
+							</p>
+						</div>
+					@endif	
 				</div>
 			@endif
 		</div>
