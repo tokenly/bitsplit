@@ -70,6 +70,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             } else {
                 return false;
             }
+
+            $user_account_data = User::getUserAccountData($user->id);
+            if($user_account_data) {
+                User::sendApproveAccountEmailToAdmins($user->id);
+            }
         }
         catch (Exception $e) {
             return false;
@@ -137,6 +142,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         try {
             $accept = $user_account_data->save();
+
+            if($user->checkTACAccept()) {
+                User::sendApproveAccountEmailToAdmins($user->id);
+            }
+            
             if($accept) {
                 return true;
             } else {
@@ -196,6 +206,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             $user_to_approve = User::find($userId);
         }
 
+        if(!$user_to_approve) {
+            return false;
+        }
+
         if($current_user->admin) {
             $user_to_approve->approval_admin_id = $current_user->id;
         } else {
@@ -214,6 +228,33 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         catch (Exception $e) {
             return false;
         }
+    }
+
+    public static function sendApproveAccountEmailToAdmins($userId = 0)
+    {   
+        
+        if($userId == 0){
+            return false;
+        }
+        else{
+            $user_to_approve = User::find($userId);
+        }
+
+        if(!$user_to_approve) {
+            return false;
+        }
+
+        $admins = User::where('admin', 1)->get();
+
+        foreach($admins as $admin) {
+            Mail::send('emails.admin.approve-account', ['user_to_approve' => $user_to_approve, 'admin' => $admin],
+                function($m) use ($admin) {
+                    $m->from(env('MAIL_FROM_ADDRESS'));
+                    $m->to($admin->email, $admin->username)->subject('New User Requires Your Approval');
+                }
+            );
+        }
+        
     }
 
 	public static function getDashInfo($userId = 0, $no_history = false)

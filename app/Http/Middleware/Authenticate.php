@@ -35,7 +35,6 @@ class Authenticate
                 return redirect()->route('account.complete');
             }
 
-
             $user_tac_accept = $user->checkTACAccept();
             if(!$user_tac_accept) {
                 Session::put('return_route_after_tac', url()->full());
