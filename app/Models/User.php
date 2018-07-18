@@ -73,7 +73,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
             $user_account_data = User::getUserAccountData($user->id);
             if($user_account_data) {
-                // User::sendApproveAccountEmailToAdmins($user->id);
+                User::sendApproveAccountEmailToAdmins($user->id);
             }
         }
         catch (Exception $e) {
@@ -144,7 +144,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             $accept = $user_account_data->save();
 
             if($user->checkTACAccept()) {
-                // User::sendApproveAccountEmailToAdmins($user->id);
+                User::sendApproveAccountEmailToAdmins($user->id);
             }
             
             if($accept) {
