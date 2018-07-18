@@ -1547,3 +1547,21 @@ border-radius: 3px;
 .alert-container {
 	padding: 10px 0px;
 }
+
+.number-badge {
+	font-size: 10px;
+	display: inline-block;
+	border-radius: 50%;
+	color: #fff;
+	width: 14px;
+	height: 14px;
+	line-height: 14px;
+	text-align: center;
+	vertical-align: middle;
+	background: #F50057;
+    font-weight: 700;
+}
+
+.navbar-right {
+	background: #fff;
+}

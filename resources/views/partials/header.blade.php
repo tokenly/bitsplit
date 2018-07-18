@@ -36,7 +36,17 @@
 						<li><a href="{{ env('TOKENPASS_PROVIDER_HOST') }}/dashboard" target="_blank">Account Settings</a></li>
 	                    <li><a href="{{ route('account.api-keys') }}">API Keys</a></li>
 	                    @if(Auth::user()->admin)
-							<li><a href="{{ route('account.admin.users') }}">User Dashboard (Admin)</a></li>
+	                    	 <?php
+	                    	 	// $query_values = ['tac_approved' => null, 'approval_admin_id' => null];	
+	                    	 	$users_that_need_approval = User::whereNull('approval_admin_id');
+	                    	 	$users_that_need_approval = $users_that_need_approval->whereNotIn('tac_accept', [null]);
+	                    	 ?>
+							<li>
+								<a href="{{ route('account.admin.users') }}">
+									<span>User Dashboard (Admin)</span>
+									<span class="number-badge">{{ $users_that_need_approval->count() }}</span>
+								</a>
+							</li>
 	                    @endif
 						<li><a href="{{ url('/account/logout') }}">Logout</a></li>
 					</ul>
