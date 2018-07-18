@@ -47,6 +47,7 @@ Route::post('/account/complete', array('as' => 'account.complete', 'uses' => 'Ac
 
 //Admin
 Route::get('/account/admin/users', array('as' => 'account.admin.users', 'uses' => 'AccountController@admin_users'));
+Route::get('/account/admin/user/{id}', array('as' => 'account.admin.user', 'uses' => 'AccountController@admin_user'));
 
 Route::get('/account/admin/users/approve/{id}', array('as' => 'account.admin.users.approve', 'uses' => 'AccountController@admin_users_approve'));
 

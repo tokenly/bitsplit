@@ -107,6 +107,18 @@ class AccountController extends Controller {
         return view('admin.admin-users-dashboard', ['user' => $user, 'all_users' => $all_users]);
     }
 
+    public function admin_user($userId) {
+        $user = Auth::user();
+        if (!$user) { return redirect('/account/welcome'); }
+
+        if(!$user->admin) { return redirect('/home'); }
+
+        $this_user = User::find($userId);
+
+        return view('admin.admin-user-show', ['user' => $user, 'this_user' => $this_user]);
+    }
+
+
     public function admin_users_approve($userId) {
         $user = Auth::user();
         if (!$user) { return redirect('/account/welcome'); }
