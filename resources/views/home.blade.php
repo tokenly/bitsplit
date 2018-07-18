@@ -37,6 +37,7 @@
 				<div class="dashboard__secondary__content">
 					<h2>Admin</h2>
 					<div class="welcome-section-divider"></div>
+					{{ User::needsApprovalCount() }}
 					@if(User::needsApprovalCount())
 						<div>
 						

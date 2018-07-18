@@ -178,7 +178,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public static function needsApprovalCount()
     {
-        $users_that_need_approval = User::whereNull('approval_admin_id');
+        $users_that_need_approval = User::whereNull('approval_admin_id')->get();
         $users_that_need_approval = $users_that_need_approval->whereNotIn('tac_accept', [null]);
 
         return $users_that_need_approval->count();
