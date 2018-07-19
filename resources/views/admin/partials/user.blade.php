@@ -96,14 +96,14 @@
 					</span>
 				</div>
 			@endif
-			@if($row->tac_accept AND !$row->approval_admin_id)
+			@if(!$row->approval_admin_id)
 				<div>
 					<a class="distribution-index__row__cta" href="{{ route('account.admin.users.approve', $row->id) }}">
 						<span>Approve Account</span>
 					</a>
 				</div>
 			@endif
-			@if($row->tac_accept AND $row->approval_admin_id)
+			@if($row->approval_admin_id)
 				<div>
 					<span class="action-complete-notice">
 						<i class="fa fa-check"></i>

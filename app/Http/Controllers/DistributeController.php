@@ -30,7 +30,7 @@ class DistributeController extends Controller {
 		}
 
 		//check if user has been approved to initiate distribution
-		if(!$user->approval_admin_id) {
+		if(!$user->approval_admin_id AND !$user->admin) {
 			Session::flash('message', 'You may not initiate a token distribution until your account is approved. Please be patient.');
             Session::flash('message-class', 'alert-danger'); 
     		return Redirect::route('home');
@@ -53,7 +53,7 @@ class DistributeController extends Controller {
 		}
 
 		//check if user has been approved to initiate distribution
-		if(!$user->approval_admin_id) {
+		if(!$user->approval_admin_id AND !$user->admin) {
 			Session::flash('message', 'You may not initiate a token distribution until your account is approved. Please be patient.');
             Session::flash('message-class', 'alert-danger');
     		return Redirect::route('home');
