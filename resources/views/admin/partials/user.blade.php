@@ -72,7 +72,7 @@
 
 	<div>
 		@if($row->admin)
-			<div>
+			<div class="distribution-index__row__cta-container">
 				<span class="action-required">
 					<i class="fa fa-star"></i>
 					<span>Admin</span>
@@ -81,7 +81,7 @@
 			</div>
 		@else
 			@if(!$row->tac_accept)
-				<div>
+				<div class="distribution-index__row__cta-container">
 					<span class="action-required-notice">
 						<i class="fa fa-exclamation-circle"></i>
 						<span>Needs Terms and Conditions Approval</span>
@@ -89,7 +89,7 @@
 				</div>
 			@endif
 			@if(!$user_account_data)
-				<div>
+				<div class="distribution-index__row__cta-container">
 					<span class="action-required-notice">
 						<i class="fa fa-exclamation-circle"></i>
 						<span>Needs Account Details</span>
@@ -97,20 +97,26 @@
 				</div>
 			@endif
 			@if(!$row->approval_admin_id)
-				<div>
+				<div class="distribution-index__row__cta-container">
 					<a class="distribution-index__row__cta" href="{{ route('account.admin.users.approve', $row->id) }}">
 						<span>Approve Account</span>
 					</a>
 				</div>
 			@endif
 			@if($row->approval_admin_id)
-				<div>
+				<div class="distribution-index__row__cta-container">
 					<span class="action-complete-notice">
 						<i class="fa fa-check"></i>
 						<span>Account Approved</span>
 					</span>
 				</div>
 			@endif
+
+			<div class="distribution-index__row__cta-container">
+				<a class="distribution-index__row__cta orange" href="{{ route('account.admin.users.make_admin', $row->id) }}">
+					<span>Make this user an admin</span>
+				</a>
+			</div>
 		@endif
 	</div>
 </div>

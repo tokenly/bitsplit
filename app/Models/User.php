@@ -207,6 +207,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         $current_user = Auth::user();
         
+        if(!$current_user->admin) {
+            return false;
+        }
+
         if($userId == 0){
             return false;
         }
@@ -226,6 +230,45 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         try {
             $accept = $user_to_approve->save();
+
+            if($accept) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function makeAdmin($userId = 0)
+    {
+        $current_user = Auth::user();
+        
+        if(!$current_user->admin) {
+            return false;
+        }
+
+        if($userId == 0){
+            return false;
+        }
+        else{
+            $user_to_make_admin = User::find($userId);
+        }
+
+        if(!$user_to_make_admin) {
+            return false;
+        }
+
+        if($current_user->admin) {
+            $user_to_make_admin->admin = 1;
+        } else {
+            return false;
+        }
+
+        try {
+            $accept = $user_to_make_admin->save();
 
             if($accept) {
                 return true;

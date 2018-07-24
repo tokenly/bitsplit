@@ -1269,6 +1269,18 @@ ul.yes-no-toggle.all-blue span.active {
     cursor: pointer;
 }
 
+.distribution-index__row__cta.orange {
+	background: #E65100;
+}
+
+.distribution-index__row__cta-container {
+	margin-bottom: 15px;
+}
+
+.distribution-index__row__cta-container:last-child, .distribution-index__row__cta-container:last-of-type {
+	margin-bottom: 0px;
+}
+
 .fa-check-circle.success {
 	color: #00AE48;
 }

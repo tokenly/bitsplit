@@ -69,7 +69,7 @@ class AccountController extends Controller {
             return Redirect::back();
         }
     }
-    
+
     public function getComplete() {
         $user = Auth::user();
         if (!$user) { return redirect('/account/welcome'); }
@@ -142,6 +142,31 @@ class AccountController extends Controller {
             return redirect(route('account.admin.users'));
         }
     }
+
+    public function make_admin($userId) {
+        $user = Auth::user();
+        if (!$user) { return redirect('/account/welcome'); }
+
+        // if(!$user->admin) { return redirect('/home'); }
+        $user_to_make_admin = User::find($userId);
+
+        if(!$user_to_make_admin) {
+            //session alert
+            return redirect(route('account.admin.users'));
+        }
+
+        $converted_to_admin = User::makeAdmin($userId);
+
+        if($converted_to_admin)
+        {   
+            //session success
+            return redirect(route('account.admin.users')); 
+        } else {
+            //session fail
+            return redirect(route('account.admin.users'));
+        }
+    }
+
     /**
      * Login or redirect
      */
