@@ -37,6 +37,15 @@
 				<div class="dashboard__secondary__content">
 					<h2>Admin</h2>
 					<div class="welcome-section-divider"></div>
+					
+					<a
+						href="{{ route('account.admin.users') }}"
+						class="select-button" 
+						style="cursor: pointer; position: absolute; right: 0px; top: 20px;"
+					>
+						<span>Go to Admin Dashboard</span>
+					</a>
+
 					@if(User::needsApprovalCount())
 						<div>
 						

@@ -75,8 +75,7 @@
 			<div class="distribution-index__row__cta-container">
 				<span class="action-required">
 					<i class="fa fa-star"></i>
-					<span>Admin</span>
-					{{ $row->admin }}
+					<span>This user is an ADMIN</span>
 				</span>
 			</div>
 		@else
