@@ -7,7 +7,7 @@ use Exception;
 use Tokenly\RecordLock\Facade\RecordLock;
 use Tokenly\SubstationClient\SubstationClient;
 use User;
-use UserMeta;
+use \App\Models\UserMeta;
 
 class UserWalletManager
 {
