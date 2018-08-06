@@ -88,7 +88,7 @@ class SaveStats extends Command
                     if ($i < 3) {
                         continue;
                     }
-                    $total += $data[1];
+                    $total += (int) $data[1];
                 }
                 rewind($fp);
 
