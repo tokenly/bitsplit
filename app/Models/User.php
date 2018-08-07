@@ -178,7 +178,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public static function needsApprovalCount()
     {
-        $users_that_need_approval = User::whereNull('approval_admin_id')->get();
+        $users_that_need_approval = User::whereNull('approval_admin_id')->where('declined', 0)->get();
         $users_that_need_approval = $users_that_need_approval->whereNotIn('tac_accept', [null]);
 
         return $users_that_need_approval->count();
@@ -238,6 +238,28 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             }
         }
         catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function declineAccount($userId = 0)
+    {
+        $current_user = Auth::user();
+        if(!$current_user->admin) {
+            return false;
+        }
+        $user_to_approve = User::find($userId);
+        if($userId === 0 || !$user_to_approve){
+            return false;
+        }
+        if(!$current_user->admin) {
+            return false;
+        }
+        //Decline
+        $user_to_approve->declined = 1;
+        try {
+            return (bool) $user_to_approve->save();
+        } catch (Exception $e) {
             return false;
         }
     }

@@ -1273,6 +1273,10 @@ ul.yes-no-toggle.all-blue span.active {
 	background: #E65100;
 }
 
+.distribution-index__row__cta.decline {
+	background: white;
+	color: red !important;
+}
 .distribution-index__row__cta-container {
 	margin-bottom: 15px;
 }

@@ -111,6 +111,14 @@
 				</div>
 			@endif
 
+			@if(!$row->approval_admin_id)
+				<div class="distribution-index__row__cta-container" style="border: red 1px solid">
+					<a class="distribution-index__row__cta decline" href="{{ route('account.admin.users.decline', $row->id) }}">
+						<span>Decline Account</span>
+					</a>
+				</div>
+			@endif
+
 			<div class="distribution-index__row__cta-container">
 				<a class="distribution-index__row__cta orange" href="{{ route('account.admin.users.make_admin', $row->id) }}">
 					<span>Make this user an admin</span>

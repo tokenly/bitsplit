@@ -102,7 +102,7 @@ class AccountController extends Controller {
 
         if(!$user->admin) { return redirect('/home'); }
 
-        $all_users = User::all()->reverse();
+        $all_users = User::where('declined', 0)->get()->reverse();
 
         return view('admin.admin-users-dashboard', ['user' => $user, 'all_users' => $all_users]);
     }
@@ -137,6 +137,30 @@ class AccountController extends Controller {
         {   
             //session success
             return redirect(route('account.admin.users')); 
+        } else {
+            //session fail
+            return redirect(route('account.admin.users'));
+        }
+    }
+
+    public function admin_users_decline($userId) {
+        $user = Auth::user();
+        if (!$user) { return redirect('/account/welcome'); }
+
+        // if(!$user->admin) { return redirect('/home'); }
+        $user_to_approve = User::find($userId);
+
+        if(!$user_to_approve) {
+            //session alert
+            return redirect(route('account.admin.users'));
+        }
+
+        $approved = User::declineAccount($userId);
+
+        if($approved)
+        {
+            //session success
+            return redirect(route('account.admin.users'));
         } else {
             //session fail
             return redirect(route('account.admin.users'));
