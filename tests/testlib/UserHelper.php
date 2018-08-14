@@ -73,7 +73,7 @@ class UserHelper
 
         // set meta vars
         foreach($meta_vars as $meta_key => $meta_val) {
-            UserMeta::setMeta($new_user['id'], $meta_key, $meta_val);
+            \App\Models\UserMeta::setMeta($new_user['id'], $meta_key, $meta_val);
         }
 
         return $new_user;
