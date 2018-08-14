@@ -35,7 +35,8 @@
         "tokenly/tokenmap-client": "^2.0",
         "tokenly/tokenpass-client": "^2",
         "tokenly/tokenslot-client": "dev-master",
-        "tokenly/xcaller-client": "^0.3"
+        "tokenly/xcaller-client": "^0.3",
+        "spatie/laravel-permission": "^2.13"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

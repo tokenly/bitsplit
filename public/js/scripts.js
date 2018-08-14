@@ -254,4 +254,31 @@ $(document).ready(function(){
     //         default:
     //     }
     // })
+
+
+    $( function() {
+        $( ".sortable" ).sortable({
+            handle: ".name",
+            update: function( event, ui ) {
+                let csrf_token = $('#csrf_token').val();
+                let fields =  $(".sortable").sortable('toArray');
+                var values = $(this).serialize();
+                $.ajax({
+                    url: "fields/positions",
+                    type: "post",
+                    data: {'_token': csrf_token, 'fields': fields} ,
+                    success: function (response) {
+                        // you will get response from your php page (what you echo or print)
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+
+
+                });
+            },
+        });
+        $( ".sortable").disableSelection();
+    } );
 });

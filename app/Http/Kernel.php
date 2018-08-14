@@ -55,5 +55,6 @@ class Kernel extends HttpKernel
         'auth.api'        => \App\Http\Middleware\AuthenticateAPIKey::class,
         'auth.api.signed' => \App\Http\Middleware\AuthenticateAPIKeySigned::class,
         'tls'             => \App\Http\Middleware\RequireTLS::class,
-    ];
+        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ];
 }

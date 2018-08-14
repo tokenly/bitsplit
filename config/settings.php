@@ -20,4 +20,5 @@ return array(
     'auto_pump_stuck_distros' => false, //set to true to have 1 miner_fee pumped into a distribution if it gets stuck, set to false if this goes out of wack
     'distribute_service_fee' => 0, //amount of satoshis per address to tack on to their fee for service profit
     'official_fldc_email' => env('FLDC_EMAIL', 'foldingcoin.net@gmail.com'), //Email of the official fldc account
+    'signup_field_types' => ['Text', 'Textarea', 'Toggle', 'Checkbox', 'Toggle'], //Email of the official fldc account
 );

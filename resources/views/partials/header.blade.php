@@ -42,6 +42,11 @@
 									<span class="number-badge">{{ User::needsApprovalCount() }}</span>
 								</a>
 							</li>
+							<li>
+								<a href="{{ route('account.admin.fields') }}">
+									<span>Signup fields (Admin)</span>
+								</a>
+							</li>
 	                    @endif
 						<li><a href="{{ url('/account/logout') }}">Logout</a></li>
 					</ul>

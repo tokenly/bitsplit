@@ -19,7 +19,9 @@
 @section('page_scripts')
 	
 	<script>
-		var userMetaSubmitRoute = {!! json_encode(route('account.complete')) !!};
+        var _token = "{{ csrf_token()  }}"
+        var userMetaSubmitRoute = {!! json_encode(route('account.complete')) !!};
+        var fields = {!! json_encode($fields) !!};
 		Vue.component('user-meta-form', {
 			template: `
 				@include('user_meta.partials.form')
@@ -47,19 +49,59 @@
 					'Kraken',
 					'Ethex'
 				],
-				inputWarning: null
+                inputWarning: null,
+				fields: fields,
 			  }
 			},
 	    	methods: {
-	    		toggleListing(exchange) {
-	    			_arrayIndex = this.tokenExchangesListed.indexOf(exchange);
-	    			if(_arrayIndex > -1) {
-	    				this.tokenExchangesListed.splice(_arrayIndex, 1);
-	    			} else {
-	    				this.tokenExchangesListed.push(exchange);
-	    			}
+			    submit: function () {
+                    let fields = [];
+			        this.$http.post('/account/complete', {
+                        _token: _token,
+                        fields: this.fields,
+                    }).then(response => {
+                        window.location.reload();
+                    }, response => {
+                        let errors = response.body.errors;
+                        console.log(errors)
+                        if(errors.name) {
+                            this.errors.name = errors.name[0];
+                        }
+                    });
+				},
+			    checkCondition: function (field) {
+			        if(!field.condition) {
+			            return true;
+					}
+					for (let i=0;i<this.fields.length;++i) {
+			            if(this.fields[i].id != field.condition.field_to_compare_id) {
+			                continue;
+						}
+						return this.fields[i].value == field.condition.value;
+					}
+			        return true;
+				},
+			    toggle: function (field, val) {
+			        for (let i = 0; i < this.fields.length; ++i) {
+			            if(this.fields[i].name === field.name) {
+                    		this.$set(this.fields[i], 'value', val)
+						}
+					}
+
+                },
+	    		toggleListing: function (field, value) {
+			        for(let i=0;i<this.fields.length;++i) {
+			            if(this.fields[i].name === field.name) {
+			                if(!this.fields[i].value) {
+                                this.$set(this.fields[i], 'value', [value]);
+							} else {
+                                this.fields[i].value.push(value);
+							}
+						}
+					}
 	    		},
 	    		checkIfValid(e) {
+			        return true;
 	    			if(this.formIsValid) {
 	    				return true;
 	    			} else {
@@ -69,23 +111,8 @@
 	    		}
 	    	},
 			computed: {
-				validFirstName() {
-					return (this.firstName && this.firstName.length > 1);
-				},
-				validLastName() {
-					return (this.lastName && this.lastName.length > 1);
-				},
-				validEmail() {
-					return (this.email && this.email.length > 1);
-				},
-				validTokenName() {
-					return (this.tokenName && this.tokenName.length > 1);
-				},
-				validTokenDescription() {
-					return(this.tokenDescription && this.tokenDescription.length > 10);
-				},
 				formIsValid() {
-					return (this.validFirstName && this.validLastName && this.validEmail && this.validTokenName && this.validTokenDescription);
+				    return true;
 				}
 			}
 		});

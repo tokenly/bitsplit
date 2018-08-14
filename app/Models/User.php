@@ -16,11 +16,14 @@ use Tokenly\LaravelApiProvider\Model\Traits\Permissioned;
 use Illuminate\Support\Facades\Log;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\SubstationClient\SubstationClient;
+use \Spatie\Permission\Models\Role;
+
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
 	use Authenticatable, CanResetPassword;
     use Permissioned;
-	
+    use \Spatie\Permission\Traits\HasRoles;
+
 	protected $fillable = array('name','email','username','tokenly_uuid','oauth_token');
 
 	public static $cur_user = false;
@@ -158,21 +161,27 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
     }
 
+    public function saveData(\App\Models\SignupField $field, $value)
+    {
+        if(is_array($value)) {
+            DB::table('user_data')->insert(['field_id' => $field->id, 'user_id' => $this->id, 'value' => implode(", ", $value)]);
+        } else {
+            DB::table('user_data')->insert(['field_id' => $field->id, 'user_id' => $this->id, 'value' => $value]);
+        }
+    }
+
     public function getCurrentUserAccountData()
     {
-        $user = Auth::user();
-
-        if(!$user) {
-            return false;
+        //
+        $user_data =  DB::table('user_data')->where('user_id', $this->id)->get();
+        if(!$user_data->isEmpty()) {
+            return $user_data;
         }
-
-        $user_account_data = UserAccountData::where('user_id', $user->id);
-
+        //
+        $user_account_data = UserAccountData::where('user_id', $this->id);
         if($user_account_data) {
             $user_account_data = $user_account_data->first();
             return $user_account_data;
-        } else {
-            return null;
         }
     }
 
@@ -203,34 +212,28 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
     }
 
-    public static function approveAccount($userId = 0)
+    public function getAccountData() {
+	    return \App\Models\UserData::where('user_id', $this->id)->get();
+    }
+
+    public static function getUserData()
     {
-        $current_user = Auth::user();
-        
-        if(!$current_user->admin) {
-            return false;
-        }
 
-        if($userId == 0){
-            return false;
-        }
-        else{
-            $user_to_approve = User::find($userId);
-        }
-
-        if(!$user_to_approve) {
-            return false;
-        }
-
-        if($current_user->admin) {
-            $user_to_approve->approval_admin_id = $current_user->id;
+        $user_account_data = UserAccountData::where('user_id', $this->id);
+        if($user_account_data) {
+            $user_account_data = $user_account_data->first();
+            return $user_account_data;
         } else {
-            return false;
+            return null;
         }
+    }
 
+
+    public function approve() {
         try {
-            $accept = $user_to_approve->save();
-
+            $current_user = Auth::user();
+            $this->approval_admin_id = $current_user->id;
+            $accept = $this->save();
             if($accept) {
                 return true;
             } else {
@@ -242,66 +245,30 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
     }
 
-    public static function declineAccount($userId = 0)
+    public function decline()
     {
-        $current_user = Auth::user();
-        if(!$current_user->admin) {
-            return false;
-        }
-        $user_to_approve = User::find($userId);
-        if($userId === 0 || !$user_to_approve){
-            return false;
-        }
-        if(!$current_user->admin) {
-            return false;
-        }
-        //Decline
-        $user_to_approve->declined = 1;
+        $this->declined = 1;
         try {
-            return (bool) $user_to_approve->save();
+            return (bool) $this->save();
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function makeAdmin($userId = 0)
-    {
-        $current_user = Auth::user();
-        
-        if(!$current_user->admin) {
-            return false;
+    public function makeModerator() {
+        if(!Role::where('name', 'moderator')->exists()) {
+            Role::create(['name' => 'moderator']);
         }
-
-        if($userId == 0){
-            return false;
-        }
-        else{
-            $user_to_make_admin = User::find($userId);
-        }
-
-        if(!$user_to_make_admin) {
-            return false;
-        }
-
-        if($current_user->admin) {
-            $user_to_make_admin->admin = 1;
-        } else {
-            return false;
-        }
-
-        try {
-            $accept = $user_to_make_admin->save();
-
-            if($accept) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        catch (Exception $e) {
-            return false;
-        }
+        $this->assignRole('moderator');
     }
+
+    public function makeAdmin() {
+        if(!Role::where('name', 'admin')->exists()) {
+            Role::create(['name' => 'admin']);
+        }
+        $this->assignRole('admin');
+    }
+
 
     public static function sendApproveAccountEmailToAdmins($userId = 0)
     {   
@@ -419,5 +386,35 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             ->where('active', 1)
             ->orderBy('id')
             ->first();
+    }
+
+    public function getStatusAttribute($value)
+    {
+        $user_account_data = User::getUserAccountData($this->id);
+        switch (true) {
+            case $this->admin:
+                return 'Admin';
+            case $this->hasRole('moderator'):
+                return 'Moderator';
+                case !$this->tac_accept:
+                return 'Needs Terms and Conditions Approval';
+            case !$user_account_data:
+                return 'Needs Account Details';
+            case !$this->approval_admin_id:
+                return 'Needs approval';
+            case $this->approval_admin_id:
+                return 'Approved';
+        }
+        return 'No status';
+    }
+
+    public function getAdminAttribute($admin)
+    {
+        return $admin || $this->hasRole('admin');
+    }
+
+    public function getIsModeratorAttribute()
+    {
+        return $this->admin || $this->hasRole('admin') || $this->hasRole('moderator');
     }
 }

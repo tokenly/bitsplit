@@ -1,9 +1,12 @@
 <?php 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use App\Models\SignupField;
+use App\Models\UserAccountData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Socialite;
+use Spatie\Permission\Models\Role;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\TokenpassClient\Facade\Tokenpass;
 use User, Input, Session, Hash, Redirect, Exception, Config, URL, Response;
@@ -74,25 +77,64 @@ class AccountController extends Controller {
         $user = Auth::user();
         if (!$user) { return redirect('/account/welcome'); }
         \Session::put('embed_body', false);
-        return view('user_meta.get_user_meta_data', ['user' => $user]);
+        $fields = SignupField::with('options')->with('condition')->orderBy('position', 'ASC')->get();
+        return view('user_meta.get_user_meta_data', ['user' => $user, 'fields' => $fields]);
     }
 
-    public function complete() {
-
-        // // if the user is not signed in, go to the welcome page
-        $user = Auth::user();
-        if (!$user) { return redirect('/account/welcome'); }
-
-        $input = Input::all();
-
-        $save_user_meta = $user->saveUserAccountData($input);
-
-        if($save_user_meta) {
-            return Redirect::route('home');
-        } else {
-            return Redirect::back();
+    public function complete(Request $request) {
+        if($request->user()->getCurrentUserAccountData()) {
+            return redirect()->route('home');
         }
-        // \Session::put('embed_body', false);
+
+        $user = $request->user();
+        /* VALIDATION */
+        $fields = $request->input('fields');
+        foreach ($fields as $key => $field) {
+            $field_object = SignupField::with('condition')->find($field['id']);
+            if(empty($field['value']) && $field_object->required && $field_object->type != 'toggle') {
+                if(!$field_object->condition()->exists()) {
+                    return response()->json([
+                        'status' => 'fail',
+                        'message' => 'Field ' . $field['name'] . ' is required',
+                    ], 400);
+                }
+                $condition_met = true;
+                foreach ($fields as $compare_field) {
+                    if($field_object->condition->field_to_compare_id == $compare_field['id'] && (empty($compare_field['value']) || $field_object->condition->value != $compare_field['value'])) {
+                        $condition_met = false;
+                    }
+                }
+                if($condition_met) {
+                    return response()->json([
+                        'status' => 'fail',
+                        'message' => 'Field ' . $field['name'] . ' is required',
+                    ], 400);
+                }
+            }
+        }
+        // Save
+        foreach ($fields as $key => $field) {
+            $field_object = SignupField::with('condition')->find($field['id']);
+            if(!empty($field['value']) || $field_object->type == 'toggle') {
+                $user->saveData($field_object, $field['value'] ?? false);
+            }
+        }
+
+        try {
+            if($user->checkTACAccept()) {
+                User::sendApproveAccountEmailToAdmins($user->id);
+            }
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'Account data saved successfully',
+            ], 201);
+        }
+        catch (Exception $e) {
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'There was an error saving the account data',
+            ], 500);
+        }
         
     }
 
@@ -100,7 +142,7 @@ class AccountController extends Controller {
         $user = Auth::user();
         if (!$user) { return redirect('/account/welcome'); }
 
-        if(!$user->admin) { return redirect('/home'); }
+        if(!$user->isModerator) { return redirect('/home'); }
 
         $all_users = User::where('declined', 0)->get()->reverse();
 
@@ -111,7 +153,7 @@ class AccountController extends Controller {
         $user = Auth::user();
         if (!$user) { return redirect('/account/welcome'); }
 
-        if(!$user->admin) { return redirect('/home'); }
+        if(!$user->isModerator) { return redirect('/home'); }
 
         $this_user = User::find($userId);
 
@@ -119,76 +161,46 @@ class AccountController extends Controller {
     }
 
 
-    public function admin_users_approve($userId) {
-        $user = Auth::user();
-        if (!$user) { return redirect('/account/welcome'); }
-
-        // if(!$user->admin) { return redirect('/home'); }
-        $user_to_approve = User::find($userId);
-
-        if(!$user_to_approve) {
-            //session alert
-            return redirect(route('account.admin.users'));
-        }
-
-        $approved = User::approveAccount($userId);
-
-        if($approved)
-        {   
-            //session success
-            return redirect(route('account.admin.users')); 
-        } else {
-            //session fail
-            return redirect(route('account.admin.users'));
-        }
+    public function approve(Request $request, User $user) {
+        $approved = $user->approve();
+        return redirect(route('account.admin.users'));
     }
 
-    public function admin_users_decline($userId) {
-        $user = Auth::user();
-        if (!$user) { return redirect('/account/welcome'); }
-
-        // if(!$user->admin) { return redirect('/home'); }
-        $user_to_approve = User::find($userId);
-
-        if(!$user_to_approve) {
-            //session alert
-            return redirect(route('account.admin.users'));
-        }
-
-        $approved = User::declineAccount($userId);
-
-        if($approved)
-        {
-            //session success
-            return redirect(route('account.admin.users'));
-        } else {
-            //session fail
-            return redirect(route('account.admin.users'));
-        }
+    public function decline(Request $request, User $user) {
+        $declined = $user->decline();
+        return redirect(route('account.admin.users'));
     }
 
-    public function make_admin($userId) {
-        $user = Auth::user();
-        if (!$user) { return redirect('/account/welcome'); }
-
-        // if(!$user->admin) { return redirect('/home'); }
-        $user_to_make_admin = User::find($userId);
-
-        if(!$user_to_make_admin) {
-            //session alert
+    public function make_moderator(Request $request, User $user) {
+        if($user->hasRole('moderator')) {
+            Session::flash('message', 'User is already a moderator.');
+            Session::flash('message-class', 'alert-danger');
             return redirect(route('account.admin.users'));
         }
+        $user->makeModerator();
+        return redirect(route('account.admin.users'));
+    }
 
-        $converted_to_admin = User::makeAdmin($userId);
-
-        if($converted_to_admin)
-        {   
-            //session success
-            return redirect(route('account.admin.users')); 
-        } else {
-            //session fail
+    public function make_admin(Request $request, User $user) {
+        if($user->admin) {
+            Session::flash('message', 'User is already an admin.');
+            Session::flash('message-class', 'alert-danger');
             return redirect(route('account.admin.users'));
         }
+        $user->makeAdmin();
+        return redirect(route('account.admin.users'));
+    }
+
+    public function remove_moderator(Request $request, User $user) {
+        $user->removeRole('moderator');
+        return redirect(route('account.admin.users'));
+    }
+
+    public function remove_admin(Request $request, User $user) {
+        $user->removeRole('admin');
+        $user->admin = 0;
+        $user->save();
+        return redirect(route('account.admin.users'));
     }
 
     /**
@@ -224,10 +236,10 @@ class AccountController extends Controller {
         // and redirect
         return Socialite::redirect();
     }
-    
+
     /**
      * Obtain the user information from Accounts.
-     * 
+     *
      * This is the route called after Tokenpass has granted (or denied) permission to this application
      * This application is now responsible for loading the user information from Tokenpass and storing
      * it in the local user database.
@@ -240,8 +252,8 @@ class AccountController extends Controller {
         try {
             // retrieve the user from Tokenpass
             $oauth_user = Socialite::user();
-            
-            
+
+
             // get all the properties from the oAuth user object
             $tokenly_uuid       = $oauth_user->id;
             $oauth_token        = $oauth_user->token;

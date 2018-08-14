@@ -33,7 +33,7 @@
 					@include('inc.my-account-details')
 				</div>	
 			</div>
-			@if(Auth::user()->admin)
+			@if(Auth::user()->isModerator)
 				<div class="dashboard__secondary__content">
 					<h2>Admin</h2>
 					<div class="welcome-section-divider"></div>

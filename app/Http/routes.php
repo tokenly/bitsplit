@@ -50,10 +50,17 @@ Route::post('/account/complete', array('as' => 'account.complete', 'uses' => 'Ac
 Route::get('/account/admin/users', array('as' => 'account.admin.users', 'uses' => 'AccountController@admin_users'));
 Route::get('/account/admin/user/{id}', array('as' => 'account.admin.user', 'uses' => 'AccountController@admin_user'));
 
-Route::get('/account/admin/users/approve/{id}', array('as' => 'account.admin.users.approve', 'uses' => 'AccountController@admin_users_approve'));
-Route::get('/account/admin/users/decline/{id}', array('as' => 'account.admin.users.decline', 'uses' => 'AccountController@admin_users_decline'))->middleware(\App\Http\Middleware\Admin::class);
+Route::get('/account/admin/users/approve/{user}', array('as' => 'account.admin.users.approve', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Moderator::class], 'uses' => 'AccountController@approve'));
+Route::get('/account/admin/users/decline/{user}', array('as' => 'account.admin.users.decline', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Moderator::class], 'uses' => 'AccountController@decline'));
+Route::get('/account/admin/users/make_admin/{user}', array('as' => 'account.admin.users.make_admin', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class], 'uses' => 'AccountController@make_admin'));
+Route::get('/account/admin/users/make_moderator/{user}', array('as' => 'account.admin.users.make_moderator', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class], 'uses' => 'AccountController@make_moderator'));
+Route::get('/account/admin/users/remove_admin/{user}', array('as' => 'account.admin.users.remove_admin', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class], 'uses' => 'AccountController@remove_admin'));
+Route::get('/account/admin/users/remove_moderator/{user}', array('as' => 'account.admin.users.remove_moderator', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class], 'uses' => 'AccountController@remove_moderator'));
 
-Route::get('/account/admin/users/make_admin/{id}', array('as' => 'account.admin.users.make_admin', 'uses' => 'AccountController@make_admin'));
+Route::get('/account/admin/fields', array('as' => 'account.admin.fields',  'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class],'uses' => 'SignupFieldsController@index'));
+Route::post('/account/admin/fields', array('as' => 'account.admin.fields',  'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class],'uses' => 'SignupFieldsController@create'));
+Route::post('/account/admin/fields/positions', array('as' => 'account.admin.fields.positions','middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class], 'uses' => 'SignupFieldsController@updateOrder'));
+Route::delete('/account/admin/fields/{field}', array('as' => 'account.admin.fields.positions', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class],'uses' => 'SignupFieldsController@delete'));
 
 //END Admin
 

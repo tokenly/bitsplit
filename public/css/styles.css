@@ -1277,6 +1277,10 @@ ul.yes-no-toggle.all-blue span.active {
 	background: white;
 	color: red !important;
 }
+.distribution-index__row__cta.moderator {
+	background: white;
+	color: #E65100 !important;
+}
 .distribution-index__row__cta-container {
 	margin-bottom: 15px;
 }
