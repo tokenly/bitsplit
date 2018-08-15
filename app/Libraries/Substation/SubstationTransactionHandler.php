@@ -3,6 +3,7 @@
 namespace App\Libraries\Substation;
 
 use App\Libraries\Substation\Substation;
+use App\Models\UserMeta;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,6 @@ use Models\DistributionTx;
 use Tokenly\CryptoQuantity\CryptoQuantity;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 use User;
-use UserMeta;
 
 class SubstationTransactionHandler
 {
