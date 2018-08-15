@@ -21,4 +21,9 @@ class UserRepository extends APIUserRepository implements APIUserRepositoryContr
         return null;
     }
 
+    public function findByUsername(string $username)
+    {
+        return $this->prototype_model->where('username', $username)->first();
+    }
+
 }

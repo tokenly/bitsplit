@@ -48,3 +48,12 @@ php artisan list
 ##API
 
 For API documentation, check out http://apidocs.tokenly.com/bitsplit/
+
+
+### Migrating the wallets database
+
+You must run migrations for both the regular database and the separate wallets database
+```
+php artisan migrate
+php artisan migrate --database=mysql_wallets --path=database/walletdb_migrations
+```

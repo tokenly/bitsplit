@@ -6,6 +6,7 @@ use App\Repositories\EscrowAddressRepository;
 use App\Repositories\EscrowWalletRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\RecordLock\Facade\RecordLock;
 use Tokenly\TokenpassClient\TokenpassAPI;
 use User;
@@ -16,11 +17,32 @@ use User;
 class EscrowWalletManager
 {
 
-    function __construct(EscrowWalletRepository $wallet_repository, EscrowAddressRepository $address_repository, TokenpassAPI $tokenpass_client)
+    public function __construct(EscrowWalletRepository $wallet_repository, EscrowAddressRepository $address_repository, TokenpassAPI $tokenpass_client)
     {
         $this->wallet_repository = $wallet_repository;
         $this->address_repository = $address_repository;
         $this->tokenpass_client = $tokenpass_client;
+    }
+
+    public function ensureEscrowAddressForUser(User $user, string $recovery_address, string $chain)
+    {
+        // does the user have an escrow address yet?
+        $address = $this->getEscrowAddressForUser($user, $chain);
+        if ($address) {
+            return $address;
+        }
+
+        return $this->generateEscrowAddressForUser($user, $recovery_address, $chain);
+    }
+
+    public function getEscrowAddressForUser(User $user, string $chain)
+    {
+        $addresses = $this->address_repository->findAllByUser($user, $chain);
+        if ($addresses and count($addresses) > 0) {
+            return $addresses[0];
+        }
+
+        return null;
     }
 
     public function generateEscrowAddressForUser(User $user, string $recovery_address, string $chain)
@@ -28,8 +50,8 @@ class EscrowWalletManager
         // ensure a wallet
         $wallet = $this->ensureSubstationWalletForUser($user, $chain);
 
-        // allocate the addresses
-        DB::transaction(function () use ($wallet, $user, $recovery_address) {
+        // allocate the address
+        $address = DB::transaction(function () use ($wallet, $user, $recovery_address) {
             // use privileged substation client
             $substation_client = app('substationclient.escrow');
 
@@ -45,7 +67,17 @@ class EscrowWalletManager
 
             // make sure the address is whitelisted with tokenpass
             $this->ensureWhitelistedSourceAddress($address_attributes['address']);
+
+            return $address;
         });
+
+        EventLog::debug('escrowAddress.generated', [
+            'uuid' => $address['uuid'],
+            'address' => $address['address'],
+            'recovery_address' => $address['recovery_address'],
+        ]);
+
+        return $address;
 
         // send a websocket notification
         // event(new EscrowWalletsUpdated($user));
@@ -112,6 +144,8 @@ class EscrowWalletManager
         Log::debug("Registered address $source_address.");
     }
 
+    // ------------------------------------------------------------------------
+
     protected function getSubstationClient()
     {
         return app('substationclient.escrow');
@@ -126,6 +160,5 @@ class EscrowWalletManager
         }
         return $all_registered_source_addresses_map;
     }
-
 
 }

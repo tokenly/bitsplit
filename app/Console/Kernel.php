@@ -41,6 +41,9 @@ class Kernel extends ConsoleKernel
         Commands\GenerateDailyFolderUUIDs::class,
         Commands\CacheTotalUniqueFolders::class,
 
+        // Escrow address commands
+        Commands\EscrowAddress\GenerateEscrowAddress::class,
+
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
     ];
@@ -54,7 +57,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('bitsplit:distribute')->everyMinute();
-        
+
         // the stats and save_stats schedule are moved to App\Console\Commands\FoldingCoinSaveStatsScheduler
     }
 }
