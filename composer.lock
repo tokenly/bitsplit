@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b4646ce3bd2d250d2a382f526d438b1",
+    "content-hash": "6a26330a7551ed9e44ede16d4fe8e1e1",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4431,16 +4431,16 @@
         },
         {
             "name": "tokenly/substation-client",
-            "version": "v0.4.1",
+            "version": "v0.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-client.git",
-                "reference": "c2966acd877a9d7f75f25ccf9fb4c64fae97564c"
+                "reference": "a100448a34c14653bc2f317741b1b94e4a2c2e4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/c2966acd877a9d7f75f25ccf9fb4c64fae97564c",
-                "reference": "c2966acd877a9d7f75f25ccf9fb4c64fae97564c",
+                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/a100448a34c14653bc2f317741b1b94e4a2c2e4b",
+                "reference": "a100448a34c14653bc2f317741b1b94e4a2c2e4b",
                 "shasum": ""
             },
             "require": {
@@ -4485,26 +4485,26 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-06-15T11:38:39+00:00"
+            "time": "2018-07-03T22:30:42+00:00"
         },
         {
             "name": "tokenly/substation-distribution-client",
-            "version": "v0.1.0",
+            "version": "v0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-distribution-client.git",
-                "reference": "7ef883d0dfcf59921a5a773fbe2911eeab8c9638"
+                "reference": "eed6e650d216270a3a6ca5821bb5c4c3c253450f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/7ef883d0dfcf59921a5a773fbe2911eeab8c9638",
-                "reference": "7ef883d0dfcf59921a5a773fbe2911eeab8c9638",
+                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/eed6e650d216270a3a6ca5821bb5c4c3c253450f",
+                "reference": "eed6e650d216270a3a6ca5821bb5c4c3c253450f",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0",
                 "tokenly/crypto-quantity": "^2",
-                "tokenly/substation-client": "^0.4.1"
+                "tokenly/substation-client": "^0.5.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "~6.0",
@@ -4540,7 +4540,7 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-06-19T11:46:53+00:00"
+            "time": "2018-08-14T20:46:36+00:00"
         },
         {
             "name": "tokenly/token-generator",

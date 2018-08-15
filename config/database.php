@@ -28,6 +28,9 @@ return [
 
     'default' => env('DATABASE_DRIVER', 'mysql'),
 
+    'main' => env('DATABASE_DRIVER', 'mysql'),
+    'wallets' => env('WALLETS_DATABASE_DRIVER', 'mysql_wallets'),
+
     /*
     |--------------------------------------------------------------------------
     | Database Connections
@@ -46,13 +49,13 @@ return [
 
     'connections' => [
 
-        'sqlite' => [
-            'driver' => 'sqlite',
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
-            'prefix' => '',
+        'testing' => [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
         ],
 
-        'testing' => [
+        'testing_wallets' => [
             'driver'   => 'sqlite',
             'database' => ':memory:',
             'prefix'   => '',
@@ -72,17 +75,20 @@ return [
             'engine' => null,
         ],
 
-        'pgsql' => [
-            'driver' => 'pgsql',
+        'mysql_wallets' => [
+            'driver' => 'mysql',
             'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '5432'),
+            'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
             'prefix' => '',
-            'schema' => 'public',
+            'strict' => false,
+            'engine' => null,
         ],
+
         'fldc'  => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', 'localhost'),

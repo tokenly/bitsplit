@@ -18,7 +18,7 @@ use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\SubstationClient\SubstationClient;
 use \Spatie\Permission\Models\Role;
 
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract
+class User extends APIUser implements AuthenticatableContract, CanResetPasswordContract
 {
 	use Authenticatable, CanResetPassword;
     use Permissioned;

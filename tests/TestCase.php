@@ -17,6 +17,10 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         parent::setUp();
 
+        // bind the test case so we can typehint TestCase 
+        //   and have access to this instance
+        app()->instance(TestCase::class, $this);
+
         if ($this->use_database) { $this->setUpDb(); }
     }
 
@@ -36,7 +40,17 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     public function setUpDb()
     {
-        $this->app['Illuminate\Contracts\Console\Kernel']->call('migrate');
+         // migrate the wallets DB
+        $result = $this->app['Illuminate\Contracts\Console\Kernel']->call('migrate', [
+            '--path' => 'database/walletdb_migrations',
+            '--database' => $this->app['config']['database.wallets'],
+        ]);
+
+        // migrate the regular DB
+        $result = $this->app['Illuminate\Contracts\Console\Kernel']->call('migrate', [
+            '--database' => $this->app['config']['database.main'],
+        ]);
+
     }
 
 }

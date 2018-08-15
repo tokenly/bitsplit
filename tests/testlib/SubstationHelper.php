@@ -2,6 +2,7 @@
 
 use Ramsey\Uuid\Uuid;
 use Tokenly\CryptoQuantity\CryptoQuantity;
+use Tokenly\SubstationClient\Mock\MockSubstationClient;
 
 /**
  *  SubstationHelper
@@ -18,6 +19,9 @@ class SubstationHelper
         self::mock_getTxosById($mock);
         self::mock_createServerManagedWallet($mock);
         self::mock_sendImmediatelyToDestinations($mock);
+
+        // also mock the escrow client
+        self::ensureMockedEscrowSubstationClient();
     }
 
     public static function mock_createServerManagedWallet($mock = null)
@@ -104,6 +108,16 @@ class SubstationHelper
         if ($mock === null) {
             $mock = Mockery::mock('Tokenly\SubstationClient\SubstationClient');
             app()->instance('Tokenly\SubstationClient\SubstationClient', $mock);
+        }
+
+        return $mock;
+    }
+
+    public static function ensureMockedEscrowSubstationClient($mock = null)
+    {
+        if ($mock === null) {
+            $mock = new MockSubstationClient('http://localhost:9999');
+            app()->instance('substationclient.escrow', $mock);
         }
 
         return $mock;

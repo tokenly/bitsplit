@@ -54,12 +54,8 @@ class UserHelper
             }
         }
 
-
-
         // create user
-        User::unguard();
-        $new_user = User::create($create_vars);
-        User::reguard();
+        $new_user = app(UserRepository::class)->create($create_vars);
 
         // Create the associated API Key
         APIKey::unguard();
