@@ -43,6 +43,7 @@ class Kernel extends ConsoleKernel
 
         // Escrow address commands
         Commands\EscrowAddress\GenerateEscrowAddress::class,
+        Commands\EscrowAddress\SyncEscrowAddress::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,

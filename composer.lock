@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a26330a7551ed9e44ede16d4fe8e1e1",
+    "content-hash": "544ff2b4e3d49e583de4460bb87b3a6c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -3999,16 +3999,16 @@
         },
         {
             "name": "tokenly/crypto-quantity",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/crypto-quantity.git",
-                "reference": "fb7f57645d42e576886f41acbdce09e3d46012ad"
+                "reference": "52c1ace1736232aa7afc8c4b1450a8b49093ce72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/crypto-quantity/zipball/fb7f57645d42e576886f41acbdce09e3d46012ad",
-                "reference": "fb7f57645d42e576886f41acbdce09e3d46012ad",
+                "url": "https://api.github.com/repos/tokenly/crypto-quantity/zipball/52c1ace1736232aa7afc8c4b1450a8b49093ce72",
+                "reference": "52c1ace1736232aa7afc8c4b1450a8b49093ce72",
                 "shasum": ""
             },
             "require": {
@@ -4038,7 +4038,7 @@
                 }
             ],
             "description": "A quantity class for cryptocurrency values",
-            "time": "2018-06-19T12:42:44+00:00"
+            "time": "2018-07-30T14:26:52+00:00"
         },
         {
             "name": "tokenly/fluentd-logger",
