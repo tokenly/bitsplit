@@ -22,6 +22,7 @@
         var _token = "{{ csrf_token()  }}"
         var userMetaSubmitRoute = {!! json_encode(route('account.complete')) !!};
         var fields = {!! json_encode($fields) !!};
+        var home_route = "{{ route('home') }}";
 		Vue.component('user-meta-form', {
 			template: `
 				@include('user_meta.partials.form')
@@ -51,21 +52,24 @@
 				],
                 inputWarning: null,
 				fields: fields,
+				errors: {}
 			  }
 			},
 	    	methods: {
 			    submit: function () {
-                    let fields = [];
-			        this.$http.post('/account/complete', {
+                    this.errors = {};
+                    this.$http.post('/account/complete', {
                         _token: _token,
                         fields: this.fields,
                     }).then(response => {
-                        window.location.reload();
+                        window.location.replace(home_route);
                     }, response => {
-                        let errors = response.body.errors;
-                        console.log(errors)
-                        if(errors.name) {
-                            this.errors.name = errors.name[0];
+                        let errors = response.body.data;
+                        for (let key in errors) {
+                            if (!Object.prototype.hasOwnProperty.call(errors, key)) {
+                                continue;
+                            }
+							this.$set(this.errors, key, errors[key]);
                         }
                     });
 				},
@@ -94,6 +98,9 @@
 			            if(this.fields[i].name === field.name) {
 			                if(!this.fields[i].value) {
                                 this.$set(this.fields[i], 'value', [value]);
+							} else if(this.fields[i].value.indexOf(value) > -1) {
+                                let index = this.fields[i].value.indexOf(value);
+								this.fields[i].value.splice(index, 1);
 							} else {
                                 this.fields[i].value.push(value);
 							}
