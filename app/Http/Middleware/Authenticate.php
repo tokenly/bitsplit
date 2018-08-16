@@ -25,20 +25,28 @@ class Authenticate
             }
         }
 
-        if(Auth::guard($guard)->user()) {
-            $user = Auth::guard($guard)->user();
+        $user = Auth::guard($guard)->user();
+        if($user) {
 
             $user_account_data = $user->getCurrentUserAccountData();
-
             if(!$user_account_data)
             {
-                return redirect()->route('account.complete');
+                // redirect to complete form if the user doesn't have data
+                $route_name = $request->route()->getName();
+                $is_on_complete_form = in_array($route_name, ['account.get_complete', 'account.complete',]);
+
+                if (!$is_on_complete_form) {
+                    return redirect()->route('account.complete');
+                }
             }
 
-            $user_tac_accept = $user->checkTACAccept();
-            if(!$user_tac_accept) {
-                Session::put('return_route_after_tac', url()->full());
-                return redirect()->route('terms-and-conditions');
+            if ($user_account_data) {
+                // force users with account data to accept terms and conditions
+                $user_tac_accept = $user->checkTACAccept();
+                if(!$user_tac_accept) {
+                    Session::put('return_route_after_tac', url()->full());
+                    return redirect()->route('terms-and-conditions');
+                }
             }
         }
 
