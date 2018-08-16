@@ -76,13 +76,20 @@ class AccountController extends Controller {
     public function getComplete() {
         $user = Auth::user();
         if (!$user) { return redirect('/account/welcome'); }
+        //Check that user didn't already submit their data
+        $user_account_data = $user->getCurrentUserAccountData();
+        if($user_account_data)  {
+            return redirect()->route('home');
+        }
         \Session::put('embed_body', false);
         $fields = SignupField::with('options')->with('condition')->orderBy('position', 'ASC')->get();
         return view('user_meta.get_user_meta_data', ['user' => $user, 'fields' => $fields]);
     }
 
     public function complete(Request $request) {
-        if($request->user()->getCurrentUserAccountData()) {
+        //Check that user didn't already submit their data
+        $user_account_data = $request->user()->getCurrentUserAccountData();
+        if($user_account_data)  {
             return redirect()->route('home');
         }
 
@@ -95,7 +102,7 @@ class AccountController extends Controller {
                 if(!$field_object->condition()->exists()) {
                     return response()->json([
                         'status' => 'fail',
-                        'message' => 'Field ' . $field['name'] . ' is required',
+                        'data' => [$field['name'] => $field['name'] . ' is required'],
                     ], 400);
                 }
                 $condition_met = true;
@@ -107,7 +114,7 @@ class AccountController extends Controller {
                 if($condition_met) {
                     return response()->json([
                         'status' => 'fail',
-                        'message' => 'Field ' . $field['name'] . ' is required',
+                        'data' => [$field['name'] => $field['name'] . ' is required'],
                     ], 400);
                 }
             }

@@ -1,5 +1,5 @@
 <form>
-	<div v-for="field in fields" v-if="checkCondition(field)" class="form-group">
+	<div v-for="(field, key) in fields" v-if="checkCondition(field)" class="form-group" :class="{ 'text-danger': errors[field.name] }">
 		<label>
 			<span>@{{ field.name }}</span>
 			<small v-if="!field.required" class="optional">(Optional)</small>
@@ -21,6 +21,7 @@
 			</span>
 			<input type="text" name="token_exchanges_listed" v-model="field.value" v-show="false"/>
 		</div>
+		<span v-if="errors[field.name]" class="text-danger">@{{ errors[field.name] }}</span>
 	</div>
 	<hr>
 

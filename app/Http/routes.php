@@ -41,9 +41,9 @@ $router->get('/account/welcome', 'AccountController@welcome');
 $router->get('/account/login', array('as' => 'account.auth', 'uses' => 'AccountController@login'));
 $router->get('/account/logout', array('as' => 'account.auth.logout', 'uses' => 'AccountController@logout'));
 
-Route::get('/account/complete', array('as' => 'account.get_complete', 'uses' => 'AccountController@getcomplete'));
+Route::get('/account/complete', array('as' => 'account.get_complete', 'middleware' => ['auth'], 'uses' => 'AccountController@getcomplete'));
 
-Route::post('/account/complete', array('as' => 'account.complete', 'uses' => 'AccountController@complete'));
+Route::post('/account/complete', array('as' => 'account.complete', 'middleware' => ['auth'], 'uses' => 'AccountController@complete'));
 
 
 //Admin
