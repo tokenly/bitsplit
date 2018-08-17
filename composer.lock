@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b4646ce3bd2d250d2a382f526d438b1",
+    "content-hash": "544ff2b4e3d49e583de4460bb87b3a6c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -3999,16 +3999,16 @@
         },
         {
             "name": "tokenly/crypto-quantity",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/crypto-quantity.git",
-                "reference": "fb7f57645d42e576886f41acbdce09e3d46012ad"
+                "reference": "52c1ace1736232aa7afc8c4b1450a8b49093ce72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/crypto-quantity/zipball/fb7f57645d42e576886f41acbdce09e3d46012ad",
-                "reference": "fb7f57645d42e576886f41acbdce09e3d46012ad",
+                "url": "https://api.github.com/repos/tokenly/crypto-quantity/zipball/52c1ace1736232aa7afc8c4b1450a8b49093ce72",
+                "reference": "52c1ace1736232aa7afc8c4b1450a8b49093ce72",
                 "shasum": ""
             },
             "require": {
@@ -4038,7 +4038,7 @@
                 }
             ],
             "description": "A quantity class for cryptocurrency values",
-            "time": "2018-06-19T12:42:44+00:00"
+            "time": "2018-07-30T14:26:52+00:00"
         },
         {
             "name": "tokenly/fluentd-logger",
@@ -4431,16 +4431,16 @@
         },
         {
             "name": "tokenly/substation-client",
-            "version": "v0.4.1",
+            "version": "v0.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-client.git",
-                "reference": "c2966acd877a9d7f75f25ccf9fb4c64fae97564c"
+                "reference": "a100448a34c14653bc2f317741b1b94e4a2c2e4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/c2966acd877a9d7f75f25ccf9fb4c64fae97564c",
-                "reference": "c2966acd877a9d7f75f25ccf9fb4c64fae97564c",
+                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/a100448a34c14653bc2f317741b1b94e4a2c2e4b",
+                "reference": "a100448a34c14653bc2f317741b1b94e4a2c2e4b",
                 "shasum": ""
             },
             "require": {
@@ -4485,26 +4485,26 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-06-15T11:38:39+00:00"
+            "time": "2018-07-03T22:30:42+00:00"
         },
         {
             "name": "tokenly/substation-distribution-client",
-            "version": "v0.1.0",
+            "version": "v0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-distribution-client.git",
-                "reference": "7ef883d0dfcf59921a5a773fbe2911eeab8c9638"
+                "reference": "eed6e650d216270a3a6ca5821bb5c4c3c253450f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/7ef883d0dfcf59921a5a773fbe2911eeab8c9638",
-                "reference": "7ef883d0dfcf59921a5a773fbe2911eeab8c9638",
+                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/eed6e650d216270a3a6ca5821bb5c4c3c253450f",
+                "reference": "eed6e650d216270a3a6ca5821bb5c4c3c253450f",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0",
                 "tokenly/crypto-quantity": "^2",
-                "tokenly/substation-client": "^0.4.1"
+                "tokenly/substation-client": "^0.5.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "~6.0",
@@ -4540,7 +4540,7 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-06-19T11:46:53+00:00"
+            "time": "2018-08-14T20:46:36+00:00"
         },
         {
             "name": "tokenly/token-generator",

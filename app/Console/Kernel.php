@@ -27,7 +27,6 @@ class Kernel extends ConsoleKernel
         Commands\UpdateDistroTx::class,
         Commands\ListUsers::class,
         Commands\GetUser::class,
-        Commands\SetAdmin::class,
         Commands\ShowBalances::class,
         Commands\ResendWebhook::class,
         Commands\CloneDistro::class,
@@ -40,6 +39,13 @@ class Kernel extends ConsoleKernel
         Commands\AddNewCreditsFieldOnOldFLDC::class,
         Commands\GenerateDailyFolderUUIDs::class,
         Commands\CacheTotalUniqueFolders::class,
+
+        // Escrow address commands
+        Commands\EscrowAddress\GenerateEscrowAddress::class,
+        Commands\EscrowAddress\SyncEscrowAddress::class,
+
+        // Role commands
+        Commands\Roles\AssignUserRole::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
@@ -54,7 +60,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('bitsplit:distribute')->everyMinute();
-        
+
         // the stats and save_stats schedule are moved to App\Console\Commands\FoldingCoinSaveStatsScheduler
     }
 }

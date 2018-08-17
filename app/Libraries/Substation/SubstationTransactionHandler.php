@@ -3,7 +3,10 @@
 namespace App\Libraries\Substation;
 
 use App\Libraries\Substation\Substation;
+use App\Models\EscrowAddressLedgerEntry;
 use App\Models\UserMeta;
+use App\Repositories\EscrowAddressLedgerEntryRepository;
+use App\Repositories\EscrowAddressRepository;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +19,14 @@ use User;
 
 class SubstationTransactionHandler
 {
+
+    const CONFIRMATIONS_REQUIRED = 2;
+
+    public function __construct(EscrowAddressRepository $escrow_address_repository, EscrowAddressLedgerEntryRepository $escrow_address_ledger_entry_repository)
+    {
+        $this->escrow_address_repository = $escrow_address_repository;
+        $this->ledger = $escrow_address_ledger_entry_repository;
+    }
 
     public function handleSubstationTransactionPayload($payload)
     {
@@ -30,6 +41,9 @@ class SubstationTransactionHandler
     protected function processCredits($credits, $transaction)
     {
         foreach ($credits as $credit) {
+            // check escrow address credit
+            $this->processEscrowAddressEntry('credit', $credit, $transaction);
+
             // check fuel address credit
             $this->processFuelAddressCredit($credit, $transaction);
 
@@ -41,6 +55,9 @@ class SubstationTransactionHandler
     protected function processDebits($debits, $transaction)
     {
         foreach ($debits as $debit) {
+            // check escrow address debit
+            $this->processEscrowAddressEntry('debit', $debit, $transaction);
+
             $this->processDistributionAddressDebit($debit, $transaction);
 
             $this->processFuelAddressDebit($debit, $transaction);
@@ -525,7 +542,7 @@ class SubstationTransactionHandler
     protected function updateFuelBalance(User $user)
     {
         $user_id = $user['id'];
-        Log::debug("updateFuelBalance \$user_id=".json_encode($user_id, 192));
+        // Log::debug("updateFuelBalance \$user_id=".json_encode($user_id, 192));
 
         try {
             $substation = Substation::instance();
@@ -541,7 +558,7 @@ class SubstationTransactionHandler
             // ]
             $fuel_address_uuid = UserMeta::getMeta($user_id, 'fuel_address_uuid');
             $substation_balances = $substation->getCombinedAddressBalanceById($wallet_uuid, $fuel_address_uuid);
-            Log::debug("updateFuelBalance \$substation_balances=".json_encode($substation_balances, 192));
+            Log::debug("updateFuelBalance \$substation_balances=" . json_encode($substation_balances, 192));
 
             $confirmed_balance = 0;
             $unconfirmed_balance = 0;
@@ -594,6 +611,63 @@ class SubstationTransactionHandler
             }
         }
         return false;
+    }
+
+    // ------------------------------------------------------------------------
+    // escrow address
+
+    protected function processEscrowAddressEntry($entry_type, $entry, $transaction)
+    {
+        $destination = $transaction['credits'][0]['address'];
+        $address = $entry['address'];
+        $asset = $entry['asset'];
+        $txid = $transaction['txid'];
+        $chain = $transaction['chain'];
+        $confirmations = $transaction['confirmations'];
+        $amount = Substation::buildCryptoQuantity($transaction['chain'], $entry['quantity']);
+        $time = timestamp();
+
+        // Log::debug("processEscrowAddressEntry ".json_encode($entry, 192));
+        // find a merchant wallet matching the address
+        $escrow_address = $this->escrow_address_repository->findByAddress($address);
+        // Log::debug("processEscrowAddressEntry {$entry_type} \$address=$address \$escrow_address=".json_encode($escrow_address, 192));
+        if ($escrow_address) {
+            $prefix = $entry_type == 'credit' ? 'recv' : 'send';
+            $tx_identifier = $prefix . ':' . $asset . ':' . $txid;
+            $confirmed = ($confirmations >= self::CONFIRMATIONS_REQUIRED);
+
+            // find or update the ledger entry by txid
+            try {
+                if ($entry_type == 'credit') {
+                    $this->ledger->credit($escrow_address, $amount, $asset, EscrowAddressLedgerEntry::TYPE_DEPOSIT, $txid, $tx_identifier, $confirmed);
+                } else if ($entry_type == 'debit') {
+                    $this->ledger->debit($escrow_address, $amount, $asset, EscrowAddressLedgerEntry::TYPE_WITHDRAWAL, $txid, $tx_identifier, $confirmed);
+                }
+
+                EventLog::debug('tx.escrowAddress', [
+                    'walletId' => $escrow_address['id'],
+                    'transactionType' => $entry_type,
+                    'txid' => $txid,
+                    'confirmations' => $confirmations,
+                    'address' => $escrow_address['address'],
+                    'chain' => $chain,
+                    'asset' => $asset,
+                    'amount' => $amount->getSatoshisString(),
+                ]);
+            } catch (Exception $e) {
+                EventLog::logError('tx.escrowAddress.failed', $e, [
+                    'walletId' => $escrow_address['id'],
+                    'transactionType' => $entry_type,
+                    'txid' => $txid,
+                    'confirmations' => $confirmations,
+                    'address' => $escrow_address['address'],
+                    'chain' => $chain,
+                    'asset' => $asset,
+                    'amount' => $amount->getSatoshisString(),
+                ]);
+            }
+        }
+
     }
 
 }

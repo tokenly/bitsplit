@@ -26,6 +26,7 @@
         <env name="APP_KEY" value="base64:LG787oR5OlescEBJp22HBJppmKiUJmrm13SfdZ1UT30="/>
 
         <env name="DATABASE_DRIVER" value="testing"/>
+        <env name="WALLETS_DATABASE_DRIVER"  value="testing_wallets"/>
 
         <env name="FEE_SATOSHI_PER_BYTE" value="40"/>
         <env name="MAX_TX_OUTPUTS" value="150"/>

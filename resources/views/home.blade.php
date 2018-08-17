@@ -32,7 +32,18 @@
 				<div>
 					@include('inc.my-account-details')
 				</div>	
+
+				@if(Auth::user()->isAdmin)
+				<div>&nbsp;</div>
+				<h2>FLDC Escrow</h2>
+				<div class="welcome-section-divider"></div>
+				<div>
+					@include('inc.fldc-escrow-details')
+				</div>	
+				@endif
 			</div>
+
+
 			@if(Auth::user()->isModerator)
 				<div class="dashboard__secondary__content">
 					<h2>Admin</h2>
