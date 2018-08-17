@@ -27,7 +27,6 @@ class Kernel extends ConsoleKernel
         Commands\UpdateDistroTx::class,
         Commands\ListUsers::class,
         Commands\GetUser::class,
-        Commands\SetAdmin::class,
         Commands\ShowBalances::class,
         Commands\ResendWebhook::class,
         Commands\CloneDistro::class,
@@ -44,6 +43,9 @@ class Kernel extends ConsoleKernel
         // Escrow address commands
         Commands\EscrowAddress\GenerateEscrowAddress::class,
         Commands\EscrowAddress\SyncEscrowAddress::class,
+
+        // Role commands
+        Commands\Roles\AssignUserRole::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,

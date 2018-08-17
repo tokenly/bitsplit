@@ -91,8 +91,8 @@ class EscrowWalletManager
 
             if (is_null($wallet)) {
                 // create a new wallet
-                $name = "Merchant Wallet for " . $user['username'];
-                $notification_queue_name = env('SIGNAL_NOTIFICATION_QUEUE', 'tokenmarkets');
+                $name = "Escrow Wallet for " . $user['username'];
+                $notification_queue_name = env('RABBITMQ_SIGNAL_QUEUE', 'tokenmarkets');
 
                 $substation_client = $this->getSubstationClient();
                 $wallet_info = $substation_client->createServerManagedWallet($chain, $name, $_unlock_phrase = null, $notification_queue_name);

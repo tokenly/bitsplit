@@ -630,6 +630,7 @@ class SubstationTransactionHandler
         // Log::debug("processEscrowAddressEntry ".json_encode($entry, 192));
         // find a merchant wallet matching the address
         $escrow_address = $this->escrow_address_repository->findByAddress($address);
+        // Log::debug("processEscrowAddressEntry {$entry_type} \$address=$address \$escrow_address=".json_encode($escrow_address, 192));
         if ($escrow_address) {
             $prefix = $entry_type == 'credit' ? 'recv' : 'send';
             $tx_identifier = $prefix . ':' . $asset . ':' . $txid;

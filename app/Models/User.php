@@ -1,19 +1,23 @@
 <?php
+use App\Libraries\Substation\Substation;
 use App\Libraries\Substation\UserWalletManager;
+use App\Models\UserAccountData;
+use App\Models\UserMeta;
+use App\Repositories\EscrowAddressLedgerEntryRepository;
+use App\Repositories\EscrowAddressRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Models\Distribution, Models\DistributionTx;
-use App\Models\UserMeta;
-use App\Models\UserAccountData;
 use Tokenly\CurrencyLib\CurrencyUtil;
 use Tokenly\LaravelApiProvider\Contracts\APIPermissionedUserContract;
 use Tokenly\LaravelApiProvider\Model\APIUser;
 use Tokenly\LaravelApiProvider\Model\Traits\Permissioned;
-use Illuminate\Support\Facades\Log;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\SubstationClient\SubstationClient;
 use \Spatie\Permission\Models\Role;
@@ -34,20 +38,6 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
 			self::$cur_user = Auth::user();
 		}
 		return self::$cur_user;
-	}
-
-	public static function isAdmin($userId = 0)
-	{
-		if($userId == 0){
-			$user = Auth::user();
-		}
-		else{
-			$user = User::find($userId);
-		}
-		if(!$user OR $user->admin == 0){
-			return false;
-		}
-		return true;
 	}
 	
     public function checkTACAccept()
@@ -256,17 +246,19 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
     }
 
     public function makeModerator() {
-        if(!Role::where('name', 'moderator')->exists()) {
-            Role::create(['name' => 'moderator']);
-        }
-        $this->assignRole('moderator');
+        $this->createAndAssignRole('moderator');
     }
 
     public function makeAdmin() {
-        if(!Role::where('name', 'admin')->exists()) {
-            Role::create(['name' => 'admin']);
+        $this->createAndAssignRole('admin');
+    }
+
+    public function createAndAssignRole($role_name)
+    {
+        if(!Role::where('name', $role_name)->exists()) {
+            Role::create(['name' => $role_name]);
         }
-        $this->assignRole('admin');
+        $this->assignRole($role_name);
     }
 
 
@@ -317,6 +309,22 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
         $output['fuel_balanceFloat'] = CurrencyUtil::satoshisToValue($output['fuel_balance']);
         $output['fuel_pendingFloat'] = CurrencyUtil::satoshisToValue($output['fuel_pending']);;
         $output['fuel_spentFloat'] = CurrencyUtil::satoshisToValue($output['fuel_spent']);;
+
+        // escrow info
+        $escrow_address = $user->getEscrowAddress();
+        if ($escrow_address) {
+            // address
+            $ledger = app(EscrowAddressLedgerEntryRepository::class);
+            $output['escrow_address'] = $escrow_address['address'];
+            $output['escrow_balances'] = $ledger->addressBalancesByAsset($escrow_address, $_confirmed_only = true);
+            $output['escrow_pending_balances'] = $ledger->addressBalancesByAsset($escrow_address, $_confirmed_only = false);
+        } else {
+            // no address
+            $output['escrow_address'] = '[None]';
+            $output['escrow_balances'] = [];
+            $output['escrow_pending_balances'] = [];
+        }
+
 
         if(!$no_history){
             $distros = Distribution::where('user_id', $user->id)->orderBy('id', 'desc')->get();
@@ -408,6 +416,11 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
         return 'No status';
     }
 
+    public function getIsAdminAttribute($admin)
+    {
+        return $this->getAdminAttribute($admin);
+    }
+
     public function getAdminAttribute($admin)
     {
         return $admin || $this->hasRole('admin');
@@ -416,5 +429,22 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
     public function getIsModeratorAttribute()
     {
         return $this->admin || $this->hasRole('admin') || $this->hasRole('moderator');
+    }
+
+    public function getEscrowAddress()
+    {
+        if (!$this->hasRole('admin')) {
+            return null;
+        }
+
+        $user_repository = app(UserRepository::class);
+        $escrow_address_repository = app(EscrowAddressRepository::class);
+
+        $owner = $user_repository->findEscrowWalletOwner();
+        $escrow_addresses = $escrow_address_repository->findAllByUser($owner, Substation::chain());
+        if (count($escrow_addresses)) {
+            return $escrow_addresses[0];
+        }
+        return null;
     }
 }
