@@ -1,7 +1,10 @@
 <?php namespace App\Http\Controllers;
+use App\Http\Requests\Request;
+use App\Http\Requests\SubmitDistribution;
 use App\Models\DailyFolder;
 use App\Libraries\Substation\Substation;
 use App\Libraries\Substation\UserAddressManager;
+use App\Services\CreateDistribution;
 use Distribute\Initialize as DistroInit;
 use Input, Session, Exception, Log;
 use Models\Distribution as Distro, Models\DistributionTx as DistroTx, Models\Fuel;
@@ -38,6 +41,19 @@ class DistributeController extends Controller {
 
     	return view('distribute.new', array('user' => $user));
     }
+
+    public function submitDistro(SubmitDistribution $request) {
+        try {
+            $create_distribution_service = new CreateDistribution($request);
+            $deposit_address = $create_distribution_service->create();
+            return Redirect::route('distribute.details', $deposit_address);
+        } catch (\Exception $e) {
+            Session::flash('message', $e->getMessage());
+            Session::flash('message-class', 'alert-danger');
+            return Redirect::route('home');
+        }
+    }
+
 	public function submitDistribution()
 	{
         $input = Input::all();
