@@ -11,20 +11,28 @@
 |
 */
 
-//main pages
-Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
-Route::get('distributions/new', array('as' => 'distribute.new', 'middleware' => ['auth'], 'uses' => 'DistributeController@newDistribution'));
-		
 //distributions
-Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'DistributeController@submitDistribution'));
-Route::get('distribute/_status-info', array('as' => 'distribute.status-info', 'uses' => 'DistributeController@getStatusInfo'));
-Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
-Route::get('distribute/{address}/_info', array('as' => 'distribute.details.info', 'uses' => 'DistributeController@getDetailsInfo'));
-Route::post('distribute/{address}', array('as' => 'distribute.details.update', 'uses' => 'DistributeController@updateDetails'));
-Route::get('distribute/delete/{id}', array('as' => 'distribute.delete', 'uses' => 'DistributeController@deleteDistribution'));
-Route::get('distribute/duplicate/{address}', array('as' => 'distribute.duplicate', 'uses' => 'DistributeController@duplicateDistribution'));
+Route::middleware(['requireApproval'])->group(function () {
+    Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
+    Route::get('distributions/new', array('as' => 'distribute.new', 'middleware' => ['auth'], 'uses' => 'DistributeController@newDistribution'));
+    Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'DistributeController@submitDistribution'));
+    Route::get('distribute/_status-info', array('as' => 'distribute.status-info', 'uses' => 'DistributeController@getStatusInfo'));
+    Route::get('distribute/{address}/_info', array('as' => 'distribute.details.info', 'uses' => 'DistributeController@getDetailsInfo'));
+    Route::post('distribute/{address}', array('as' => 'distribute.details.update', 'uses' => 'DistributeController@updateDetails'));
+    Route::get('distribute/delete/{id}', array('as' => 'distribute.delete', 'uses' => 'DistributeController@deleteDistribution'));
+    Route::get('distribute/duplicate/{address}', array('as' => 'distribute.duplicate', 'uses' => 'DistributeController@duplicateDistribution'));
+});
+
+// public
 Route::get('distributions', array('as' => 'distribute.history', 'uses' => 'DistributeController@getDistributionsHistory'));
+Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
 Route::get('official-distributions', array('as' => 'distribute.official_fldc_history', 'uses' => 'DistributeController@getOfficialFldcDistributionsHistory'));
+
+// recipients
+Route::middleware(['tls', 'auth'])->group(function () {
+    Route::get('recipient/dashboard', ['as' => 'recipient.dashboard', 'uses' => 'RecipientController@index']);
+});
+
 
 //Terms of use
 Route::get('/terms-and-conditions', array('as' => 'terms-and-conditions', 'uses' => 'AccountController@termsAndConditions'));

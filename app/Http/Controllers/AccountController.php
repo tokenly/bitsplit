@@ -32,7 +32,7 @@ class AccountController extends Controller {
         $user = Auth::user();
         if (!$user) { return Redirect::route('account.auth'); }
 
-        return Redirect::route('home');
+        return Redirect::route('recipient.dashboard');
     }
 
     public function termsAndConditions()

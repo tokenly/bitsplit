@@ -27,7 +27,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            \App\Http\Middleware\EncryptCookies::class,
+            Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
@@ -47,14 +47,15 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth'            => \App\Http\Middleware\Authenticate::class,
-        'auth.basic'      => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest'           => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle'        => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'cors'            => \App\Http\Middleware\CORS::class,
-        'auth.api'        => \App\Http\Middleware\AuthenticateAPIKey::class,
-        'auth.api.signed' => \App\Http\Middleware\AuthenticateAPIKeySigned::class,
-        'tls'             => \App\Http\Middleware\RequireTLS::class,
+        'auth' => Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'requireApproval' => Middleware\RequireAccountApproval::class,
+        'guest' => Middleware\RedirectIfAuthenticated::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'cors' => Middleware\CORS::class,
+        'auth.api' => Middleware\AuthenticateAPIKey::class,
+        'auth.api.signed' => Middleware\AuthenticateAPIKeySigned::class,
+        'tls' => Middleware\RequireTLS::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ];
+    ];
 }

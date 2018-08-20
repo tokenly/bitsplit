@@ -32,6 +32,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> {{ Auth::user()->username }} <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
+						<li><a href="{{ route('recipient.dashboard') }}">FLDC Dashboard</a></li>
 						<li><a href="{{ URL::to('/home') }}">BitSplit Dashboard</a></li>
 						<li><a href="{{ env('TOKENPASS_PROVIDER_HOST') }}/dashboard" target="_blank">Account Settings</a></li>
 	                    <li><a href="{{ route('account.api-keys') }}">API Keys</a></li>
