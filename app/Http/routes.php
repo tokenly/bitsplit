@@ -21,19 +21,13 @@ Route::middleware(['requireApproval'])->group(function () {
     Route::post('distribute/{address}', array('as' => 'distribute.details.update', 'uses' => 'DistributeController@updateDetails'));
     Route::get('distribute/delete/{id}', array('as' => 'distribute.delete', 'uses' => 'DistributeController@deleteDistribution'));
     Route::get('distribute/duplicate/{address}', array('as' => 'distribute.duplicate', 'uses' => 'DistributeController@duplicateDistribution'));
-    Route::get('distributions', array('as' => 'distribute.history', 'uses' => 'DistributeController@getDistributionsHistory'));
-    Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
-    Route::get('official-distributions', array('as' => 'distribute.official_fldc_history', 'uses' => 'DistributeController@getOfficialFldcDistributionsHistory'));
 });
 
-<<<<<<< HEAD
-=======
 // public
 Route::get('distributions', array('as' => 'distribute.history', 'uses' => 'DistributeController@getDistributionsHistory'));
 Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
 Route::get('official-distributions', array('as' => 'distribute.official_fldc_history', 'uses' => 'DistributeController@getOfficialFldcDistributionsHistory'));
 
->>>>>>> cf74335855006d8e8414511da4a603814865e67a
 // recipients
 Route::middleware(['tls', 'auth'])->group(function () {
     Route::get('recipient/dashboard', ['as' => 'recipient.dashboard', 'uses' => 'RecipientController@index']);
@@ -44,7 +38,6 @@ Route::middleware(['tls', 'auth'])->group(function () {
 
 //Terms of use
 Route::get('/terms-and-conditions', array('as' => 'terms-and-conditions', 'uses' => 'AccountController@termsAndConditions'));
-
 Route::post('/account/accept_tac', array('as' => 'account.accept_tac', 'uses' => 'AccountController@acceptTac'));
 
 
@@ -57,14 +50,8 @@ $router->get('/account/welcome', 'AccountController@welcome');
 $router->get('/account/login', array('as' => 'account.auth', 'uses' => 'AccountController@login'));
 $router->get('/account/logout', array('as' => 'account.auth.logout', 'uses' => 'AccountController@logout'));
 
-<<<<<<< HEAD
-Route::get('/account/complete', array('as' => 'account.get_complete', 'uses' => 'AccountController@getcomplete'));
-Route::post('/account/complete', array('as' => 'account.complete', 'uses' => 'AccountController@complete'));
-Route::post('/account/complete', array('as' => 'account.complete', 'uses' => 'AccountController@complete'));
-=======
 Route::get('/account/complete', array('as' => 'account.get_complete', 'middleware' => ['auth'], 'uses' => 'AccountController@getComplete'));
 Route::post('/account/complete', array('as' => 'account.complete', 'middleware' => ['auth'], 'uses' => 'AccountController@complete'));
->>>>>>> cf74335855006d8e8414511da4a603814865e67a
 
 
 //Admin
