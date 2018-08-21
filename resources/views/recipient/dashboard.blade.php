@@ -2,10 +2,6 @@
 
 @section('content')
 
-<?php
-    $dash_info = User::getDashInfo();
-?>
-
 <div class="content padded">
     <div class="page-information">
         <h1>Dashboard</h1>
