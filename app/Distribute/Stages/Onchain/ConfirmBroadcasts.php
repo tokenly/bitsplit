@@ -1,5 +1,8 @@
 <?php
-namespace Distribute\Stages;
+
+namespace App\Distribute\Stages\Onchain;
+
+use App\Distribute\Stages\Stage;
 use Config, UserMeta, DB, Exception, Log, Models\Distribution as Distro, Models\DistributionTx as DistroTx;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 

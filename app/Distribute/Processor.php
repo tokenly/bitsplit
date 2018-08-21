@@ -31,17 +31,17 @@ class Processor
 			//$this->initializer->init($distro);
 			return true;
 		}
-		$stage = $distro->stageName();
-		if(!$stage){
+		$stage_name = $distro->stageName();
+		if(!$stage_name){
 			return false;
 		}
 
 		$stage_number = $distro->stage;
-		Log::debug('[Begin] processing stage '.$stage_number.' for distro #'.$distro->id);
-		$stage = '\\Distribute\\Stages\\'.$stage;
-		$stage_handler = new $stage($distro);
+		Log::debug('[Begin] processing stage '.$stage_name.' ('.$stage_number.') for distro #'.$distro->id);
+		$stage_class = $distro->stageClass();
+		$stage_handler = new $stage_class($distro);
 		$init = $stage_handler->init();
-		Log::debug('[End] processing stage '.$stage_number.' for distro #'.$distro->id);
+		Log::debug('[End] processing stage '.$stage_name.' ('.$stage_number.') for distro #'.$distro->id);
 
 		return true;
 	}

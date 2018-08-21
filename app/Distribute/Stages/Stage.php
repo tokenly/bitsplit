@@ -1,5 +1,6 @@
 <?php
-namespace Distribute\Stages;
+
+namespace App\Distribute\Stages;
 
 class Stage
 {

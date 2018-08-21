@@ -26,34 +26,61 @@ class Distribution extends Model
     protected $appends = ['tokens_per_point', 'average_points', 'fah_points', 'percentage_fah_network'];
 
 
-    public static function getStageMap()
+    public static function getStageMap($is_offchain)
 	{
-		static $map_cache = false;
-		if($map_cache){
-			return $map_cache;
+		static $map_cache = [];
+
+        $cache_key = $is_offchain ? 'offchain' : 'onchain';
+		if (!isset($map_cache[$cache_key])) {
+            if ($is_offchain) {
+                $path = storage_path().'/app/offchain-distribution-stage-map';
+            } else {
+                $path = storage_path().'/app/distribution-stage-map.json';
+            }
+            $stage_map = json_decode(@file_get_contents($path), true);
+            if(!is_array($stage_map)){
+                throw new Exception('Cannot open '.$cache_key.' distribution stage map');
+            }
+
+            $map_cache[$cache_key] = $stage_map;
 		}
-		$path = storage_path().'/app/distribution-stage-map.json';
-		$get = json_decode(@file_get_contents($path), true);
-		if(!is_array($get)){
-			throw new \Exception('Cannot open distribution stage map');
-		}
-		$map_cache = $get;
-		return $get;
+
+        return $map_cache[$cache_key];
 	}
 	
-	public static function getStageName($stage)
+	public static function getStageName($stage, $is_offchain = false)
 	{
 		$stage = (string)$stage;
-		$map = Distribution::getStageMap();
+		$map = self::getStageMap($is_offchain);
 		if(isset($map[$stage])){
 			return $map[$stage];
 		}
 		return false;
 	}
+
+    public static function getStageClass($stage, $is_offchain = false)
+    {
+        $stage_name = self::getStageName($this->stage, $is_offchain);
+        if ($is_offchain) {
+            return 'App\\Distribute\\Stages\\Offchain\\' . $stage_name;
+        } else {
+            return 'App\\Distribute\\Stages\\Onchain\\' . $stage_name;
+        }
+    }
+
+    public function isOffchainDistribution()
+    {
+        return false;
+    }
 	
-	public function stageName()
+    public function stageName()
+    {
+        return self::getStageName($this->stage, $this->isOffchainDistribution());
+    }
+
+	public function stageClass()
 	{
-		return Distribution::getStageName($this->stage);
+		return self::getStageClass($this->stage, $this->isOffchainDistribution());
 	}
 	
 	public function incrementStage()
