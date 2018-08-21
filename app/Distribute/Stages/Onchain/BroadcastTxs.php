@@ -1,5 +1,8 @@
 <?php
-namespace Distribute\Stages;
+
+namespace App\Distribute\Stages\Onchain;
+
+use App\Distribute\Stages\Stage;
 use App\Libraries\Substation\Substation;
 use App\Libraries\Substation\UserWalletManager;
 use Config, UserMeta, DB, Exception, Log, Models\Fuel, Models\Distribution as Distro;

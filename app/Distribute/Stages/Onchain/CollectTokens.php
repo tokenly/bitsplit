@@ -1,5 +1,8 @@
 <?php
-namespace Distribute\Stages;
+
+namespace App\Distribute\Stages\Onchain;
+
+use App\Distribute\Stages\Stage;
 use Log;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 class CollectTokens extends Stage

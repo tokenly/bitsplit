@@ -1,6 +1,6 @@
 <?php
 
-use Distribute\Stages\PrimeUtxos;
+use App\Distribute\Stages\Onchain\PrimeUtxos;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 

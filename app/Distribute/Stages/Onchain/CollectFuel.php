@@ -1,5 +1,8 @@
 <?php
-namespace Distribute\Stages;
+
+namespace App\Distribute\Stages\Onchain;
+
+use App\Distribute\Stages\Stage;
 use Models\Fuel, Exception, Log, DB, UserMeta, Config;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 class CollectFuel extends Stage

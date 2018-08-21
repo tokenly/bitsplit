@@ -28,12 +28,12 @@ class APIController extends Controller
         $fields = Distro::$api_fields;
         $get = Distro::where('user_id', $user->id)->select($fields)->orderBy('id', 'desc')->get();
         if($get){
-            $get = $get->toArray();
-            foreach($get as $k => $row){
-                $get[$k] = $this->processDistroRow($row, true);
+            $result = $get->toArray();
+            foreach($get as $k => $distro){
+                $result[$k] = $this->processDistroRow($distro->toArray, true, $distro->isOffchainDistribution());
             }
         }
-        $output['result'] = $get;
+        $output['result'] = $result;
         return Response::json($output);
     }
     
@@ -220,14 +220,15 @@ class APIController extends Controller
     {
         $output = array('result' => false);
         $code = 200;
-        $get = $this->getDistroFromId($id);
-        if($get){
-            $get = $get->toArray();
-            $get = $this->processDistroRow($get);
+        $distro = $this->getDistroFromId($id);
+        if($distro){
+            $get = $distro->toArray();
+            $get = $this->processDistroRow($get, false, $distro->isOffchainDistribution());
         }
         else{
             $output['error'] = 'Distribution not found';
             $code = 404;
+            $get = false;
         }
         $output['result'] = $get;
         return Response::json($output, $code);
@@ -327,7 +328,7 @@ class APIController extends Controller
         return false;
     }
     
-    protected function processDistroRow($row, $no_list = false)
+    protected function processDistroRow($row, $no_list = false, $is_offchain = false)
     {
         if(isset($row['user_id'])){
             unset($row['user_id']);
@@ -343,7 +344,7 @@ class APIController extends Controller
         $row['fee_totalFloat'] = CurrencyUtil::satoshisToValue($row['fee_total']);
         $row['asset_receivedFloat'] = CurrencyUtil::satoshisToValue($row['asset_received']);
         $row['fee_receivedFloat'] = CurrencyUtil::satoshisToValue($row['fee_received']);
-        $row['stage_name'] = Distro::getStageName($row['stage']);
+        $row['stage_name'] = Distro::getStageName($row['stage'], $is_offchain);
         $row['hold'] = intval($row['hold']);
         $row['complete'] = intval($row['complete']);
         $row['stage'] = intval($row['stage']);
