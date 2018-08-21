@@ -25,10 +25,10 @@ class PrimeUtxosTest extends TestCase
         );
 
         // create the distribution
-        $distibution = app('DistributionHelper')->newDistribution();
+        $distribution = app('DistributionHelper')->newDistribution();
 
         // prime
-        $prime_stage = new PrimeUtxos($distibution);
+        $prime_stage = new PrimeUtxos($distribution);
         $success = $prime_stage->init();
         PHPUnit::assertTrue($success);
     }
@@ -57,10 +57,10 @@ class PrimeUtxosTest extends TestCase
         );
 
         // create the distribution
-        $distibution = app('DistributionHelper')->newDistribution();
+        $distribution = app('DistributionHelper')->newDistribution();
 
         // prime
-        $prime_stage = new PrimeUtxos($distibution);
+        $prime_stage = new PrimeUtxos($distribution);
         $success = $prime_stage->init();
         PHPUnit::assertTrue($success);
 
@@ -131,10 +131,10 @@ class PrimeUtxosTest extends TestCase
         );
 
         // create the distribution
-        $distibution = app('DistributionHelper')->newDistribution();
+        $distribution = app('DistributionHelper')->newDistribution();
 
         // prime (should run stage 2)
-        $prime_stage = new PrimeUtxos($distibution);
+        $prime_stage = new PrimeUtxos($distribution);
         $success = $prime_stage->init();
         PHPUnit::assertTrue($success);
 

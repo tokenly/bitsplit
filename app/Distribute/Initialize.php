@@ -1,13 +1,19 @@
 <?php
 namespace Distribute;
-use Models\Distribution as Distro;
+use App\Distribute\Stages\Offchain\Initialize as OffchainInitialize;
 use Log, Exception;
+use Models\Distribution as Distro;
 use Tokenly\TokenpassClient\TokenpassAPI;
 
 class Initialize
 {
 	public function init($distro)
 	{
+        // check for offchain
+        if ($distro->isOffchainDistribution()) {
+            return app(OffchainInitialize::class)->init($distro);
+        }
+
 		$this->startMonitor($distro);
         $this->registerToTokenpassProvisionalWhitelist($distro);
 	}
@@ -21,7 +27,7 @@ class Initialize
         // substation automatically monitors all allocated addresses
         //   so we don't need to explictly create a monitor
 
-        // mark the distribution as entering hte first stage
+        // mark the distribution as entering the first stage
 		if($first_stage){
 			$distro->stage = 1;
     		$distro->save();

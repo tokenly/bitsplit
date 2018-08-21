@@ -1,5 +1,6 @@
 <?php
 
+use Distribute\Initialize;
 use Models\Distribution;
 use Models\DistributionTx;
 use Models\Fuel;
@@ -12,7 +13,7 @@ use Tokenly\SubstationClient\Mock\MockSubstationClient;
 class DistributionHelper
 {
 
-    public function newDistribution(User $user=null)
+    public function newDistribution(User $user = null, $is_offchain = false)
     {
         if ($user === null) {
             $user = app('UserHelper')->newRandomUser();
@@ -21,11 +22,11 @@ class DistributionHelper
         $deposit_address = MockSubstationClient::sampleAddress('bitcoin', 0);
 
         $address_list = [
-            ['address' => 'recip_addr_001', 'amount' => 100000000,],
-            ['address' => 'recip_addr_002', 'amount' => 200000000,],
-            ['address' => 'recip_addr_003', 'amount' => 300000000,],
-            ['address' => 'recip_addr_004', 'amount' => 400000000,],
-            ['address' => 'recip_addr_005', 'amount' => 500000000,],
+            ['address' => 'recip_addr_001', 'amount' => 100000000],
+            ['address' => 'recip_addr_002', 'amount' => 200000000],
+            ['address' => 'recip_addr_003', 'amount' => 300000000],
+            ['address' => 'recip_addr_004', 'amount' => 400000000],
+            ['address' => 'recip_addr_005', 'amount' => 500000000],
         ];
 
         $distro = new Distribution();
@@ -41,20 +42,46 @@ class DistributionHelper
         $distro->uuid = Uuid::uuid4()->toString();
         $distro->fee_rate = 40;
 
+        if ($is_offchain) {
+            $distro->offchain = true;
+        }
+
         //estimate fees
-        $fee_total = Fuel::estimateFuelCost(count($address_list), $distro);
-        $distro->fee_total = $fee_total;
+        if (!$is_offchain) {
+            $fee_total = Fuel::estimateFuelCost(count($address_list), $distro);
+            $distro->fee_total = $fee_total;
+        } else {
+            $distro->fee_total = 0;
+        }
 
         // save
         $save = $distro->save();
 
         //save individual distro addresses
-        foreach($address_list as $row){
+        foreach ($address_list as $row) {
             $tx = new DistributionTx();
             $tx->distribution_id = $distro->id;
             $tx->destination = $row['address'];
             $tx->quantity = $row['amount'];
             $tx->save();
+        }
+
+        return $distro;
+    }
+
+    public function newOffchainDistribution(User $user = null, $update_vars = null, $and_initialize = true)
+    {
+        $distro = $this->newDistribution($user, $_is_offchain = true);
+
+        if ($update_vars) {
+            foreach($update_vars as $k => $v) {
+                $distro->{$k} = $v;
+            }
+            $distro->save();
+        }
+
+        if ($and_initialize) {
+            app(Initialize::class)->init($distro);
         }
 
         return $distro;
