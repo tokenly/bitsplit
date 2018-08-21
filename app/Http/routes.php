@@ -12,7 +12,6 @@
 */
 
 //distributions
-<<<<<<< HEAD
 Route::middleware(['requireApproval'])->group(function () {
     Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
     Route::get('distributions/new', array('as' => 'distribute.new', 'middleware' => ['auth'], 'uses' => 'DistributeController@newDistribution'));
@@ -22,21 +21,10 @@ Route::middleware(['requireApproval'])->group(function () {
     Route::post('distribute/{address}', array('as' => 'distribute.details.update', 'uses' => 'DistributeController@updateDetails'));
     Route::get('distribute/delete/{id}', array('as' => 'distribute.delete', 'uses' => 'DistributeController@deleteDistribution'));
     Route::get('distribute/duplicate/{address}', array('as' => 'distribute.duplicate', 'uses' => 'DistributeController@duplicateDistribution'));
+    Route::get('distributions', array('as' => 'distribute.history', 'uses' => 'DistributeController@getDistributionsHistory'));
+    Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
+    Route::get('official-distributions', array('as' => 'distribute.official_fldc_history', 'uses' => 'DistributeController@getOfficialFldcDistributionsHistory'));
 });
-
-// public
-=======
-Route::post('distribute', array('as' => 'distribute.post', 'middleware' => ['auth', 'bindings'], 'uses' => 'DistributeController@submitDistro'));
-Route::get('distribute/_status-info', array('as' => 'distribute.status-info', 'uses' => 'DistributeController@getStatusInfo'));
-Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
-Route::get('distribute/{address}/_info', array('as' => 'distribute.details.info', 'uses' => 'DistributeController@getDetailsInfo'));
-Route::post('distribute/{address}', array('as' => 'distribute.details.update', 'uses' => 'DistributeController@updateDetails'));
-Route::get('distribute/delete/{id}', array('as' => 'distribute.delete', 'uses' => 'DistributeController@deleteDistribution'));
-Route::get('distribute/duplicate/{address}', array('as' => 'distribute.duplicate', 'uses' => 'DistributeController@duplicateDistribution'));
->>>>>>> new-stats-api
-Route::get('distributions', array('as' => 'distribute.history', 'uses' => 'DistributeController@getDistributionsHistory'));
-Route::get('distribute/{address}', array('as' => 'distribute.details', 'uses' => 'DistributeController@getDetails'));
-Route::get('official-distributions', array('as' => 'distribute.official_fldc_history', 'uses' => 'DistributeController@getOfficialFldcDistributionsHistory'));
 
 // recipients
 Route::middleware(['tls', 'auth'])->group(function () {
@@ -59,15 +47,9 @@ $router->get('/account/welcome', 'AccountController@welcome');
 $router->get('/account/login', array('as' => 'account.auth', 'uses' => 'AccountController@login'));
 $router->get('/account/logout', array('as' => 'account.auth.logout', 'uses' => 'AccountController@logout'));
 
-<<<<<<< HEAD
-Route::get('/account/complete', array('as' => 'account.get_complete', 'middleware' => ['auth'], 'uses' => 'AccountController@getcomplete'));
-
-Route::post('/account/complete', array('as' => 'account.complete', 'middleware' => ['auth'], 'uses' => 'AccountController@complete'));
-=======
 Route::get('/account/complete', array('as' => 'account.get_complete', 'uses' => 'AccountController@getcomplete'));
 Route::post('/account/complete', array('as' => 'account.complete', 'uses' => 'AccountController@complete'));
 Route::post('/account/complete', array('as' => 'account.complete', 'uses' => 'AccountController@complete'));
->>>>>>> new-stats-api
 
 
 //Admin

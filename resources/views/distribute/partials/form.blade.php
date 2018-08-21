@@ -8,7 +8,7 @@
 	<div class="distro-form">
 		<div class="distro-form__section">
 			<div class="distro-form__section__content">
-				<div 
+				<div
 					class="form-group"
 					v-bind:class="{'action-required': invalidInputWarning && !validToken}"
 				>
