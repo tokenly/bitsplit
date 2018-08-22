@@ -86,6 +86,7 @@ class OffchainDistributionTest extends TestCase
 
         // create the distribution
         $distribution = app('DistributionHelper')->newOffchainDistribution($user, ['asset' => 'FLDC'], $_and_initialize = true);
+        PHPUnit::assertNotEmpty($distribution->getEscrowAddress());
         PHPUnit::assertTrue($distribution->isOffchainDistribution());
         PHPUnit::assertNotEmpty($distribution);
         PHPUnit::assertEquals('EnsureTokens', ($distribution->refresh())->stageName());

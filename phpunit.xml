@@ -24,6 +24,8 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
         <env name="APP_KEY" value="base64:LG787oR5OlescEBJp22HBJppmKiUJmrm13SfdZ1UT30="/>
+        
+        <env name="SUBSTATION_USE_LIVENET" value="1"/>
 
         <env name="DATABASE_DRIVER" value="testing"/>
         <env name="WALLETS_DATABASE_DRIVER"  value="testing_wallets"/>
