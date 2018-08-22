@@ -6,6 +6,7 @@ use App\Libraries\EscrowWallet\EscrowWalletManager;
 use App\Models\EscrowAddress;
 use App\Models\EscrowAddressLedgerEntry;
 use App\Repositories\EscrowAddressLedgerEntryRepository;
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -56,6 +57,9 @@ class EscrowAddressSynchronizer
         // get substation transactions
         $substation_client = $this->getSubstationClient();
         $wallet = $escrow_address->escrowWallet;
+        if (!$wallet) {
+            throw new Exception("Wallet not found for escrow address", 1);
+        }
         $wallet_uuid = $wallet['uuid'];
         $substation_tx_map = [];
         $address_uuid = $escrow_address['uuid'];
@@ -63,12 +67,13 @@ class EscrowAddressSynchronizer
             $substation_transactions = $substation_client->getTransactionsById($wallet_uuid, $address_uuid)['items'];
         } catch (APIException $e) {
             if ($e->getCode() == 404) {
+                Log::debug("Substation returned 404 for $wallet_uuid $address_uuid");
                 $substation_transactions = [];
             } else {
                 throw $e;
             }
         }
-        // Log::debug("\$substation_transactions for address {$address_uuid} {$escrow_address['address']} is\n".json_encode($substation_transactions, 192));
+        Log::debug("\$substation_transactions for address {$address_uuid} {$escrow_address['address']} is\n".json_encode($substation_transactions, 192));
 
         // process all txos paying to this address
         $address_hash = $escrow_address['address'];
