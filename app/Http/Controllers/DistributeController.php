@@ -94,10 +94,21 @@ class DistributeController extends Controller {
 		$value_type = 'percent';
 
 		$max_fixed_decimals = Config::get('settings.amount_decimals');
+
+        // offchain distribution
+        $is_official_distribution = in_array($asset, ['FLDC', 'TESTFLDC']);
+        if ($is_official_distribution and $input['offchain']) {
+            $offchain = true;
+        } else {
+            $offchain = false;
+        }
+        $onchain = !$offchain;
+
+
         
         //fee rate override
         $btc_fee_rate = null;
-        if(isset($input['btc_fee_rate']) AND trim($input['btc_fee_rate']) != ''){
+        if($onchain and isset($input['btc_fee_rate']) AND trim($input['btc_fee_rate']) != ''){
             $btc_fee_rate = intval($input['btc_fee_rate']);
             $min_rate = Config::get('settings.min_fee_per_byte');
             $max_rate = Config::get('settings.max_fee_per_byte');
@@ -204,31 +215,33 @@ class DistributeController extends Controller {
 		}
 
 		//generate deposit address
-		$deposit_address = false;
-		$address_uuid = false;
-		try{
-			$deposit_address_details = app(UserAddressManager::class)->newPaymentAddressForUser($user);
-			$deposit_address = $deposit_address_details['address'];
-			$address_uuid = $deposit_address_details['uuid'];
-		}
-		catch(Exception $e){
-            EventLog::logError('depositAddress.error', $e, [
-                'userId' => $user['id'],
-            ]);
-			return $this->return_error('home', 'Error generating deposit address');
+        $deposit_address = false;
+        $address_uuid = false;
+        if ($onchain) {
+    		try{
+    			$deposit_address_details = app(UserAddressManager::class)->newPaymentAddressForUser($user);
+    			$deposit_address = $deposit_address_details['address'];
+    			$address_uuid = $deposit_address_details['uuid'];
+    		}
+    		catch(Exception $e){
+                EventLog::logError('depositAddress.error', $e, [
+                    'userId' => $user['id'],
+                ]);
+    			return $this->return_error('home', 'Error generating deposit address');
+            }
         }
 		
 		$use_fuel = 0;
-		if(isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
+		if($onchain and isset($input['use_fuel']) AND intval($input['use_fuel']) == 1){
 			$use_fuel = 1;
 		}
         
-
 
 		//save distribution
 		$distro = new Distro;
 		$distro->user_id = $user->id;
 		$distro->stage = 0;
+        $distro->offchain = $offchain;
 		$distro->deposit_address = $deposit_address;
 		$distro->address_uuid = $address_uuid;
 		$distro->network = 'btc';
