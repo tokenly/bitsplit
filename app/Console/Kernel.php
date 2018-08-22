@@ -43,6 +43,7 @@ class Kernel extends ConsoleKernel
         // Escrow address commands
         Commands\EscrowAddress\GenerateEscrowAddress::class,
         Commands\EscrowAddress\SyncEscrowAddress::class,
+        Commands\EscrowAddress\CreateEscrowAddressPromise::class,
 
         // Role commands
         Commands\Roles\AssignUserRole::class,
