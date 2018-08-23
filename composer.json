@@ -33,7 +33,7 @@
         "tokenly/substation-distribution-client": "^0.1.1",
         "tokenly/token-generator": "^1",
         "tokenly/tokenmap-client": "^2.0",
-        "tokenly/tokenpass-client": "^2",
+        "tokenly/tokenpass-client": "^3.0.1",
         "tokenly/tokenslot-client": "dev-master",
         "tokenly/xcaller-client": "^0.3",
         "spatie/laravel-permission": "^2.13"

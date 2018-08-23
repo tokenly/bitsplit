@@ -67,6 +67,20 @@ class OffchainDistributionTest extends TestCase
 
         // make sure promises were called
         PHPUnit::assertEquals(106, $promise_counter);
+
+        // make sure balances are sent in the ledger
+        $ledger = app(EscrowAddressLedgerEntryRepository::class);
+
+        // check foreign entity totals
+        $balance = $ledger->foreignEntityBalance('1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j', 'FLDC');
+        PHPUnit::assertEquals(1, $balance->getFloatValue());
+        $balance = $ledger->foreignEntityBalance('1AAAA2222xxxxxxxxxxxxxxxxxxy4pQ3tU', 'FLDC');
+        PHPUnit::assertEquals(2, $balance->getFloatValue());
+
+        // check promise IDs in the ledger entries
+        // echo "\n".$ledger->debugDumpLedger($ledger->findAllByAddress($escrow_address))."\n";
+        $entries = $ledger->entriesWithPromiseIDsByForeignEntityAndAsset('1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j', 'FLDC');
+        PHPUnit::assertCount(1, $entries);
     }
 
     public function testRequiresTokensForOffchainDistribution()

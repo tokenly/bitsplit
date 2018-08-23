@@ -63,7 +63,26 @@
 						</span>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" v-if="isOfficialDistribution">
+					<label for="offchain">Make this an offchain distribution from your escrow address?</label><br>
+					<ul class="yes-no-toggle">
+						<li
+							@click="offchainDistribution = true"
+						><a><span class="yes" v-bind:class="{active: offchainDistribution}">Yes</span></a></li><li 
+						class="no"
+							@click="offchainDistribution = false"
+						><a><span class="no" v-bind:class="{active: !offchainDistribution}">No</span></a></li>
+					</ul>
+					<input
+						v-show="false"
+						v-model="offchainDistribution"
+						type="checkbox"
+						name="offchain"
+						id="offchain"
+						value="1"
+					/>
+				</div>
+				<div class="form-group" v-if="!isOfficialDistribution || !offchainDistribution">
 					<label for="use_fuel">Use available fuel in your account for BTC fee?</label><br>
 					<ul class="yes-no-toggle">
 						<li
@@ -473,6 +492,7 @@
 					</div>
 				</div>
 				<div 
+					v-if="!isOfficialDistribution || !offchainDistribution"
 					class="form-group"
 					v-bind:class="{'action-required': invalidInputWarning &&  !validBTCNetworkFee}"
 				>

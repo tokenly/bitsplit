@@ -3,6 +3,7 @@
 namespace App\Distribute\Stages\Offchain;
 
 use App\Distribute\Stages\Stage;
+use App\Repositories\EscrowAddressLedgerEntryRepository;
 use Illuminate\Support\Facades\Log;
 use Models\Distribution;
 use Models\DistributionTx;
@@ -16,6 +17,9 @@ class DistributePromises extends Stage
     {
         parent::init();
 
+        $ledger = app(EscrowAddressLedgerEntryRepository::class);
+        $tokenpass = app(TokenpassAPI::class);
+
         $distribution = $this->distro;
         $escrow_address = $distribution->getEscrowAddress();
 
@@ -26,9 +30,8 @@ class DistributePromises extends Stage
             return null;
         }
 
-        // allocate each promise debit in the ledger
+        // creates each promise in tokenpass
         $promise_count = 0;
-        $tokenpass = app(TokenpassAPI::class);
         $asset = $distribution->asset;
         $expiration = null;
         foreach ($distribution_txs as $distribution_tx) {
@@ -55,6 +58,34 @@ class DistributePromises extends Stage
             $distribution_tx->update([
                 'promise_id' => $promise_id,
             ]);
+
+            // also update the ledger entry with the promise id
+            $dist_tx_id = $distribution_tx->id;
+            $tx_identifier = 'disttx:' . $asset . ':' . $dist_tx_id;
+            $ledger_entry = $ledger->findByTransactionIdentifierAndAddress($tx_identifier, $escrow_address);
+            if ($ledger_entry) {
+                if ($ledger_entry['promise_id'] === null) {
+                    $ledger->update($ledger_entry, [
+                        'promise_id' => $promise_id,
+                    ]);
+                } else {
+                    EventLog::warning('ledger.promiseIdNotNull', [
+                        'distributionId' => $distribution->id,
+                        'txIdentifier' => $tx_identifier,
+                        'existingPromiseId' => $ledger_entry['promise_id'],
+                        'newPromiseId' => $promise_id,
+                        'stage' => 'DistributePromises',
+                    ]);
+                }
+            } else {
+                EventLog::warning('ledger.notFound', [
+                    'distributionId' => $distribution->id,
+                    'txIdentifier' => $tx_identifier,
+                    'stage' => 'DistributePromises',
+                ]);
+            }
+
+
             ++$promise_count;
         }
 

@@ -28,7 +28,7 @@ class Controller extends BaseController
 				$opts = $arr[1];
 			}
 		}
-		return \Redirect::route($route, $opts);
+		return \Redirect::route($route, $opts)->withInput();
 	}
     
     protected function return_error($route, $message)

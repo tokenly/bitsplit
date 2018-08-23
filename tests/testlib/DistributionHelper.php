@@ -22,11 +22,11 @@ class DistributionHelper
         $deposit_address = MockSubstationClient::sampleAddress('bitcoin', 0);
 
         $address_list = [
-            ['address' => 'recip_addr_001', 'amount' => 100000000],
-            ['address' => 'recip_addr_002', 'amount' => 200000000],
-            ['address' => 'recip_addr_003', 'amount' => 300000000],
-            ['address' => 'recip_addr_004', 'amount' => 400000000],
-            ['address' => 'recip_addr_005', 'amount' => 500000000],
+            ['address' => '1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j', 'amount' => 100000000],
+            ['address' => '1AAAA2222xxxxxxxxxxxxxxxxxxy4pQ3tU', 'amount' => 200000000],
+            ['address' => '1AAAA3333xxxxxxxxxxxxxxxxxxxsTtS6v', 'amount' => 300000000],
+            ['address' => '1AAAA4444xxxxxxxxxxxxxxxxxxxxjbqeD', 'amount' => 400000000],
+            ['address' => '1AAAA5555xxxxxxxxxxxxxxxxxxxwEhYkL', 'amount' => 500000000],
         ];
 
         $distro = new Distribution();

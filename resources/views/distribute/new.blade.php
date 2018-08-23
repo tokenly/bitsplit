@@ -21,6 +21,7 @@
 	<div id="new-distro-form">
 		<distro-form></distro-form>
 	</div>
+	@if (env('SHOW_BITCOIN_CONGESTION_WARNING', false))
 	<p class="text-danger">
         <strong>Attention:</strong> Transaction capacity on the Bitcoin network is at high levels of congestion.
         If your distribution is time sensitive at all, please make sure to double check that your miner fee rate
@@ -28,6 +29,7 @@
         You can use <a href="https://bitcoinfees.earn.com/" target="_blank">https://bitcoinfees.earn.com/</a> to help
         with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.<br>
     </p>
+	@endif
 </div>
 @endsection
 
@@ -59,6 +61,7 @@
 				calculationType: null,
 				distributionClass: null,
 				useAccountFuel: true,
+				offchainDistribution: true,
 				customBitcoinNetworkFee: false,
 				startDate: null,
 				endDate: null,
@@ -156,6 +159,14 @@
 			},
 			validConfiguration() {
 				return (this.validToken && this.validTokenAmount && this.calculationType && this.validDistributionClassConfig && this.startDate && this.endDate && this.validBTCNetworkFee);
+			},
+			isOfficialDistribution() {
+				if (this.validToken) {
+					if (this.tokenName == 'FLDC' || this.tokenName == 'TESTFLDC') {
+						return true
+					}
+				}
+				return false
 			},
 		},
 		created: function(){
