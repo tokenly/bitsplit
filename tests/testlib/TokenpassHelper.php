@@ -6,9 +6,12 @@
 class TokenpassHelper
 {
 
+    static $PROMISE_COUNTER = 101;
+
     public static function mockAll($mock = null) {
         $mock = self::mockCheckoutMethods($mock);
         $mock = self::mockPromiseMethods($mock);
+        $mock = self::mockErrorMethods($mock);
         return $mock;
     }
 
@@ -74,9 +77,15 @@ class TokenpassHelper
     {
         $mock = self::ensureMockedTokenpassAPI($mock);
 
-        $mock->shouldReceive('promiseTransaction')->andReturn([
-            'promise_id' => 101,
-        ]);
+        self::$PROMISE_COUNTER = 101;
+        $mock->shouldReceive('promiseTransaction')->andReturnUsing(function () {
+            ++self::$PROMISE_COUNTER;
+            return [
+                'promise_id' => self::$PROMISE_COUNTER - 1,
+            ];
+        });
+
+        $mock->shouldReceive('deletePromisedTransaction')->andReturn(true);
 
         return $mock;
     }

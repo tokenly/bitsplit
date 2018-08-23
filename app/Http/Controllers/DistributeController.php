@@ -96,7 +96,8 @@ class DistributeController extends Controller {
 		$max_fixed_decimals = Config::get('settings.amount_decimals');
 
         // offchain distribution
-        $is_official_distribution = in_array($asset, ['FLDC', 'TESTFLDC']);
+
+        $is_official_distribution = ($asset == FLDCAssetName());
         if ($is_official_distribution and $input['offchain']) {
             $offchain = true;
         } else {

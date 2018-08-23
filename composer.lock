@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "544ff2b4e3d49e583de4460bb87b3a6c",
+    "content-hash": "12754cd339d95f0a04a6b6f3ffda2f1e",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4634,16 +4634,16 @@
         },
         {
             "name": "tokenly/tokenpass-client",
-            "version": "v2.0.7",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/tokenpass-client.git",
-                "reference": "f3768cdd73b9714f6159527662bde26e94f551d7"
+                "reference": "d216189c6271def006ebe444b32769a702ac7ef5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/tokenpass-client/zipball/f3768cdd73b9714f6159527662bde26e94f551d7",
-                "reference": "f3768cdd73b9714f6159527662bde26e94f551d7",
+                "url": "https://api.github.com/repos/tokenly/tokenpass-client/zipball/d216189c6271def006ebe444b32769a702ac7ef5",
+                "reference": "d216189c6271def006ebe444b32769a702ac7ef5",
                 "shasum": ""
             },
             "require": {
@@ -4687,7 +4687,7 @@
                 "tokenly",
                 "tokenpass"
             ],
-            "time": "2018-06-07T13:22:14+00:00"
+            "time": "2018-08-23T12:45:29+00:00"
         },
         {
             "name": "tokenly/tokenslot-client",

@@ -53,12 +53,8 @@ class CreateEscrowAddressPromise extends Command
             $owner = $user_repository->findEscrowWalletOwner();
             $escrow_address = $owner->getEscrowAddress();
 
-            // add to ledger
-            $quantity = CryptoQuantity::fromFloat($amount);
             $timestamp = time();
-            $tx_identifier = 'manual:' . $asset . ':' . $timestamp;
-            $txid = 'manual:' . $timestamp;
-            $ledger->debit($escrow_address, $quantity, $asset, EscrowAddressLedgerEntry::TYPE_WITHDRAWAL, $txid, $tx_identifier, $_confirmed = true);
+            $quantity = CryptoQuantity::fromFloat($amount);
 
             // call tokenpass
             $tokenpass = app(TokenpassAPI::class);
@@ -71,6 +67,12 @@ class CreateEscrowAddressPromise extends Command
             }
             $promise_id = $promise_response['promise_id'];
             $this->comment("Tokenpass promise succeeded with promise id {$promise_id}");
+
+            // add to ledger
+            $tx_identifier = 'manual:' . $asset . ':' . $timestamp;
+            $txid = 'manual:' . $timestamp;
+            $ledger->debit($escrow_address, $quantity, $asset, EscrowAddressLedgerEntry::TYPE_WITHDRAWAL, $txid, $tx_identifier, $_confirmed = true, $promise_id, $destination);
+
         });
 
         $this->comment("done.");

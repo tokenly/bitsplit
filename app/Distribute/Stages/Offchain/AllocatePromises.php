@@ -21,7 +21,7 @@ class AllocatePromises extends Stage
 
         $distribution = $this->distro;
 
-        // TODO: distribute tokenpass promises
+        // allocate all promises in the ledger
         DB::transaction(function () use ($distribution) {
             $ledger = app(EscrowAddressLedgerEntryRepository::class);
 
@@ -42,7 +42,8 @@ class AllocatePromises extends Stage
                 $dist_tx_id = $distribution_tx->id;
                 $tx_identifier = 'disttx:' . $asset . ':' . $dist_tx_id;
                 $txid = 'disttx:' . $dist_tx_id;
-                $ledger->debit($escrow_address, $quantity, $asset, EscrowAddressLedgerEntry::TYPE_WITHDRAWAL, $txid, $tx_identifier, $_confirmed = true);
+                $destination = $distribution_tx->destination;
+                $ledger->debit($escrow_address, $quantity, $asset, EscrowAddressLedgerEntry::TYPE_PROMISE_CREATED, $txid, $tx_identifier, $_confirmed = true, $_promise_id = null, $destination);
                 ++$promise_count;
             }
 
