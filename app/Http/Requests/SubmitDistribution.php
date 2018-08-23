@@ -43,8 +43,9 @@ class SubmitDistribution extends FormRequest
             'asset' => ['required', new Asset()],
             //Validate folding dates
             'folding_start_date' => ['required', 'before:'.$end_day_time],
-            'folding_end_date' => ['required', 'before:'.$end_day_time, 'after:'.$this->input('folding_start_date')],
-            'distribution_class' => 'required'
+            'folding_end_date' => ['required', 'before:'.$end_day_time, 'after_or_equal:'.$this->input('folding_start_date')],
+            'distribution_class' => 'required',
+            'asset_total' => 'required|min:0'
         ];
     }
 
