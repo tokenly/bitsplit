@@ -15,13 +15,15 @@ use Tokenly\TokenpassClient\TokenpassAPI;
 
 class Distribution extends Model
 {
-	
+    const PROPORTIONAL_CALCULATION_TYPE = 'even';
+    const UNIFORM_CALCULATION_TYPE = '';
+
     public static $api_fields = array(
         'id', 'uuid', 'label', 'created_at', 'updated_at', 'stage', 'stage_message', 'complete',
         'deposit_address', 'network', 'asset', 'asset_total', 
         'fee_total', 'asset_received', 'fee_received', 'hold', 'use_fuel', 'webhook',
         'distribution_class', 'calculation_type'
-        );
+    );
 
     protected $appends = ['tokens_per_point', 'average_points', 'fah_points', 'percentage_fah_network'];
 
@@ -222,6 +224,97 @@ class Distribution extends Model
             $items[] = array('address' => $address, 'amount' => $amount);
         }
         return $items;
+    }
+
+    public static function processAddressList2($list, $value_type, $csv = false, $cut_csv_head = false, $calculation_type = 'even') {
+        $array = true;
+        if(!is_array($list)){
+            $array = false;
+            $list = explode("\n", str_replace("\r", "", trim($list)));
+            if($csv){
+                if($cut_csv_head){
+                    if(isset($list[0])){
+                        unset($list[0]);
+                    }
+                }
+            }
+        }
+        $tokenpass = app(TokenpassAPI::class);
+        $address_list = array();
+        foreach($list as $lk => $row){
+            if($array){
+                if(is_array($row) AND isset($row['address']) AND isset($row['amount'])){
+                    $parse_row = array($row['address'], $row['amount']);
+                }
+                else{
+                    $parse_row = array($lk, $row);
+                }
+            }
+            else{
+                if($csv){
+                    $parse_row = str_getcsv($row);
+                }
+                else{
+                    $parse_row = explode(',', $row);
+                }
+            }
+            if(isset($parse_row[0]) AND isset($parse_row[1])){
+                $address = trim($parse_row[0]);
+                /*
+                //disable for now, addresses are validated elsewhere in this fork
+				try{
+                    $address_version = Substation::useLivenet() ? AddressValidator::MAINNET : AddressValidator::TESTNET;
+                    $address_is_valid = AddressValidator::isValid($address, $address_version);
+					if(!$address_is_valid){
+						$address = false;
+					}
+				}
+				catch(Exception $e){
+					Log::error('Error validating distribution address "'.$address.'": '.$e->getMessage());
+					$address = false;
+				}
+
+				if(!$address){
+					//see if we can lookup address by username
+					try{
+						$lookup_user = $tokenpass->lookupAddressByUser(trim($parse_row[0]));
+						if($lookup_user AND isset($lookup_user['address'])){
+							$address = $lookup_user['address'];
+						}
+					}
+					catch(Exception $e){
+						Log::error('Error looking up address by username "'.$address.'" '.$e->getMessage());
+					}
+					if(!$address){
+						continue;
+					}
+				}*/
+                if(!$address){
+                    continue;
+                }
+                if($value_type == 'percent' && $calculation_type === 'even'){
+                    $amount = floatval($parse_row[1]) / 100;
+                }
+                else{
+                    $amount = intval(bcmul(trim($parse_row[1]), "100000000", "0"));
+                }
+                if($amount <= 0){
+                    continue;
+                }
+                if(isset($address_list[$address])){
+                    $address_list[$address]['amount'] += $amount;
+                }
+                else{
+                    $item = array('address' => $address, 'amount' => $amount);
+                    $address_list[$address] = $item;
+                }
+            }
+        }
+        $address_list = array_values($address_list);
+        if(count($address_list) == 0){
+            return false;
+        }
+        return $address_list;
     }
 	
 	public static function divideTotalBetweenList($list, $total)

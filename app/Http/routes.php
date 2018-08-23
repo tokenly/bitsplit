@@ -15,7 +15,7 @@
 Route::middleware(['requireApproval'])->group(function () {
     Route::get('home', array('as' => 'home', 'uses' => 'HomeController@index'));
     Route::get('distributions/new', array('as' => 'distribute.new', 'middleware' => ['auth'], 'uses' => 'DistributeController@newDistribution'));
-    Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'DistributeController@submitDistribution'));
+    Route::post('distribute', array('as' => 'distribute.post', 'uses' => 'DistributeController@submitDistro'));
     Route::get('distribute/_status-info', array('as' => 'distribute.status-info', 'uses' => 'DistributeController@getStatusInfo'));
     Route::get('distribute/{address}/_info', array('as' => 'distribute.details.info', 'uses' => 'DistributeController@getDetailsInfo'));
     Route::post('distribute/{address}', array('as' => 'distribute.details.update', 'uses' => 'DistributeController@updateDetails'));
@@ -49,6 +49,7 @@ $router->get('/account/welcome', 'AccountController@welcome');
 // routes for logging in and logging out
 $router->get('/account/login', array('as' => 'account.auth', 'uses' => 'AccountController@login'));
 $router->get('/account/logout', array('as' => 'account.auth.logout', 'uses' => 'AccountController@logout'));
+
 
 Route::get('/account/complete', array('as' => 'account.get_complete', 'middleware' => ['auth'], 'uses' => 'AccountController@getComplete'));
 Route::post('/account/complete', array('as' => 'account.complete', 'middleware' => ['auth'], 'uses' => 'AccountController@complete'));
