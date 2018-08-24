@@ -40,16 +40,15 @@
                 <div class="form-group">
                     <label class="col-md-3 control-label">Withdrawal Fee</label>
                     <div class="col-md-9">
-                        <p class="form-control-static">Approximately xxx.xx {{ FLDCAssetName() }} (Unimplemented)</p>
-                        <p class="small">This amount will be deducted from the amount you receive in order to pay for the transaction fee.  The exact amount is determined by market conditions.</p>
+                        <p class="form-control-static">Approximately {{ formattedTokenQuantity($fee_quote) }} {{ FLDCAssetName() }}</p>
+                        <p class="small">This amount will be deducted from the amount you receive in order to pay for the transaction fee.  The exact amount deducted may vary slightly depending on market conditions.</p>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-md-3 control-label">Confirmation</label>
                     <div class="col-md-9">
-                        <label for="confirm"><input type="checkbox" name="confirm" id="confirm" value="1" style="margin-right: 6px;" /> Yes.  I want to withdraw all available {{ FLDCAssetName() }} to the address selected above.</label>
-                        <p class="small">You must withdraw all available {{ FLDCAssetName() }}.</p>
+                        <label for="confirm"><input type="checkbox" name="confirm" id="confirm" value="1" style="margin-right: 6px;" /> Yes.  I want to withdraw all available {{ FLDCAssetName() }} to the address selected above.  I understand that the withdrawal fee will be deducted from the amount of {{ FLDCAssetName() }} I received.</label>
                     </div>
                 </div>
                 <div class="form-group">

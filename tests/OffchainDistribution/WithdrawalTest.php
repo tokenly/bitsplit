@@ -11,6 +11,7 @@ use SampleId;
 use SubstationHelper;
 use TestCase;
 use Tokenly\CryptoQuantity\CryptoQuantity;
+use Tokenly\TokenmapClient\Mock\MockeryBuilder;
 use User;
 
 class WithdrawalTest extends TestCase
@@ -20,7 +21,10 @@ class WithdrawalTest extends TestCase
 
     public function testExecuteWithdrawal()
     {
+        $SATOSHI = 100000000;
+
         // mocks
+        app('TokenmapHelper')->mockTokenmap();
         SubstationHelper::mockAll();
         $tokenpass_mock = app('TokenpassHelper')->mockPromiseMethods();
         $tokenpass_mock = app('TokenpassHelper')->mockTokenpassErrors($tokenpass_mock);
@@ -38,7 +42,7 @@ class WithdrawalTest extends TestCase
 
         // seed ledger
         $ledger = app(EscrowAddressLedgerEntryRepository::class);
-        $ledger->credit($escrow_address, CryptoQuantity::fromSatoshis(1500000000), 'FLDC', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(500), 'recv:FLDC:' . SampleId::txid(500));
+        $ledger->credit($escrow_address, CryptoQuantity::fromSatoshis(9000 * $SATOSHI), 'FLDC', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(500), 'recv:FLDC:' . SampleId::txid(500));
 
         // run the distribution
         $this->runDistribution($admin);
@@ -68,10 +72,17 @@ class WithdrawalTest extends TestCase
             ->filter(function($e) { return $e['foreign_entity'] == '1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j' and $e['tx_type'] == EscrowAddressLedgerEntry::TYPE_PROMISE_FULFILLED; })
             ->first();
         PHPUnit::assertNotNull($entry);
-        PHPUnit::assertEquals(1, $entry['amount']->getFloatValue());
+        PHPUnit::assertEquals(1000, $entry['amount']->getFloatValue());
 
-
-
+        // test that the fee has been allocated to the fee address
+        $fee_entries = $entries
+            ->filter(function($e) {
+                return $e['foreign_entity'] == env('FOLDINGCOIN_FEE_RECOVERY_ADDRESS') and $e['tx_type'] == EscrowAddressLedgerEntry::TYPE_BLOCKCHAIN_DELIVERY_FEE;
+            });
+        PHPUnit::assertCount(1, $fee_entries);
+        $entry = $fee_entries->first();
+        PHPUnit::assertEquals(-239.0, $entry['amount']->getFloatValue());
+        // echo "\n".$ledger->debugDumpLedger($ledger->findAllByAddress($escrow_address))."\n";
     }
 
     // ------------------------------------------------------------------------

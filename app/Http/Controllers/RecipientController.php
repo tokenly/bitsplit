@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ExecuteWithdrawal;
 use App\Libraries\Withdrawal\RecipientWithdrawalManager;
+use App\Libraries\Withdrawal\WithdrawalFeeManager;
 use Auth;
 use Exception;
 use Illuminate\Http\Request;
@@ -41,7 +42,7 @@ class RecipientController extends Controller
         ]);
     }
 
-    public function withdraw(Request $request, RecipientWithdrawalManager $recipient_withdrawal_manager)
+    public function withdraw(Request $request, RecipientWithdrawalManager $recipient_withdrawal_manager, WithdrawalFeeManager $withdrawal_fee_manager)
     {
         $user = Auth::user();
         $addresses = $recipient_withdrawal_manager->getAddressesForUserWithBalances($user);
@@ -52,7 +53,7 @@ class RecipientController extends Controller
             'user' => $user,
             'addresses' => $addresses,
             'default_blockchain_address' => $default_blockchain_address,
-
+            'fee_quote' => $withdrawal_fee_manager->getLatestFeeQuote(),
         ]);
     }
 

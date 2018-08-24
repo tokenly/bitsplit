@@ -48,6 +48,9 @@ class Kernel extends ConsoleKernel
         // Role commands
         Commands\Roles\AssignUserRole::class,
 
+        // Withdrawal commands
+        Commands\Withdrawal\CacheFLDCQuote::class,
+
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
     ];
@@ -61,6 +64,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('bitsplit:distribute')->everyMinute();
+
+        $schedule->command('withdrawal:cache-fldc-quote')->everyFifteenMinutes();
 
         // the stats and save_stats schedule are moved to App\Console\Commands\FoldingCoinSaveStatsScheduler
     }

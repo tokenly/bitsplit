@@ -32,5 +32,10 @@
 
         <env name="FEE_SATOSHI_PER_BYTE" value="40"/>
         <env name="MAX_TX_OUTPUTS" value="150"/>
+
+        <env name="TOKENMAP_CONNECTION_URL" value="http://badtokenmap-xyzz.foobar"/>
+        <env name="ESCROW_SUBSTATION_CONNECTION_URL" value="http://badsubstation-xyzz.foobar"/>
+        <env name="FOLDINGCOIN_FEE_RECOVERY_ADDRESS" value="1AAAA8888xxxxxxxxxxxxxxxxxxxxnRdzt"/>
+
     </php>
 </phpunit>

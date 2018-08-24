@@ -21,13 +21,16 @@ class DistributionHelper
 
         $deposit_address = MockSubstationClient::sampleAddress('bitcoin', 0);
 
+        $SATOSHI = 100000000;
         $address_list = [
-            ['address' => '1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j', 'amount' => 100000000],
-            ['address' => '1AAAA2222xxxxxxxxxxxxxxxxxxy4pQ3tU', 'amount' => 200000000],
-            ['address' => '1AAAA3333xxxxxxxxxxxxxxxxxxxsTtS6v', 'amount' => 300000000],
-            ['address' => '1AAAA4444xxxxxxxxxxxxxxxxxxxxjbqeD', 'amount' => 400000000],
-            ['address' => '1AAAA5555xxxxxxxxxxxxxxxxxxxwEhYkL', 'amount' => 500000000],
+            ['address' => '1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j', 'amount' => 1000 * $SATOSHI],
+            ['address' => '1AAAA2222xxxxxxxxxxxxxxxxxxy4pQ3tU', 'amount' => 1100 * $SATOSHI],
+            ['address' => '1AAAA3333xxxxxxxxxxxxxxxxxxxsTtS6v', 'amount' => 1200 * $SATOSHI],
+            ['address' => '1AAAA4444xxxxxxxxxxxxxxxxxxxxjbqeD', 'amount' => 1300 * $SATOSHI],
+            ['address' => '1AAAA5555xxxxxxxxxxxxxxxxxxxwEhYkL', 'amount' => 1400 * $SATOSHI],
         ];
+
+
 
         $distro = new Distribution();
         $distro->user_id = $user->id;
@@ -36,7 +39,7 @@ class DistributionHelper
         $distro->address_uuid = Uuid::uuid4()->toString();
         $distro->network = 'btc';
         $distro->asset = 'MYCOIN';
-        $distro->asset_total = 1500000000; // 15.0
+        $distro->asset_total = 6000 * $SATOSHI;
         $distro->label = 'Test Distribution One';
         $distro->use_fuel = 0;
         $distro->uuid = Uuid::uuid4()->toString();

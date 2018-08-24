@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "12754cd339d95f0a04a6b6f3ffda2f1e",
+    "content-hash": "79c1d1609b17f64a593f0a319994bb29",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4431,16 +4431,16 @@
         },
         {
             "name": "tokenly/substation-client",
-            "version": "v0.5.2",
+            "version": "v0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-client.git",
-                "reference": "a100448a34c14653bc2f317741b1b94e4a2c2e4b"
+                "reference": "de7d6837bd24adba02b1f9b4dd4ce7b54be4d338"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/a100448a34c14653bc2f317741b1b94e4a2c2e4b",
-                "reference": "a100448a34c14653bc2f317741b1b94e4a2c2e4b",
+                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/de7d6837bd24adba02b1f9b4dd4ce7b54be4d338",
+                "reference": "de7d6837bd24adba02b1f9b4dd4ce7b54be4d338",
                 "shasum": ""
             },
             "require": {
@@ -4485,26 +4485,26 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-07-03T22:30:42+00:00"
+            "time": "2018-08-24T11:47:59+00:00"
         },
         {
             "name": "tokenly/substation-distribution-client",
-            "version": "v0.1.1",
+            "version": "v0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-distribution-client.git",
-                "reference": "eed6e650d216270a3a6ca5821bb5c4c3c253450f"
+                "reference": "d4b013117ab75b8ee31956d742e5e5d5659e2a2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/eed6e650d216270a3a6ca5821bb5c4c3c253450f",
-                "reference": "eed6e650d216270a3a6ca5821bb5c4c3c253450f",
+                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/d4b013117ab75b8ee31956d742e5e5d5659e2a2b",
+                "reference": "d4b013117ab75b8ee31956d742e5e5d5659e2a2b",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0",
                 "tokenly/crypto-quantity": "^2",
-                "tokenly/substation-client": "^0.5.2"
+                "tokenly/substation-client": "^0.6.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~6.0",
@@ -4540,7 +4540,7 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-08-14T20:46:36+00:00"
+            "time": "2018-08-24T12:02:50+00:00"
         },
         {
             "name": "tokenly/token-generator",
@@ -4584,16 +4584,16 @@
         },
         {
             "name": "tokenly/tokenmap-client",
-            "version": "v2.0.0",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/tokenmap-client.git",
-                "reference": "864a7a59b7a1f44da098458bbd719bc5a547b4bd"
+                "reference": "e5fbbdf6fc79102ef7f527f9777cbf03968a8c0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/tokenmap-client/zipball/864a7a59b7a1f44da098458bbd719bc5a547b4bd",
-                "reference": "864a7a59b7a1f44da098458bbd719bc5a547b4bd",
+                "url": "https://api.github.com/repos/tokenly/tokenmap-client/zipball/e5fbbdf6fc79102ef7f527f9777cbf03968a8c0e",
+                "reference": "e5fbbdf6fc79102ef7f527f9777cbf03968a8c0e",
                 "shasum": ""
             },
             "require": {
@@ -4630,7 +4630,7 @@
                 }
             ],
             "description": "A tokenmap client library",
-            "time": "2018-03-07T12:20:32+00:00"
+            "time": "2018-08-24T12:22:17+00:00"
         },
         {
             "name": "tokenly/tokenpass-client",

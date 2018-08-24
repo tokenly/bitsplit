@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Libraries\EscrowWallet\EscrowWalletManager;
 use App\Libraries\Substation\Substation;
 use App\Libraries\Withdrawal\RecipientWithdrawalManager;
+use App\Libraries\Withdrawal\WithdrawalFeeManager;
 use App\Models\EscrowAddressLedgerEntry;
 use App\Models\RecipientWithdrawal;
 use App\Repositories\EscrowAddressLedgerEntryRepository;
@@ -43,11 +44,40 @@ class ExecuteWithdrawal implements ShouldQueue
      *
      * @return void
      */
-    public function handle(RecipientWithdrawalManager $recipient_withdrawal_manager, EscrowAddressLedgerEntryRepository $ledger, TokenpassAPI $tokenpass, RecipientWithdrawalRepository $recipient_withdrawal_repository, UserRepository $user_repository, EscrowWalletManager $escrow_wallet_manager)
+    public function handle(RecipientWithdrawalManager $recipient_withdrawal_manager, WithdrawalFeeManager $withdrawal_fee_manager, EscrowAddressLedgerEntryRepository $ledger, TokenpassAPI $tokenpass, RecipientWithdrawalRepository $recipient_withdrawal_repository, UserRepository $user_repository, EscrowWalletManager $escrow_wallet_manager)
     {
         $user = $this->withdrawal->user;
         $destination_address = $this->withdrawal->address;
         $asset = $this->withdrawal->asset;
+
+        // get the total quantity that we will withdraw
+        $total_quantity = $recipient_withdrawal_manager->getPromisedBalanceForUser($user, $destination_address, $asset);
+
+        // subtract the fee
+        $fee_address = env('FOLDINGCOIN_FEE_RECOVERY_ADDRESS');
+        if ($destination_address == $fee_address) {
+            // special case for withdrawing to fee address
+            $fee_quantity = CryptoQuantity::zero();
+        } else {
+            $fee_quantity = $withdrawal_fee_manager->getLiveFeeQuote($_round_up = true);
+        }
+
+        // if the quantity was zero, don't create the ledger entries
+        if ($total_quantity->subtract($fee_quantity)->lte(0)) {
+            $error = "Insufficient balance to withdraw";
+            EventLog::warning('withdrawal.insufficentBalance', [
+                'userId' => $user['id'],
+                'address' => $destination_address,
+                'asset' => $asset,
+                'quantity' => $total_quantity->getSatoshisString(),
+                'fee' => $fee_quantity->getSatoshisString(),
+            ]);
+            $recipient_withdrawal_repository->update($this->withdrawal, [
+                'error' => $error,
+                'completed_at' => time(),
+            ]);
+            return;
+        }
 
         $owner = $user_repository->findEscrowWalletOwner();
         $escrow_address = $escrow_wallet_manager->getEscrowAddressForUser($owner, Substation::chain());
@@ -65,7 +95,7 @@ class ExecuteWithdrawal implements ShouldQueue
             }
 
             // call Tokenpass to cancel all the promise(s)
-            [$promised_total_quantity, $tmp_delivery_ledger_entry] = DB::transaction(function() use ($user, $escrow_address, $ledger, $tokenpass, $destination_address, $asset) {
+            [$withdrawal_total_quantity, $tmp_delivery_ledger_entry] = DB::transaction(function() use ($user, $escrow_address, $ledger, $tokenpass, $destination_address, $asset, $fee_quantity) {
                 $promised_total_quantity = CryptoQuantity::zero();
 
                 $entries = $ledger->entriesWithPromiseIDsByForeignEntityAndAsset($destination_address, $asset);
@@ -101,9 +131,12 @@ class ExecuteWithdrawal implements ShouldQueue
                     $promised_total_quantity = $promised_total_quantity->subtract($ledger_entry['amount']);
                 }
 
+                // subtract the fee
+                $withdrawal_total_quantity = $promised_total_quantity->subtract($fee_quantity);
+
                 // if the quantity was zero, don't create the ledger entries
-                if ($promised_total_quantity->lte(0)) {
-                    return [$promised_total_quantity, null];
+                if ($withdrawal_total_quantity->lte(0)) {
+                    return [$withdrawal_total_quantity, null];
                 }
 
                 // add a credit to reverse the promises total
@@ -111,28 +144,35 @@ class ExecuteWithdrawal implements ShouldQueue
                 $tx_identifier = 'fulfill:' . $asset . ':' . $this->withdrawal['uuid'];
                 $ledger->credit($escrow_address, $promised_total_quantity, $asset, EscrowAddressLedgerEntry::TYPE_PROMISE_FULFILLED, $txid, $tx_identifier, $_confirmed = true, $_promise_id = null, $destination_address);
 
+                // create a promise to pay for the fees
+                $fee_address = env('FOLDINGCOIN_FEE_RECOVERY_ADDRESS');
+                $txid = $this->withdrawal['uuid'];
+                $tx_identifier = 'fee:' . $asset . ':' . $this->withdrawal['uuid'];
+                $tmp_delivery_ledger_entry = $ledger->debit($escrow_address, $fee_quantity, $asset, EscrowAddressLedgerEntry::TYPE_BLOCKCHAIN_DELIVERY_FEE, $txid, $tx_identifier, $_confirmed = true, $_promise_id = null, $fee_address);
+
                 // create a temporary delivery debit that will be deleted after the Substation send is completed
                 $txid = $this->withdrawal['uuid'];
                 $tx_identifier = 'tmp-deliver:' . $asset . ':' . $this->withdrawal['uuid'];
-                $tmp_delivery_ledger_entry = $ledger->debit($escrow_address, $promised_total_quantity, $asset, EscrowAddressLedgerEntry::TYPE_BLOCKCHAIN_DELIVERY, $txid, $tx_identifier, $_confirmed = false, $_promise_id = null);
+                $tmp_delivery_ledger_entry = $ledger->debit($escrow_address, $withdrawal_total_quantity, $asset, EscrowAddressLedgerEntry::TYPE_BLOCKCHAIN_DELIVERY, $txid, $tx_identifier, $_confirmed = false, $_promise_id = null);
 
-                return [$promised_total_quantity, $tmp_delivery_ledger_entry];
+                return [$withdrawal_total_quantity, $tmp_delivery_ledger_entry];
             });
 
 
             // verify that the quantity was not zero
-            if ($promised_total_quantity->lte(0)) {
-                $error = "Balance was zero";
-                EventLog::warning('withdrawal.zeroBalance', [
+            if ($withdrawal_total_quantity->lte(0)) {
+                $error = "Insufficient balance to withdraw";
+                EventLog::warning('withdrawal.insufficentBalance', [
                     'userId' => $user['id'],
                     'address' => $destination_address,
                     'asset' => $asset,
+                    'quantity' => $total_quantity->getSatoshisString(),
+                    'fee' => $fee_quantity->getSatoshisString(),
                 ]);
                 $recipient_withdrawal_repository->update($this->withdrawal, [
                     'error' => $error,
                     'completed_at' => time(),
                 ]);
-
                 return;
             }
 
@@ -143,14 +183,15 @@ class ExecuteWithdrawal implements ShouldQueue
                 'requestId' => $this->withdrawal->uuid,
             ];
             $wallet = $escrow_address->escrowWallet;
-            $send_result = $substation_client->sendImmediatelyToSingleDestination($wallet['uuid'], $escrow_address['uuid'], $asset, $promised_total_quantity, $destination_address, $send_parameters);
-            Log::debug("\$send_result=".json_encode($send_result, 192));
+            $send_result = $substation_client->sendImmediatelyToSingleDestination($wallet['uuid'], $escrow_address['uuid'], $asset, $withdrawal_total_quantity, $destination_address, $send_parameters);
+            // Log::debug("\$send_result=".json_encode($send_result, 192));
 
             EventLog::info('withdrawal.sent', [
                 'userId' => $user['id'],
                 'address' => $destination_address,
                 'asset' => $asset,
-                'quantity' => $promised_total_quantity->getSatoshisString(),
+                'quantity' => $withdrawal_total_quantity->getSatoshisString(),
+                'fee' => $fee_quantity->getSatoshisString(),
                 'txid' => $send_result['txid'],
             ]);
 
@@ -158,6 +199,12 @@ class ExecuteWithdrawal implements ShouldQueue
             // now that the substation transaction was successfully sent
             //   delete the temporary delivery ledger entry
             $ledger->delete($tmp_delivery_ledger_entry);
+
+            // update the withdrawal
+            $recipient_withdrawal_repository->update($this->withdrawal, [
+                'completed_at' => time(),
+                'fee_paid' => $fee_quantity->getSatoshisString(),
+            ]);
 
         } catch (Exception $e) {
             EventLog::logError('withdrawal.error', $e, [
