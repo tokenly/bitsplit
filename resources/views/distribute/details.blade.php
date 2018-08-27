@@ -44,9 +44,11 @@
                 <strong>Estimated total USD value:</strong> ${{ number_format(($distro->asset_total / 100000000) * $distro->fiat_token_quote, 2) }}
             </li>
             @endif
+            @if ($distro->isOnchainDistribution())
 			<li>
 				<strong>BTC Fuel Cost:</strong> {{ rtrim(rtrim(number_format($distro->fee_total / 100000000, 8),"0"),".") }} BTC
 			</li>
+            @endif
 			<li>
 				<strong>Total F@H Points:</strong> {{ number_format($distro->fah_points) }}
 			</li>
@@ -76,11 +78,13 @@
 				<strong>Miner Fee Rate:</strong> {{ $distro->fee_rate }} satoshis per byte
 			</li>
             @endif
+            @if ($distro->isOnchainDistribution())
 			<li>
 				<strong>Deposit Address:</strong>
 				<a href="https://blocktrail.com/BTC/address/{{ $distro->deposit_address }}" target="_blank">{{ $distro->deposit_address }}</a>
-				<span class="dynamic-payment-button" data-label="BitSplit Distribution #{{ $distro->id }} @if(trim($distro->label) != '') '{{ $distro->label }}' @endif" data-amount="{{ round($distro->asset_total / 100000000, 8) }}" data-address="{{ $distro->deposit_address }}" data-tokens="{{ $distro->asset }}"></span>
+				<span class="dynamic-payment-button" data-label="Distribution #{{ $distro->id }} @if(trim($distro->label) != '') '{{ $distro->label }}' @endif" data-amount="{{ round($distro->asset_total / 100000000, 8) }}" data-address="{{ $distro->deposit_address }}" data-tokens="{{ $distro->asset }}"></span>
 			</li>
+            @endif
 			<li>
 				<strong>Status:</strong>
                 <span class="distro-{{ $distro->id }}-status-text">
@@ -89,38 +93,63 @@
 					echo '<span class="text-success">Complete</span>';
 				}
 				else{
-					switch($distro->stage){
-						case 0:
-							echo '<span class="text-warning">Initializing</span>';
-							break;
-						case 1:
-							echo '<span class="text-warning">Collecting Tokens</span>';
-							break;
-						case 2:
-							echo '<span class="text-warning">Collecting Fuel</span>';
-							break;
-						case 3:
-							echo '<span class="text-info">Priming Inputs</span>';
-							break;
-						case 4:
-							echo '<span class="text-info">Preparing Transactions</span>';
-							break;
-						case 5:
-							echo '<span class="text-info">Broadcasting Transactions</span>';
-							break;
-						case 6:
-							echo '<span class="text-info">Confirming Broadcasts</span>';
-							break;
-						case 7:
-							echo '<span class="text-success">Performing Cleanup</span>';
-							break;
-						case 8:
-							echo '<span class="text-success">Finalizing Cleanup</span>';
-							break;
-						default:
-							echo '(unknown)';
-							break;
-					
+					if ($distro->isOnchainDistribution()) {
+						switch($distro->stage){
+							case 0:
+								echo '<span class="text-warning">Initializing</span>';
+								break;
+							case 1:
+								echo '<span class="text-warning">Collecting Tokens</span>';
+								break;
+							case 2:
+								echo '<span class="text-warning">Collecting Fuel</span>';
+								break;
+							case 3:
+								echo '<span class="text-info">Priming Inputs</span>';
+								break;
+							case 4:
+								echo '<span class="text-info">Preparing Transactions</span>';
+								break;
+							case 5:
+								echo '<span class="text-info">Broadcasting Transactions</span>';
+								break;
+							case 6:
+								echo '<span class="text-info">Confirming Broadcasts</span>';
+								break;
+							case 7:
+								echo '<span class="text-success">Performing Cleanup</span>';
+								break;
+							case 8:
+								echo '<span class="text-success">Finalizing Cleanup</span>';
+								break;
+							default:
+								echo '(unknown)';
+								break;
+						
+						}
+					}
+					if ($distro->isOffchainDistribution()) {
+						switch($distro->stage){
+							case 0:
+								echo '<span class="text-warning">Initializing</span>';
+								break;
+							case 1:
+								// "1": "EnsureTokens"
+								echo '<span class="text-warning">Checking Token Balances</span>';
+								break;
+							case 2:
+								// "2": "AllocatePromises"
+								echo '<span class="text-info">Allocating Tokens to Recipients</span>';
+								break;
+							case 3:
+								// "3": "DistributePromises"
+								echo '<span class="text-info">Distributing Tokens</span>';
+								break;
+							default:
+								echo '(unknown)';
+								break;
+						
+						}
 					}
 					if($distro->hold == 1){
 						echo ' <strong class="text-danger">HOLD</strong>';

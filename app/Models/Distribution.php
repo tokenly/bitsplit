@@ -52,6 +52,11 @@ class Distribution extends Model
         }
     }
 
+    public function isOnchainDistribution()
+    {
+        return !$this->offchain;
+    }
+    
     public function isOffchainDistribution()
     {
         return $this->offchain;
@@ -176,7 +181,7 @@ class Distribution extends Model
         Mail::send('emails.distribution.complete', ['user' => $user, 'distro' => $this, 'distro_tx' => $distro_tx],
             function($m) use ($user) {
                 $m->from(env('MAIL_FROM_ADDRESS'));
-                $m->to($user->email, $user->username)->subject('BitSplit Distribution #'.$this->id.' Complete - '.timestamp());
+                $m->to($user->email, $user->username)->subject('Distribution #'.$this->id.' Complete - '.timestamp());
         });
     }
     
@@ -212,7 +217,7 @@ class Distribution extends Model
             Mail::send('emails.distribution.recipient', ['notify_data' => $row, 'distro' => $this],
                 function($m) use ($email, $username) {
                     $m->from(env('MAIL_FROM_ADDRESS'));
-                    $m->to($email, $username)->subject('BitSplit Distribution #'.$this->id.' - '.$this->asset.' Received');
+                    $m->to($email, $username)->subject('Distribution #'.$this->id.' - '.$this->asset.' Received');
             });
         }
     }
