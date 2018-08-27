@@ -32,7 +32,7 @@ class Folders
         foreach ($folders as $folder) {
             if(isset($pre_folders[$folder['bitcoinAddress']])) {
                 $pre_folders[$folder['bitcoinAddress']]['pointsGained'] += $folder['pointsGained'];
-                $pre_folders[$folder['bitcoinAddress']]['amount'] = bcadd($pre_folders[$folder['bitcoinAddress']]['amount'], $folder['amount']);
+                $pre_folders[$folder['bitcoinAddress']]['amount'] = bcadd($pre_folders[$folder['bitcoinAddress']]['amount'], $folder['amount'], 8);
             } else {
                 $pre_folders[$folder['bitcoinAddress']] = $folder;
             }
@@ -64,7 +64,7 @@ class Folders
         foreach ($folders as $folder) {
             $folder->calculateAmount($total_points, $this->amount, $calculation_type === Distribution::PROPORTIONAL_CALCULATION_TYPE);
             if($compare_amount && (bccomp($folder->getAmount(), $this->amounts[$folder->address]) !== 0)) {
-                throw new \Exception('Amount wasn\'t calculated correctly. ' . $folder->getAmount() . ' doesn\'t match ' . $this->amounts[$folder->address]);
+                throw new \Exception('Amount wasn\'t calculated correctly for address: ' . $folder->address . '. ' . $folder->getAmount() . ' doesn\'t match ' . $this->amounts[$folder->address]);
             }
         }
         return $folders;
@@ -77,9 +77,9 @@ class Folders
     function getTopFolders(string $calculation_type, int $amount) {
         $folders = $this->getFolders();
         usort($folders, function($folder_a, $folder_b) {
-            return $folder_a->new_points <=> $folder_b->new_points;
+            return $folder_b->new_points - $folder_a->new_points;
         });
-        $top_folders =array_slice($folders,0, $amount);
+        $top_folders = array_slice($folders,0, $amount);
         return $this->processFolders($calculation_type, $top_folders);
     }
 

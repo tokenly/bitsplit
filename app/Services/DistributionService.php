@@ -104,7 +104,7 @@ class DistributionService
         $distro->calculation_type = ucfirst($request->input('calculation_type'));
         $distro->total_folders = $this->distroCount;
         $distro->fiat_token_quote = app(TokenmapClient::class)->getSimpleQuote('USD', $this->asset, Substation::chain())->getFloatValue();
-        if($this->request->input('calculation_type' === 'even')) {
+        if($this->request->input('calculation_type')  === 'even') {
             $distro->asset_total = intval(bcmul(trim($this->request->input('asset_total')), '100000000', '0'));
         } else {
             $distro->asset_total = intval(bcmul(trim($this->request->input('asset_total')), '100000000', '0')) * count($this->addresses);
