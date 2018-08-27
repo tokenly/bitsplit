@@ -43,9 +43,20 @@ class Kernel extends ConsoleKernel
         // Escrow address commands
         Commands\EscrowAddress\GenerateEscrowAddress::class,
         Commands\EscrowAddress\SyncEscrowAddress::class,
+        Commands\EscrowAddress\CreateEscrowAddressPromise::class,
 
         // Role commands
         Commands\Roles\AssignUserRole::class,
+
+        // Withdrawal commands
+        Commands\Withdrawal\CacheFLDCQuote::class,
+
+        // Fee recovery
+        Commands\FeeRecovery\ProcessFeeRecovery::class,
+        Commands\FeeRecovery\SeedFeeRecoveryLedger::class,
+
+        // development
+        // Commands\Development\PurchaseBTC::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
@@ -60,6 +71,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('bitsplit:distribute')->everyMinute();
+
+        $schedule->command('withdrawal:cache-fldc-quote')->everyFifteenMinutes();
+
+        $schedule->command('fee:process-recovery')->everyFiveMinutes();
 
         // the stats and save_stats schedule are moved to App\Console\Commands\FoldingCoinSaveStatsScheduler
     }

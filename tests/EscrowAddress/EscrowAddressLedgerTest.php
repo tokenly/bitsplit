@@ -57,6 +57,44 @@ class EscrowAddressLedgerTest extends TestCase
         PHPUnit::assertEquals(0.5, $balance->getFloatValue());
     }
 
+    public function testForeignEntityDebitsAndCredits()
+    {
+        // mocks
+        SubstationHelper::mockAll();
+        app('TokenpassHelper')->mockPromiseMethods();
+
+        // ledger
+        $ledger = app(EscrowAddressLedgerEntryRepository::class);
+
+        // create a new user and address
+        // build the objects
+        $user = app('UserHelper')->newRandomUser();
+        $escrow_address = app('EscrowWalletAddressHelper')->generateNewEscrowWalletAddress($user);
+
+        // credit
+        $ledger->credit($escrow_address, CryptoQuantity::fromFloat(1000), 'FLDC', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(2000), 'recv:' . SampleId::txid(2000));
+        $ledger->credit($escrow_address, CryptoQuantity::fromFloat(1000), 'OTHERCOIN', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(2001), 'recv:' . SampleId::txid(2001));
+
+        // debit to foreign entity
+        $foreign_entity_one = '1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j';
+        $ledger->debit($escrow_address, CryptoQuantity::fromFloat(150), 'FLDC', EscrowAddressLedgerEntry::TYPE_WITHDRAWAL, SampleId::txid(1002), 'send:' . SampleId::txid(1002), $_confirmed = true, $_promise_id = 101, $foreign_entity_one);
+        $ledger->debit($escrow_address, CryptoQuantity::fromFloat(50), 'FLDC', EscrowAddressLedgerEntry::TYPE_WITHDRAWAL, SampleId::txid(1003), 'send:' . SampleId::txid(1003), $_confirmed = true, $_promise_id = 102, $foreign_entity_one);
+        $ledger->debit($escrow_address, CryptoQuantity::fromFloat(25), 'OTHERCOIN', EscrowAddressLedgerEntry::TYPE_WITHDRAWAL, SampleId::txid(1004), 'send:' . SampleId::txid(1004), $_confirmed = true, $_promise_id = 103, $foreign_entity_one);
+
+        $foreign_entity_two = '1AAAA2222xxxxxxxxxxxxxxxxxxy4pQ3tU';
+        $ledger->debit($escrow_address, CryptoQuantity::fromFloat(30), 'FLDC', EscrowAddressLedgerEntry::TYPE_WITHDRAWAL, SampleId::txid(1005), 'send:' . SampleId::txid(1005), $_confirmed = true, $_promise_id = 101, $foreign_entity_two);
+
+        // check source totals
+        $balance = $ledger->addressBalance($escrow_address, 'FLDC');
+        PHPUnit::assertEquals(770, $balance->getFloatValue());
+
+        // check foreign entity totals
+        $balance = $ledger->foreignEntityBalance($foreign_entity_one, 'FLDC');
+        PHPUnit::assertEquals(200, $balance->getFloatValue());
+        $balances = $ledger->foreignEntityBalancesByAsset($foreign_entity_one);
+        PHPUnit::assertEquals(200, $balances['FLDC']->getFloatValue());
+    }
+
     public function testEscrowAddressBlockchainCreditAndDebit()
     {
         // mocks
@@ -108,8 +146,6 @@ class EscrowAddressLedgerTest extends TestCase
         PHPUnit::assertEquals(0.1, $ledger->addressBalance($escrow_address, 'BTC', $_confirmed_only = true)->getFloatValue());
         PHPUnit::assertEquals(0.1, $ledger->addressBalance($escrow_address, 'BTC', $_confirmed_only = false)->getFloatValue());
     }
-
-
 
     // ------------------------------------------------------------------------
 

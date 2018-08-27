@@ -18,6 +18,8 @@ class OffchainDistributionTest extends TestCase
 
     public function testOffchainDistribution()
     {
+        $SATOSHI = 100000000;
+
         // mocks
         SubstationHelper::mockAll();
         $tokenpass_mock = app('TokenpassHelper')->mockProvisionalSourceMethods(app('TokenpassHelper')->ensureMockedTokenpassAPI());
@@ -38,7 +40,7 @@ class OffchainDistributionTest extends TestCase
 
         // seed ledger
         $ledger = app(EscrowAddressLedgerEntryRepository::class);
-        $ledger->credit($escrow_address, CryptoQuantity::fromSatoshis(1500000000), 'FLDC', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(500), 'recv:FLDC:' . SampleId::txid(500));
+        $ledger->credit($escrow_address, CryptoQuantity::fromSatoshis(9000 * $SATOSHI), 'FLDC', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(500), 'recv:FLDC:' . SampleId::txid(500));
 
         // create the distribution
         $distribution = app('DistributionHelper')->newOffchainDistribution($user, ['asset' => 'FLDC'], $_and_initialize = true);
@@ -67,10 +69,26 @@ class OffchainDistributionTest extends TestCase
 
         // make sure promises were called
         PHPUnit::assertEquals(106, $promise_counter);
+
+        // make sure balances are sent in the ledger
+        $ledger = app(EscrowAddressLedgerEntryRepository::class);
+
+        // check foreign entity totals
+        $balance = $ledger->foreignEntityBalance('1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j', 'FLDC');
+        PHPUnit::assertEquals(1000, $balance->getFloatValue());
+        $balance = $ledger->foreignEntityBalance('1AAAA2222xxxxxxxxxxxxxxxxxxy4pQ3tU', 'FLDC');
+        PHPUnit::assertEquals(1100, $balance->getFloatValue());
+
+        // check promise IDs in the ledger entries
+        // echo "\n".$ledger->debugDumpLedger($ledger->findAllByAddress($escrow_address))."\n";
+        $entries = $ledger->entriesWithPromiseIDsByForeignEntityAndAsset('1AAAA1111xxxxxxxxxxxxxxxxxxy43CZ9j', 'FLDC');
+        PHPUnit::assertCount(1, $entries);
     }
 
     public function testRequiresTokensForOffchainDistribution()
     {
+        $SATOSHI = 100000000;
+
         // mocks
         SubstationHelper::mockAll();
         $tokenpass_mock = app('TokenpassHelper')->mockProvisionalSourceMethods(app('TokenpassHelper')->ensureMockedTokenpassAPI());
@@ -82,10 +100,11 @@ class OffchainDistributionTest extends TestCase
 
         // seed ledger with inadequate funds
         $ledger = app(EscrowAddressLedgerEntryRepository::class);
-        $ledger->credit($escrow_address, CryptoQuantity::fromSatoshis(900000000), 'FLDC', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(500), 'recv:FLDC:' . SampleId::txid(500));
+        $ledger->credit($escrow_address, CryptoQuantity::fromSatoshis(5900 * $SATOSHI), 'FLDC', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(500), 'recv:FLDC:' . SampleId::txid(500));
 
         // create the distribution
         $distribution = app('DistributionHelper')->newOffchainDistribution($user, ['asset' => 'FLDC'], $_and_initialize = true);
+        PHPUnit::assertNotEmpty($distribution->getEscrowAddress());
         PHPUnit::assertTrue($distribution->isOffchainDistribution());
         PHPUnit::assertNotEmpty($distribution);
         PHPUnit::assertEquals('EnsureTokens', ($distribution->refresh())->stageName());
@@ -99,6 +118,8 @@ class OffchainDistributionTest extends TestCase
 
     public function testAllocateLedgerEntriesForOffchainDistribution()
     {
+        $SATOSHI = 100000000;
+
         // mocks
         SubstationHelper::mockAll();
         $tokenpass_mock = app('TokenpassHelper')->mockProvisionalSourceMethods(app('TokenpassHelper')->ensureMockedTokenpassAPI());
@@ -110,7 +131,7 @@ class OffchainDistributionTest extends TestCase
 
         // seed ledger
         $ledger = app(EscrowAddressLedgerEntryRepository::class);
-        $ledger->credit($escrow_address, CryptoQuantity::fromSatoshis(1500000000), 'FLDC', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(500), 'recv:FLDC:' . SampleId::txid(500));
+        $ledger->credit($escrow_address, CryptoQuantity::fromSatoshis(9000 * $SATOSHI), 'FLDC', EscrowAddressLedgerEntry::TYPE_DEPOSIT, SampleId::txid(500), 'recv:FLDC:' . SampleId::txid(500));
 
         // create the distribution
         $distribution = app('DistributionHelper')->newOffchainDistribution($user, ['asset' => 'FLDC'], $_and_initialize = true);

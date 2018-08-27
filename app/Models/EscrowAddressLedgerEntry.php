@@ -13,8 +13,10 @@ class EscrowAddressLedgerEntry extends APIModel
 
     const TYPE_DEPOSIT = 'deposit';
     const TYPE_WITHDRAWAL = 'withdrawal';
-    // const TYPE_PROMISE_CREATED = 'promise_created';
-    // const TYPE_PROMISE_FULFILLED = 'promise_fulfilled';
+    const TYPE_PROMISE_CREATED = 'promise_created';
+    const TYPE_PROMISE_FULFILLED = 'promise_fulfilled';
+    const TYPE_BLOCKCHAIN_DELIVERY = 'blockchain_delivery';
+    const TYPE_BLOCKCHAIN_DELIVERY_FEE = 'blockchain_delivery_fee';
 
     const CRYPTOQUANTITY_CLASS = 'Tokenly\CryptoQuantity\CryptoQuantity';
 
@@ -38,11 +40,17 @@ class EscrowAddressLedgerEntry extends APIModel
             case self::TYPE_WITHDRAWAL:
                 return 'withdrawal';
 
-            // case self::TYPE_PROMISE_CREATED:
-            //     return 'customer delivery';
+            case self::TYPE_PROMISE_CREATED:
+                return 'promise created';
 
-            // case self::TYPE_PROMISE_FULFILLED:
-            //     return 'blockchain delivery';
+            case self::TYPE_PROMISE_FULFILLED:
+                return 'promise fulfilled';
+
+            case self::TYPE_BLOCKCHAIN_DELIVERY:
+                return 'blockchain delivery';
+
+            case self::TYPE_BLOCKCHAIN_DELIVERY_FEE:
+                return 'blockchain delivery fee';
 
             default:
                 return $type_id;
