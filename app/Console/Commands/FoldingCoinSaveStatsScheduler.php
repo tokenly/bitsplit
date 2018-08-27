@@ -42,14 +42,16 @@ class FoldingCoinSaveStatsScheduler extends ScheduleRunCommand
     }
 
     protected function defineSchedule(Schedule $schedule) {
-        // download the stats
-        $schedule->command('bitsplit:stats')->dailyAt('07:00')->timezone('UTC');
+        // stats schedule is disabled
 
-        // process the stats
-        $schedule->command('bitsplit:save_stats')->dailyAt('07:00')->timezone('UTC');
+        // // download the stats
+        // $schedule->command('bitsplit:stats')->dailyAt('07:00')->timezone('UTC');
+
+        // // process the stats
+        // $schedule->command('bitsplit:save_stats')->dailyAt('07:00')->timezone('UTC');
     
-        // run after the save stats command
-        $schedule->command('bitsplit:cache-total-unique-folders')->dailyAt('07:00')->timezone('UTC');
+        // // run after the save stats command
+        // $schedule->command('bitsplit:cache-total-unique-folders')->dailyAt('07:00')->timezone('UTC');
     }
 
 }
