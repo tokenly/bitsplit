@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Models\Distribution, Models\DistributionTx;
+use Tokenly\CryptoQuantity\CryptoQuantity;
 use Tokenly\CurrencyLib\CurrencyUtil;
 use Tokenly\LaravelApiProvider\Contracts\APIPermissionedUserContract;
 use Tokenly\LaravelApiProvider\Model\APIUser;
@@ -318,11 +319,18 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
             $output['escrow_address'] = $escrow_address['address'];
             $output['escrow_balances'] = $ledger->addressBalancesByAsset($escrow_address, $_confirmed_only = true);
             $output['escrow_pending_balances'] = $ledger->addressBalancesByAsset($escrow_address, $_confirmed_only = false);
+
+            // allocated
+            $output['allocated_fldc_balance'] = CryptoQuantity::zero()->subtract($ledger->addressBalanceWithForeignEntity($escrow_address, FLDCAssetName(), $_confirmed_only = true));
+
+
         } else {
             // no address
             $output['escrow_address'] = '[None]';
             $output['escrow_balances'] = [];
             $output['escrow_pending_balances'] = [];
+            $output['allocated_fldc_balance'] = 0;
+
         }
 
 

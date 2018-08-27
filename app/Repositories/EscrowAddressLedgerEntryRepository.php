@@ -7,13 +7,13 @@ use App\Models\EscrowAddressLedgerEntry;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use TableDumper;
 use Tokenly\CryptoQuantity\CryptoQuantity;
 use Tokenly\LaravelApiProvider\Repositories\APIRepository;
-use TableDumper;
 
 /*
-* EscrowAddressLedgerEntryRepository
-*/
+ * EscrowAddressLedgerEntryRepository
+ */
 class EscrowAddressLedgerEntryRepository extends APIRepository
 {
 
@@ -91,7 +91,7 @@ class EscrowAddressLedgerEntryRepository extends APIRepository
     }
 
     // returns CryptoQuantity::fromFloat(0.5)
-    public function addressBalance(EscrowAddress $address, $asset, $confirmed_only = false)
+    public function addressBalance(EscrowAddress $address, $asset, $confirmed_only = false, $with_foreign_entity_only = false)
     {
         $address_id = $address['id'];
 
@@ -103,10 +103,19 @@ class EscrowAddressLedgerEntryRepository extends APIRepository
             $query->where('confirmed', '1');
         }
 
+        if ($with_foreign_entity_only) {
+            $query->whereNotNull('foreign_entity');
+        }
+
         $sat_sum = $query->sum('amount');
         if ($sat_sum === null) {$sat_sum = 0;}
 
         return EscrowAddressLedgerEntry::cryptoQuantityForAddress($sat_sum, $address);
+    }
+
+    public function addressBalanceWithForeignEntity(EscrowAddress $address, $asset, $confirmed_only = false)
+    {
+        return $this->addressBalance($address, $asset, $confirmed_only, $_with_foreign_entity_only = true);
     }
 
     // returns
@@ -114,7 +123,7 @@ class EscrowAddressLedgerEntryRepository extends APIRepository
     //    BTC => CryptoQuantity::fromFloat(0.12),
     //    SOUP =>  CryptoQuantity::fromFloat(10),
     // ]
-    public function addressBalancesByAsset(EscrowAddress $address, $confirmed_only = false)
+    public function addressBalancesByAsset(EscrowAddress $address, $confirmed_only = false, $with_foreign_entity_only = false)
     {
         $address_id = $address['id'];
 
@@ -127,10 +136,19 @@ class EscrowAddressLedgerEntryRepository extends APIRepository
             $query->where('confirmed', '1');
         }
 
+        if ($with_foreign_entity_only) {
+            $query->whereNotNull('foreign_entity');
+        }
+
         $results = $query->get();
 
         $sums = $this->assembleBalancesByAsset($results, $address);
         return $sums;
+    }
+
+    public function addressBalancesByAssetBalanceWithForeignEntity(EscrowAddress $address, $confirmed_only = false)
+    {
+        return $this->addressBalancesByAsset($address, $confirmed_only, $_with_foreign_entity_only = true);
     }
 
     // returns CryptoQuantity::fromFloat(0.5)
@@ -174,7 +192,7 @@ class EscrowAddressLedgerEntryRepository extends APIRepository
         return $sums;
     }
 
-    // 
+    //
     public function entriesWithPromiseIDsByForeignEntityAndAsset($foreign_entity, $asset, $confirmed_only = false)
     {
         $query = $this->prototype_model
@@ -192,7 +210,6 @@ class EscrowAddressLedgerEntryRepository extends APIRepository
         $sums = $this->assembleBalancesByAsset($results, null, $_reverse = true);
         return $sums;
     }
-
 
     public function debugDumpLedger($entries)
     {

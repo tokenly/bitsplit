@@ -12,6 +12,11 @@
 </div>
 
 <div>
-	<strong>FLDC Escrow Address:</strong><br>
+    <strong>FLDC Escrow Address:</strong><br>
     <a href="https://{{ App\Libraries\Substation\Substation::chain() == 'counterpartyTestnet' ? 'testnet.' : '' }}xchain.io/address/{{ $dash_info['escrow_address'] }}" target="_blank" style="    word-break: break-all;">{{ $dash_info['escrow_address'] }}</a>
+</div>
+
+<div>
+	<strong>FLDC Allocated:</strong>
+    {{ formattedTokenQuantity($dash_info['allocated_fldc_balance']) }} 
 </div>
