@@ -22,7 +22,7 @@ class Distribution extends Model
         'id', 'uuid', 'label', 'created_at', 'updated_at', 'stage', 'stage_message', 'complete',
         'deposit_address', 'network', 'asset', 'asset_total', 
         'fee_total', 'asset_received', 'fee_received', 'hold', 'use_fuel', 'webhook',
-        'distribution_class', 'calculation_type'
+        'distribution_class', 'calculation_type', 'offchain',
     );
 
     protected $appends = ['tokens_per_point', 'average_points', 'fah_points', 'percentage_fah_network'];

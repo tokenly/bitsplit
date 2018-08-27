@@ -51,43 +51,66 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     return s.join(dec);
 }
 
-function getStageText(stage){
+function getStageText(stage, isOffchain){
     stage = parseInt(stage);
     var text = 'Unknown';
-    switch(stage){
-        case -1:
-            text = '<span class="text-success completed">Complete</span>';
-            break;
-        case -2:
-            text = '<strong>HOLD</strong>';
-            break;
-        case 0:
-            text = '<span class="text-warning">Initializing</span>';
-            break;
-        case 1:
-            text = '<span class="text-warning">Collecting Tokens</span>';
-            break;
-        case 2:
-            text = '<span class="text-warning">Collecting Fuel</span>';
-            break;
-        case 3:
-            text = '<span class="text-info">Priming Inputs</span>';
-            break;
-        case 4:
-            text = '<span class="text-info">Preparing Transactions</span>';
-            break;
-        case 5:
-            text = '<span class="text-info">Broadcasting Transactions</span>';
-            break;
-        case 6:
-            text = '<span class="text-info">Confirming Broadcasts</span>';
-            break;
-        case 7: 
-            text = '<span class="text-success">Performing Cleanup</span>';
-            break;
-        case 8:
-            text = '<span class="text-success">Finalizing Cleanup</span>';
-            break;        
+    if (isOffchain) {
+        switch(stage){
+            case -1:
+                text = '<span class="text-success completed">Complete</span>';
+                break;
+            case -2:
+                text = '<strong>HOLD</strong>';
+                break;
+            case 0:
+                text = '<span class="text-warning">Initializing</span>';
+                break;
+            case 1:
+                text = '<span class="text-warning">Checking Token Balances</span>';
+                break;
+            case 2:
+                text = '<span class="text-info">Allocating Tokens to Recipients</span>';
+                break;
+            case 3:
+                text = '<span class="text-info">Distributing Tokens</span>';
+                break;
+        }
+    } else {
+        switch(stage){
+            case -1:
+                text = '<span class="text-success completed">Complete</span>';
+                break;
+            case -2:
+                text = '<strong>HOLD</strong>';
+                break;
+            case 0:
+                text = '<span class="text-warning">Initializing</span>';
+                break;
+            case 1:
+                text = '<span class="text-warning">Collecting Tokens</span>';
+                break;
+            case 2:
+                text = '<span class="text-warning">Collecting Fuel</span>';
+                break;
+            case 3:
+                text = '<span class="text-info">Priming Inputs</span>';
+                break;
+            case 4:
+                text = '<span class="text-info">Preparing Transactions</span>';
+                break;
+            case 5:
+                text = '<span class="text-info">Broadcasting Transactions</span>';
+                break;
+            case 6:
+                text = '<span class="text-info">Confirming Broadcasts</span>';
+                break;
+            case 7: 
+                text = '<span class="text-success">Performing Cleanup</span>';
+                break;
+            case 8:
+                text = '<span class="text-success">Finalizing Cleanup</span>';
+                break;        
+        }
     }
     return text;
     
@@ -154,7 +177,7 @@ $(document).ready(function(){
                     else if(val.hold == 1){
                         val.stage = -2;
                     }
-                    $('.distro-' + val.id + '-status-text').html(getStageText(val.stage));
+                    $('.distro-' + val.id + '-status-text').html(getStageText(val.stage, val.offchain));
                     if(val.tx_confirmed >= val.tx_total){
                         $('#distro-' + val.id + '-table-complete-count-cont').html('<i class="fa fa-check text-success" title="Complete"></i> ' + val.tx_total);
                     }
@@ -185,7 +208,7 @@ $(document).ready(function(){
                     if(data.distro.hold == 1){
                         data.distro.stage = -2;
                     }                    
-                    $('.distro-' + data.distro.id + '-status-text').html(getStageText(data.distro.stage));
+                    $('.distro-' + data.distro.id + '-status-text').html(getStageText(data.distro.stage, data.distro.offchain));
                 }  
                 if(data.distro.stage_message != null && data.distro.stage_message.trim() != ''){
                     $('.status-message-cont').show();

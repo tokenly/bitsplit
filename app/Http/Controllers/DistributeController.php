@@ -134,7 +134,7 @@ class DistributeController extends Controller {
 			return Response::json($output, 403);
 		}
 		$distro = Distro::where('deposit_address', $address)->where('user_id', $user->id)
-                ->select('id', 'updated_at', 'completed_at', 'stage', 'stage_message', 'complete', 'hold', 'asset_received', 'asset_total', 'fee_received', 'fee_total')
+                ->select('id', 'updated_at', 'completed_at', 'stage', 'stage_message', 'complete', 'hold', 'asset_received', 'asset_total', 'fee_received', 'fee_total', 'offchain')
                 ->first();
 		if(!$distro){
             $output['error'] = 'Distribution not found';
@@ -313,7 +313,7 @@ class DistributeController extends Controller {
         }
 
          $distros = Distro::where('user_id', $user->id)
-                    ->select('id', 'updated_at', 'completed_at', 'stage', 'stage_message', 'hold', 'complete', 'asset_received', 'asset_total', 'fee_received', 'fee_total')
+                    ->select('id', 'updated_at', 'completed_at', 'stage', 'stage_message', 'hold', 'complete', 'asset_received', 'asset_total', 'fee_received', 'fee_total', 'offchain')
                     ->get();
          
          $output['stats']['distro_count'] = 0;

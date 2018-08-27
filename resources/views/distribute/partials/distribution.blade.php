@@ -44,39 +44,9 @@
                     echo '<strong>HOLD</strong>';
                 }
                 else{
-                    switch($row->stage){
-                        case 0:
-                            echo '<span class="text-warning">Initializing</span>';
-                            break;
-                        case 1:
-                            echo '<span class="text-warning">Collecting Tokens</span>';
-                            break;
-                        case 2:
-                            echo '<span class="text-warning">Collecting Fuel</span>';
-                            break;
-                        case 3:
-                            echo '<span class="text-info">Priming Inputs</span>';
-                            break;
-                        case 4:
-                            echo '<span class="text-info">Preparing Transactions</span>';
-                            break;
-                        case 5:
-                            echo '<span class="text-info">Broadcasting Transactions</span>';
-                            break;
-                        case 6:
-                            echo '<span class="text-info">Confirming Broadcasts</span>';
-                            break;
-                        case 7:
-                            echo '<span class="text-success">Performing Cleanup</span>';
-                            break;
-                        case 8:
-                            echo '<span class="text-success">Finalizing Cleanup</span>';
-                            break;
-                        default:
-                            echo '(unknown)';
-                            break;
-
-                    }
+                ?>
+                    @include('distribute.partials.distribution-status', ['distro' => $row])
+                <?php
                 }
             ?>
         </div>
