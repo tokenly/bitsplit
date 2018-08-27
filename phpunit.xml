@@ -37,5 +37,8 @@
         <env name="ESCROW_SUBSTATION_CONNECTION_URL" value="http://badsubstation-xyzz.foobar"/>
         <env name="FOLDINGCOIN_FEE_RECOVERY_ADDRESS" value="1AAAA8888xxxxxxxxxxxxxxxxxxxxnRdzt"/>
 
+        <env name="BITTREX_API_KEY" value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+        <env name="BITTREX_API_SECRET" value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+
     </php>
 </phpunit>

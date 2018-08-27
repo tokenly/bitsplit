@@ -4,7 +4,9 @@ namespace Tests\unit;
 
 use App\Jobs\ExecuteWithdrawal;
 use App\Models\EscrowAddressLedgerEntry;
+use App\Models\FeeRecoveryLedgerEntry;
 use App\Repositories\EscrowAddressLedgerEntryRepository;
+use App\Repositories\FeeRecoveryLedgerEntryRepository;
 use Distribute\Processor;
 use PHPUnit\Framework\Assert as PHPUnit;
 use SampleId;
@@ -34,6 +36,10 @@ class WithdrawalTest extends TestCase
                 'balances' => [],
             ],
         ]);
+
+        // objects
+        $recovery_ledger = app(FeeRecoveryLedgerEntryRepository::class);
+        $recovery_ledger->credit(CryptoQuantity::fromFloat(0.006), 'BTC', FeeRecoveryLedgerEntry::TYPE_DEPOSIT);
 
         // prerequisites
         $admin = app('UserHelper')->newRandomUser();
@@ -83,6 +89,12 @@ class WithdrawalTest extends TestCase
         $entry = $fee_entries->first();
         PHPUnit::assertEquals(-239.0, $entry['amount']->getFloatValue());
         // echo "\n".$ledger->debugDumpLedger($ledger->findAllByAddress($escrow_address))."\n";
+
+        // test that fee recover ledger was updated
+        $balance = $recovery_ledger->balance('FLDC');
+        PHPUnit::assertEquals(239, $balance->getFloatValue());
+        $balance = $recovery_ledger->balance('BTC');
+        PHPUnit::assertEquals(0.0059, $balance->getFloatValue());
     }
 
     // ------------------------------------------------------------------------

@@ -7,8 +7,10 @@ use App\Libraries\Substation\Substation;
 use App\Libraries\Withdrawal\RecipientWithdrawalManager;
 use App\Libraries\Withdrawal\WithdrawalFeeManager;
 use App\Models\EscrowAddressLedgerEntry;
+use App\Models\FeeRecoveryLedgerEntry;
 use App\Models\RecipientWithdrawal;
 use App\Repositories\EscrowAddressLedgerEntryRepository;
+use App\Repositories\FeeRecoveryLedgerEntryRepository;
 use App\Repositories\RecipientWithdrawalRepository;
 use App\Repositories\UserRepository;
 use Exception;
@@ -44,7 +46,7 @@ class ExecuteWithdrawal implements ShouldQueue
      *
      * @return void
      */
-    public function handle(RecipientWithdrawalManager $recipient_withdrawal_manager, WithdrawalFeeManager $withdrawal_fee_manager, EscrowAddressLedgerEntryRepository $ledger, TokenpassAPI $tokenpass, RecipientWithdrawalRepository $recipient_withdrawal_repository, UserRepository $user_repository, EscrowWalletManager $escrow_wallet_manager)
+    public function handle(RecipientWithdrawalManager $recipient_withdrawal_manager, WithdrawalFeeManager $withdrawal_fee_manager, EscrowAddressLedgerEntryRepository $ledger, TokenpassAPI $tokenpass, RecipientWithdrawalRepository $recipient_withdrawal_repository, UserRepository $user_repository, EscrowWalletManager $escrow_wallet_manager, FeeRecoveryLedgerEntryRepository $fee_recovery_ledger)
     {
         $user = $this->withdrawal->user;
         $destination_address = $this->withdrawal->address;
@@ -205,6 +207,12 @@ class ExecuteWithdrawal implements ShouldQueue
                 'completed_at' => time(),
                 'fee_paid' => $fee_quantity->getSatoshisString(),
             ]);
+
+            // update the fee recovery ledger
+            DB::transaction(function() use ($fee_recovery_ledger, $send_result, $fee_quantity) {
+                $fee_recovery_ledger->debit($send_result['feePaid'], 'BTC', FeeRecoveryLedgerEntry::TYPE_WITHDRAWAL);
+                $fee_recovery_ledger->credit($fee_quantity, 'FLDC', FeeRecoveryLedgerEntry::TYPE_DEPOSIT);
+            });
 
         } catch (Exception $e) {
             EventLog::logError('withdrawal.error', $e, [

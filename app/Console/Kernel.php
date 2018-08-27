@@ -51,6 +51,13 @@ class Kernel extends ConsoleKernel
         // Withdrawal commands
         Commands\Withdrawal\CacheFLDCQuote::class,
 
+        // Fee recovery
+        Commands\FeeRecovery\ProcessFeeRecovery::class,
+        Commands\FeeRecovery\SeedFeeRecoveryLedger::class,
+
+        // development
+        // Commands\Development\PurchaseBTC::class,
+
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
     ];
@@ -66,6 +73,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('bitsplit:distribute')->everyMinute();
 
         $schedule->command('withdrawal:cache-fldc-quote')->everyFifteenMinutes();
+
+        $schedule->command('fee:process-recovery')->everyFiveMinutes();
 
         // the stats and save_stats schedule are moved to App\Console\Commands\FoldingCoinSaveStatsScheduler
     }
