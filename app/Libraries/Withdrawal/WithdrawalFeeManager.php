@@ -87,8 +87,8 @@ class WithdrawalFeeManager
     public function buildFLDCQuote()
     {
         $tokenmap_client = app(TokenmapClient::class);
-        $asset = 'FLDC';
-        $btc_quantity = $this->tokenmap_client->getSimpleQuote('BTC', $asset, 'counterparty');
+        $asset = FLDCAssetName();
+        $btc_quantity = $this->tokenmap_client->getSimpleQuote('BTC', $asset, Substation::chain());
         return $btc_quantity;
     }
 

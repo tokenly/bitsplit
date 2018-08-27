@@ -4,7 +4,9 @@ namespace App\Services;
 use App\Http\Requests\SubmitDistribution;
 use App\Libraries\Folders\Folders;
 use App\Libraries\Stats\Stats;
+use App\Libraries\Substation\Substation;
 use App\Libraries\Substation\UserAddressManager;
+use Distribute\Initialize as DistroInit;
 use Illuminate\Support\Facades\Log;
 use Models\Distribution;
 use Models\DistributionTx;
@@ -12,7 +14,6 @@ use Models\Fuel;
 use Ramsey\Uuid\Uuid;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\TokenmapClient\TokenmapClient;
-use Distribute\Initialize as DistroInit;
 
 class DistributionService
 {
@@ -35,11 +36,27 @@ class DistributionService
         $this->folding_start_date = date("Y-m-d", strtotime($request->input('folding_start_date')));
         $this->asset = trim($request->input('asset', ''));
         $this->calculation_type = $this->request->input('calculation_type');
+
+        // calculate onchain vs offchain distribution
+        $is_official_distribution = ($this->asset == FLDCAssetName());
+        if ($is_official_distribution and $request->input('offchain')) {
+            $offchain = true;
+        } else {
+            $offchain = false;
+        }
+        $this->offchain = $offchain;
+        $this->onchain = !$offchain;
+
         $this->calculateData();
-        try{
-            $this->deposit_address = app(UserAddressManager::class)->newPaymentAddressForUser($request->user());
-        } catch(\Exception $e){
-            EventLog::logError('depositAddress.error', $e, ['userId' => $request->user()->id,]);
+
+        if ( $this->onchain) {
+            try{
+                $this->deposit_address = app(UserAddressManager::class)->newPaymentAddressForUser($request->user());
+            } catch(\Exception $e){
+                EventLog::logError('depositAddress.error', $e, ['userId' => $request->user()->id,]);
+            }
+        } else {
+            $this->deposit_address = null;
         }
     }
 
@@ -75,36 +92,47 @@ class DistributionService
         $distro = new Distribution();
         $distro->user_id = $request->user()->id;
         $distro->stage = 0;
-        $distro->deposit_address = $this->deposit_address['address'];
-        $distro->address_uuid = $this->deposit_address['uuid'];
         $distro->network = 'btc';
         $distro->asset = $this->asset;
         $distro->label = $request->filled('label') ? htmlentities(trim($request->input('label'))): '';
         $distro->use_fuel = $request->filled('use_fuel') && intval($request->input('use_fuel')) == 1 ? 1 : 0;
         $distro->uuid = Uuid::uuid4()->toString();
-        $distro->fee_rate = $request->filled('btc_fee_rate') ? intval($request->input('btc_fee_rate')) : null;
         $distro->folding_start_date = $this->folding_start_date;
         $distro->folding_end_date = $this->folding_end_date;
         $distro->label = $this->asset. ' - ' . $request->input('asset_total') . ' - '. date('Y/m/d');
         $distro->distribution_class = $request->input('distribution_class');
         $distro->calculation_type = ucfirst($request->input('calculation_type'));
         $distro->total_folders = $this->distroCount;
-        $distro->fee_total = (string) Fuel::estimateFuelCost(count($this->addresses), $distro);
-        $distro->fiat_token_quote = app(TokenmapClient::class)->getSimpleQuote('USD', $this->asset, 'counterparty')->getFloatValue();
+        $distro->fiat_token_quote = app(TokenmapClient::class)->getSimpleQuote('USD', $this->asset, Substation::chain())->getFloatValue();
         if($this->request->input('calculation_type' === 'even')) {
             $distro->asset_total = intval(bcmul(trim($this->request->input('asset_total')), '100000000', '0'));
         } else {
             $distro->asset_total = intval(bcmul(trim($this->request->input('asset_total')), '100000000', '0')) * count($this->addresses);
         }
-        $save = $distro->save();
-        if(!$save){
-            Log::error('Error saving distribution '.$this->deposit_address['address'].' for user '.$request->user()->id);
-            return false;
+
+        if ($this->onchain) {
+            $distro->offchain = false;
+            $distro->fee_total = (string) Fuel::estimateFuelCost(count($this->addresses), $distro);
+            $distro->fee_rate = $request->filled('btc_fee_rate') ? intval($request->input('btc_fee_rate')) : null;
+            $distro->deposit_address = $this->deposit_address['address'];
+            $distro->address_uuid = $this->deposit_address['uuid'];
+
+        } else {
+            // offchain
+            $distro->offchain = true;
+            $distro->fee_total = '0';
+            $distro->fee_rate = null;
+            // since the UI uses the address as the identifier, generate a random uuid for the address here
+            $distro->deposit_address = Uuid::uuid4()->toString();
+            $distro->address_uuid = '';
         }
+
+        $save = $distro->save();
+
         $this->saveDistroAddresses($distro);
         $initializer = new DistroInit;
         $initializer->init($distro);
-        return $this->deposit_address['address'];
+        return $distro->deposit_address;
     }
 
     private function saveDistroAddresses(Distribution $distro) {

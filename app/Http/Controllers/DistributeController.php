@@ -54,6 +54,7 @@ class DistributeController extends Controller {
         }
     }
 
+/*
 	public function submitDistribution()
 	{
         $input = Input::all();
@@ -309,9 +310,9 @@ class DistributeController extends Controller {
 		//redirect to details page
 		return Redirect::route('distribute.details', $deposit_address);
 	}
-	
+/*
+*/
 
-	
 	public function getDetails($address)
 	{
 		$user = Auth::user();
