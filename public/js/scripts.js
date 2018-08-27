@@ -74,6 +74,9 @@ function getStageText(stage, isOffchain){
             case 3:
                 text = '<span class="text-info">Distributing Tokens</span>';
                 break;
+            case 4:
+                text = '<span class="text-success">Finalizing Cleanup</span>';
+                break;
         }
     } else {
         switch(stage){

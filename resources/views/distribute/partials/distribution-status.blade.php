@@ -55,6 +55,10 @@ else{
                 // "3": "DistributePromises"
                 echo '<span class="text-info">Distributing Tokens</span>';
                 break;
+            case 4:
+                // "4": "Complete"
+                echo '<span class="text-success">Finalizing Cleanup</span>';
+                break;
             default:
                 echo '(unknown)';
                 break;

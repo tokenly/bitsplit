@@ -113,7 +113,10 @@ class Distribution extends Model
 	
 	public function countComplete()
 	{
-		return DistributionTx::where('distribution_id', $this->id)->where('confirmed', 1)->count();
+        if ($this->isOffchainDistribution()) {
+    		return DistributionTx::where('distribution_id', $this->id)->count();
+        }
+        return DistributionTx::where('distribution_id', $this->id)->where('confirmed', 1)->count();
 	}
 	
 	public function pendingDepositTotals()
