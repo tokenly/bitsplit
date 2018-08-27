@@ -12,6 +12,6 @@
 	<?php
 		$fuel_token_list = array_keys(Config::get('settings.valid_fuel_tokens'));
 	?><br>
-	<span class="dynamic-payment-button" data-label="BitSplit Fuel Address" data-address="{{ $dash_info['fuel_address'] }}" data-tokens="{{ join(',', $fuel_token_list) }}"></span>
+	<span class="dynamic-payment-button" data-label="Fuel Address" data-address="{{ $dash_info['fuel_address'] }}" data-tokens="{{ join(',', $fuel_token_list) }}"></span>
 </div>
 <div><strong>Fuel Spent:</strong> {{ rtrim(rtrim(number_format($dash_info['fuel_spent']/100000000,8),"0"),".") }}</div>
