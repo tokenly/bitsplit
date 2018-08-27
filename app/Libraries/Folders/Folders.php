@@ -8,13 +8,12 @@ use Models\Distribution;
 class Folders
 {
 
-    const SERVER_URL = 'https://teststatsdownloadapi.azurewebsites.net/';
-
     private $start_date;
     private $end_date;
     private $amount;
 
     private $folders;
+    private $amounts;
 
     public function __construct($start_date, $end_date, $amount)
     {
@@ -25,17 +24,27 @@ class Folders
     }
 
     private function getFoldersData() {
-        $client = new Client(['base_uri' => self::SERVER_URL,]);
-        $res = $client->request('GET', '/v1/GetDistro', [
-            'query' => ['startDate' => $this->start_date, 'endDate' => $this->end_date, 'amount' => $this->amount]
-        ]);
-        $response = json_decode($res->getBody(), true);
-        if(empty($response['distro'])) {
-            throw new \Exception('We couldn\'t get the data from the Stats API');
-        }
+        $stats = app(StatsAPI::class);
+        $response = $stats->getDistro($this->start_date, $this->end_date, $this->amount);
         $folders = $response['distro'];
+        //Unify all folders with the same address
+        $pre_folders = [];
         foreach ($folders as $folder) {
+            if(isset($pre_folders[$folder['bitcoinAddress']])) {
+                $pre_folders[$folder['bitcoinAddress']]['pointsGained'] += $folder['pointsGained'];
+                $pre_folders[$folder['bitcoinAddress']]['amount'] = bcadd($pre_folders[$folder['bitcoinAddress']]['amount'], $folder['amount']);
+            } else {
+                $pre_folders[$folder['bitcoinAddress']] = $folder;
+            }
+        }
+        //
+        foreach ($pre_folders as $folder) {
             $this->folders[] = new Folder($folder['pointsGained'], $folder['bitcoinAddress']);
+            if(isset($this->amounts[$folder['bitcoinAddress']])) {
+                $this->amounts[$folder['bitcoinAddress']] += $folder['amount'];
+            } else {
+                $this->amounts[$folder['bitcoinAddress']] = $folder['amount'];
+            }
         }
     }
 
@@ -47,19 +56,22 @@ class Folders
         return $folders;
     }
 
-    private function processFolders(string $calculation_type, array $folders): array {
+    private function processFolders(string $calculation_type, array $folders, $compare_amount = false): array {
         $total_points = 0.00;
         foreach ($folders as $folder) {
             $total_points += $folder->new_points;
         }
         foreach ($folders as $folder) {
             $folder->calculateAmount($total_points, $this->amount, $calculation_type === Distribution::PROPORTIONAL_CALCULATION_TYPE);
+            if($compare_amount && (bccomp($folder->getAmount(), $this->amounts[$folder->address]) !== 0)) {
+                throw new \Exception('Amount wasn\'t calculated correctly. ' . $folder->getAmount() . ' doesn\'t match ' . $this->amounts[$folder->address]);
+            }
         }
         return $folders;
     }
 
     function getAllFolders(string $calculation_type) {
-        return $this->processFolders($calculation_type, $this->folders);
+        return $this->processFolders($calculation_type, $this->folders, $calculation_type == Distribution::PROPORTIONAL_CALCULATION_TYPE);
     }
 
     function getTopFolders(string $calculation_type, int $amount) {
