@@ -127,12 +127,14 @@
 		</form>
 		<hr>
 		<h4>Transactions (<span class="distro-{{ $distro->id }}-complete-count">{{ $num_complete }}</span> / {{ $address_count }} complete)</h4>
+        @if ($distro->isOnchainDistribution())
 		<p>
 			<strong>Received:</strong><br>
 			<span id="distro-{{ $distro->id }}-token-received">{{ rtrim(rtrim(number_format($distro->asset_received / 100000000, 8),"0"),".") }}</span> / {{ rtrim(rtrim(number_format($distro->asset_total / 100000000, 8),"0"),".") }} {{ $distro->asset }}
 			<br>
 			<span id="distro-{{ $distro->id }}-fee-received">{{ rtrim(rtrim(number_format($distro->fee_received / 100000000, 8),"0"),".") }}</span> / {{ rtrim(rtrim(number_format($distro->fee_total / 100000000, 8),"0"),".") }} BTC
 		</p>
+        @endif
 		@if(!$address_list OR count($address_list) == 0)
 			<p>
 				No distribution addresses found.
