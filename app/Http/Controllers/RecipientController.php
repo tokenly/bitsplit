@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\ExecuteWithdrawal;
 use App\Libraries\Withdrawal\RecipientWithdrawalManager;
 use App\Libraries\Withdrawal\WithdrawalFeeManager;
+use App\Repositories\RecipientWithdrawalRepository;
 use Auth;
 use Exception;
 use Illuminate\Http\Request;
@@ -74,13 +75,18 @@ class RecipientController extends Controller
         }
 
         // validate tokens exist
-        $balance = $recipient_withdrawal_manager->getPromisedBalanceForUser($user, $address, FLDCAssetName());
-        if ($balance === null or $balance == 0) {
+        $balance_qty = $recipient_withdrawal_manager->getPromisedBalanceForUser($user, $address, FLDCAssetName());
+        if ($balance_qty === null or $balance_qty->lte(0)) {
             return $this->return_error('recipient.withdraw', "This address does not have any ".FLDCAssetName()." available.");
         }
 
         // schedule the job
-        ExecuteWithdrawal::dispatch($address);
+        $withdrawal = app(RecipientWithdrawalRepository::class)->create([
+            'user_id' => $user['id'],
+            'address' => $address,
+            'asset' => FLDCAssetName(),
+        ]);
+        ExecuteWithdrawal::dispatch($withdrawal);
 
         EventLog::debug('withdrawal.scheduled', [
             'user' => $user['id'],
