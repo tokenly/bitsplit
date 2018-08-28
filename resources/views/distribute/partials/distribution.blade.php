@@ -30,10 +30,17 @@
             <span>distributed to</span>
             <span>{{ $num_complete }} folders</span>
         </p>
-        <p class="distribution-index__row__address">
-            <span>Origin Address:</span>
-            <a href="{{ 'xchain.io/address/'.$row->deposit_address }}">{{ $row->deposit_address }}</a>
-        </p>
+        @if ($row->isOnchainDistribution())
+            <p class="distribution-index__row__address">
+                <span>Origin Address:</span>
+                <a href="{{ 'xchain.io/address/'.$row->deposit_address }}">{{ $row->deposit_address }}</a>
+            </p>
+        @endif
+        @if ($row->isOffchainDistribution())
+            <p class="distribution-index__row__address">
+                <span>Offchain Distribution</span>
+            </p>
+        @endif
         <div class="distribution-index__row__status">
             <span>Status:</span>
             <?php
