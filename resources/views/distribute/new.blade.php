@@ -158,7 +158,14 @@
 				return ((this.startDate && this.endDate) && (_endDate <= _date) && (_startDate <= _date) && (_endDate > _startDate));
 			},
 			validConfiguration() {
+				if (this.validClearinghouseConfiguration) {
+					return true
+				}
+
 				return (this.validToken && this.validTokenAmount && this.calculationType && this.validDistributionClassConfig && this.startDate && this.endDate && this.validBTCNetworkFee);
+			},
+			validClearinghouseConfiguration() {
+				return (this.isOfficialDistribution && !this.offchainDistribution && this.calculationType == 'clearinghouse' && this.validBTCNetworkFee)
 			},
 			isOfficialDistribution() {
 				if (this.validToken) {
