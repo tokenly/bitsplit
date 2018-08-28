@@ -7,6 +7,7 @@ use App\Libraries\Stats\Stats;
 use App\Libraries\Substation\Substation;
 use App\Libraries\Substation\UserAddressManager;
 use Distribute\Initialize as DistroInit;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Models\Distribution;
 use Models\DistributionTx;
@@ -49,7 +50,7 @@ class DistributionService
 
         $this->calculateData();
 
-        if ( $this->onchain) {
+        if ($this->onchain) {
             try{
                 $this->deposit_address = app(UserAddressManager::class)->newPaymentAddressForUser($request->user());
             } catch(\Exception $e){
@@ -57,6 +58,11 @@ class DistributionService
             }
         } else {
             $this->deposit_address = null;
+        }
+
+        // check clearinghouse distribution is allowed only by admins
+        if ($this->calculation_type == 'clearinghouse' and !$user->isAdmin) {
+            throw new Exception("You must be an admin to use this function", 1);
         }
     }
 
