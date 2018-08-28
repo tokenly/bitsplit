@@ -73,7 +73,7 @@ class EscrowAddressSynchronizer
                 throw $e;
             }
         }
-        Log::debug("\$substation_transactions for address {$address_uuid} {$escrow_address['address']} is\n".json_encode($substation_transactions, 192));
+        // Log::debug("\$substation_transactions for address {$address_uuid} {$escrow_address['address']} is\n".json_encode($substation_transactions, 192));
 
         // process all txos paying to this address
         $address_hash = $escrow_address['address'];
@@ -130,7 +130,7 @@ class EscrowAddressSynchronizer
 
                         // add (or update) the transaction
                         $credit_or_debit = ($transaction['is_credit']) ? 'credit' : 'debit';
-                        $this->ledger->{$credit_or_debit}($escrow_address, $transaction['amount'], $transaction['asset'], $transaction['tx_type'], $transaction['txid'], $transaction['tx_identifier'], $transaction['confirmed'], $_promise_id = null, $transaction['confirmation_time']);
+                        $this->ledger->{$credit_or_debit}($escrow_address, $transaction['amount'], $transaction['asset'], $transaction['tx_type'], $transaction['txid'], $transaction['tx_identifier'], $transaction['confirmed'], $_promise_id = null, $_foreign_entity = null, $transaction['confirmation_time']);
                     }
                 });
             }
