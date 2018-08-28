@@ -150,7 +150,7 @@ class ExecuteWithdrawal implements ShouldQueue
                 $fee_address = env('FOLDINGCOIN_FEE_RECOVERY_ADDRESS');
                 $txid = $this->withdrawal['uuid'];
                 $tx_identifier = 'fee:' . $asset . ':' . $this->withdrawal['uuid'];
-                $tmp_delivery_ledger_entry = $ledger->debit($escrow_address, $fee_quantity, $asset, EscrowAddressLedgerEntry::TYPE_BLOCKCHAIN_DELIVERY_FEE, $txid, $tx_identifier, $_confirmed = true, $_promise_id = null, $fee_address);
+                $fee_ledger_entry = $ledger->debit($escrow_address, $fee_quantity, $asset, EscrowAddressLedgerEntry::TYPE_BLOCKCHAIN_DELIVERY_FEE, $txid, $tx_identifier, $_confirmed = true, $_promise_id = null, $fee_address);
 
                 // create a temporary delivery debit that will be deleted after the Substation send is completed
                 $txid = $this->withdrawal['uuid'];
