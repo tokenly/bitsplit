@@ -645,7 +645,7 @@ class SubstationTransactionHandler
                 }
 
                 EventLog::debug('tx.escrowAddress', [
-                    'walletId' => $escrow_address['id'],
+                    'addressId' => $escrow_address['id'],
                     'transactionType' => $entry_type,
                     'txid' => $txid,
                     'confirmations' => $confirmations,
@@ -656,7 +656,7 @@ class SubstationTransactionHandler
                 ]);
             } catch (Exception $e) {
                 EventLog::logError('tx.escrowAddress.failed', $e, [
-                    'walletId' => $escrow_address['id'],
+                    'addressId' => $escrow_address['id'],
                     'transactionType' => $entry_type,
                     'txid' => $txid,
                     'confirmations' => $confirmations,
