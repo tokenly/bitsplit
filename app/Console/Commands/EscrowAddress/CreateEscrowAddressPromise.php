@@ -71,7 +71,7 @@ class CreateEscrowAddressPromise extends Command
             // add to ledger
             $tx_identifier = 'manual:' . $asset . ':' . $timestamp;
             $txid = 'manual:' . $timestamp;
-            $ledger->debit($escrow_address, $quantity, $asset, EscrowAddressLedgerEntry::TYPE_WITHDRAWAL, $txid, $tx_identifier, $_confirmed = true, $promise_id, $destination);
+            $ledger->debit($escrow_address, $quantity, $asset, EscrowAddressLedgerEntry::TYPE_PROMISE_CREATED, $txid, $tx_identifier, $_confirmed = true, $promise_id, $destination);
 
         });
 
