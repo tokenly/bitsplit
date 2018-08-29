@@ -118,6 +118,7 @@
 					>
 						<option value="even">Proportional</option>
 						<option value="static">Uniform</option>
+						<option value="clearinghouse">Clearinghouse</option>
 					</select>
 				</div>
 

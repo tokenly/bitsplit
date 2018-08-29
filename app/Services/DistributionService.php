@@ -68,6 +68,7 @@ class DistributionService
                 Log::debug("\$this->deposit_address=".json_encode($this->deposit_address, 192));
             } catch(\Exception $e){
                 EventLog::logError('depositAddress.error', $e, ['userId' => $request->user()->id,]);
+                throw $e;
             }
         } else {
             $this->deposit_address = null;
