@@ -41,6 +41,7 @@ class SubmitDistribution extends FormRequest
         return [
             //validate asset name (Counterparty/BTC only)
             'asset' => ['required', new Asset()],
+            'calculation_type' => ['required'],
             //Validate folding dates
             'folding_start_date' => ['required_unless:calculation_type,clearinghouse', 'before:'.$end_day_time],
             'folding_end_date' => ['required_unless:calculation_type,clearinghouse', 'before:'.$end_day_time, 'after_or_equal:'.$this->input('folding_start_date')],

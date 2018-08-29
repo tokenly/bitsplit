@@ -1,5 +1,6 @@
 <?php
 
+use App\Libraries\Substation\Substation;
 use Ramsey\Uuid\Uuid;
 use Tokenly\CryptoQuantity\CryptoQuantity;
 use Tokenly\SubstationClient\Mock\MockSubstationClient;
@@ -19,6 +20,7 @@ class SubstationHelper
         self::mock_getTxosById($mock);
         self::mock_createServerManagedWallet($mock);
         self::mock_sendImmediatelyToDestinations($mock);
+        self::mock_allocateAddress($mock);
 
         // also mock the escrow client
         self::ensureMockedEscrowSubstationClient();
@@ -70,6 +72,24 @@ class SubstationHelper
             }),
             $expectation_callback_fn
         );
+
+        return $mock;
+    }
+
+
+    public static function mock_allocateAddress($mock = null)
+    {
+        $mock = self::ensureMockedSubstationClient($mock);
+
+        $count = 0;
+        $chain = Substation::chain();
+
+        $mock->shouldReceive('allocateAddress')->andReturn([
+            'index' => $count,
+            'address' => MockSubstationClient::sampleAddress($chain, $count),
+            'change' => false,
+            'uuid' => Uuid::uuid4()->toString(),
+        ]);
 
         return $mock;
     }
