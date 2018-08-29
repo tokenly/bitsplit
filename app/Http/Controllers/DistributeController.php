@@ -48,6 +48,7 @@ class DistributeController extends Controller {
             $deposit_address = $create_distribution_service->create();
             return Redirect::route('distribute.details', $deposit_address);
         } catch (\Exception $e) {
+            EventLog::logError('submitDistribution.error', $e);
             Session::flash('message', $e->getMessage());
             Session::flash('message-class', 'alert-danger');
             return Redirect::route('home');

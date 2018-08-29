@@ -2,16 +2,19 @@
 namespace App\Services;
 
 use App\Http\Requests\SubmitDistribution;
+use App\Libraries\Folders\ClearinghouseFolders;
 use App\Libraries\Folders\Folders;
 use App\Libraries\Stats\Stats;
 use App\Libraries\Substation\Substation;
 use App\Libraries\Substation\UserAddressManager;
 use Distribute\Initialize as DistroInit;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Models\Distribution;
 use Models\DistributionTx;
 use Models\Fuel;
 use Ramsey\Uuid\Uuid;
+use Tokenly\CryptoQuantity\CryptoQuantity;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\TokenmapClient\TokenmapClient;
 
@@ -37,6 +40,8 @@ class DistributionService
         $this->asset = trim($request->input('asset', ''));
         $this->calculation_type = $this->request->input('calculation_type');
 
+        $this->distro_uuid = Uuid::uuid4()->toString();
+
         // calculate onchain vs offchain distribution
         $is_official_distribution = ($this->asset == FLDCAssetName());
         if ($is_official_distribution and $request->input('offchain')) {
@@ -47,44 +52,26 @@ class DistributionService
         $this->offchain = $offchain;
         $this->onchain = !$offchain;
 
-        $this->calculateData();
+        if ($this->calculation_type == 'clearinghouse') {
+            $this->initClearinghouseDistribution($request);
+            $this->is_clearinghouse = true;
+        } else {
+            $this->initRegularDistribution($request);
+            $this->is_clearinghouse = false;
+        }
+        $this->distroCount = count($this->addresses);
 
-        if ( $this->onchain) {
+        Log::debug("\$this->onchain=".json_encode($this->onchain, 192));
+        if ($this->onchain) {
             try{
                 $this->deposit_address = app(UserAddressManager::class)->newPaymentAddressForUser($request->user());
+                Log::debug("\$this->deposit_address=".json_encode($this->deposit_address, 192));
             } catch(\Exception $e){
                 EventLog::logError('depositAddress.error', $e, ['userId' => $request->user()->id,]);
             }
         } else {
             $this->deposit_address = null;
         }
-    }
-
-    private function calculateData() {
-        $folders = new Folders($this->folding_start_date, $this->folding_end_date, $this->request->input('asset_total'));
-        switch ($this->request->input('distribution_class')) {
-            case 'Minimum FAH points':
-                $this->addresses = $folders->getFoldersWithMin($this->calculation_type, $this->request->input('minimum_fah_points'));
-                break;
-            case 'Top Folders':
-                $this->addresses = $folders->getTopFolders($this->calculation_type, $this->request->input('amount_top_folders'));
-                break;
-            case 'Random':
-                $this->addresses = $folders->getRandomFolders($this->calculation_type, $this->request->input('amount_random_folders'), $this->request->input('weight_cache_by_fah'));
-                break;
-            default:
-                $this->addresses = $folders->getAllFolders($this->calculation_type);
-                break;
-        }
-        //Array to store new credits for each address
-        foreach ($this->addresses as $daily_folder) {
-            if(isset($this->credit_lists[$daily_folder->address])) {
-                $this->credit_lists[$daily_folder->address] += $daily_folder->new_points;
-            } else {
-                $this->credit_lists[$daily_folder->address] = $daily_folder->new_points;
-            }
-        }
-        $this->distroCount = count($this->addresses);
     }
 
     function create() {
@@ -96,18 +83,23 @@ class DistributionService
         $distro->asset = $this->asset;
         $distro->label = $request->filled('label') ? htmlentities(trim($request->input('label'))): '';
         $distro->use_fuel = $request->filled('use_fuel') && intval($request->input('use_fuel')) == 1 ? 1 : 0;
-        $distro->uuid = Uuid::uuid4()->toString();
+        $distro->uuid = $this->distro_uuid;
         $distro->folding_start_date = $this->folding_start_date;
         $distro->folding_end_date = $this->folding_end_date;
-        $distro->label = $this->asset. ' - ' . $request->input('asset_total') . ' - '. date('Y/m/d');
-        $distro->distribution_class = $request->input('distribution_class');
+        $distro->label = $this->asset. ' - ' . $request->input('asset_total', $this->is_clearinghouse ? 'CLEARINGHOUSE' : 'ALL') . ' - '. date('Y/m/d');
+        $distro->distribution_class = $request->input('distribution_class', '');
         $distro->calculation_type = ucfirst($request->input('calculation_type'));
         $distro->total_folders = $this->distroCount;
         $distro->fiat_token_quote = app(TokenmapClient::class)->getSimpleQuote('USD', $this->asset, Substation::chain())->getFloatValue();
-        if($this->request->input('calculation_type')  === 'even') {
-            $distro->asset_total = intval(bcmul(trim($this->request->input('asset_total')), '100000000', '0'));
+        if ($this->is_clearinghouse) {
+            // this will be summed after address balances are calculated
+            $distro->asset_total = $this->sumAddressBalances($this->addresses)->getSatoshisString();
         } else {
-            $distro->asset_total = intval(bcmul(trim($this->request->input('asset_total')), '100000000', '0')) * count($this->addresses);
+            if($this->request->input('calculation_type')  === 'even') {
+                $distro->asset_total = intval(bcmul(trim($this->request->input('asset_total')), '100000000', '0'));
+            } else {
+                $distro->asset_total = intval(bcmul(trim($this->request->input('asset_total')), '100000000', '0')) * count($this->addresses);
+            }
         }
 
         if ($this->onchain) {
@@ -135,15 +127,70 @@ class DistributionService
         return $distro->deposit_address;
     }
 
+    // ------------------------------------------------------------------------
+
+    protected function initClearinghouseDistribution($request)
+    {
+        $user = $request->user();
+
+        // check clearinghouse distribution is allowed only by admins
+        if ($this->calculation_type == 'clearinghouse' and !$user->isAdmin) {
+            throw new Exception("You must be an admin to use this function", 1);
+        }
+        if ($this->calculation_type == 'clearinghouse' and $this->asset != FLDCAssetName()) {
+            throw new Exception("Only ".FLDCAssetName()." can be used in a clearinghouse distribution.", 1);
+        }
+
+        // assign all points
+        $folders = new ClearinghouseFolders($this->distro_uuid);
+        $this->addresses = $folders->getAllFolders();
+
+        // default start and end date (not used for calculations)
+        $this->folding_end_date = date("Y-m-d");
+        $this->folding_start_date = date("Y-m-d");
+    }
+
+    protected function initRegularDistribution($request)
+    {
+        $folders = new Folders($this->folding_start_date, $this->folding_end_date, $this->request->input('asset_total'));
+        switch ($this->request->input('distribution_class')) {
+            case 'Minimum FAH points':
+                $this->addresses = $folders->getFoldersWithMin($this->calculation_type, $this->request->input('minimum_fah_points'));
+                break;
+            case 'Top Folders':
+                $this->addresses = $folders->getTopFolders($this->calculation_type, $this->request->input('amount_top_folders'));
+                break;
+            case 'Random':
+                $this->addresses = $folders->getRandomFolders($this->calculation_type, $this->request->input('amount_random_folders'), $this->request->input('weight_cache_by_fah'));
+                break;
+            default:
+                $this->addresses = $folders->getAllFolders($this->calculation_type);
+                break;
+        }
+
+    }
+
+
     private function saveDistroAddresses(Distribution $distro) {
         foreach($this->addresses as $address){
             $tx = new DistributionTx();
             $tx->distribution_id = $distro->id;
             $tx->destination = $address->address;
-            $tx->quantity = intval(bcmul(trim($address->getAmount()), "100000000", "0"));
+            $tx->quantity = $address->getAmountAsSatoshis();
             $tx->folding_credit = $address->new_points;
             $tx->fldc_usernames = null;
             $tx->save();
         }
+    }
+
+    protected function sumAddressBalances($addresses)
+    {
+        $sum = CryptoQuantity::zero();
+        foreach($addresses as $address) {
+            $sum = $sum->add($address->getAmountQuantity());
+        }
+
+        Log::debug("sumAddressBalances \$sum=".json_encode($sum, 192));
+        return $sum;
     }
 }
