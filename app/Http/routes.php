@@ -65,6 +65,7 @@ Route::get('/account/admin/users/make_admin/{user}', array('as' => 'account.admi
 Route::get('/account/admin/users/make_moderator/{user}', array('as' => 'account.admin.users.make_moderator', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class], 'uses' => 'AccountController@make_moderator'));
 Route::get('/account/admin/users/remove_admin/{user}', array('as' => 'account.admin.users.remove_admin', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class], 'uses' => 'AccountController@remove_admin'));
 Route::get('/account/admin/users/remove_moderator/{user}', array('as' => 'account.admin.users.remove_moderator', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class], 'uses' => 'AccountController@remove_moderator'));
+Route::post('/account/admin/users/{user}/message', array('as' => 'account.admin.users.message', 'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class], 'uses' => 'AccountController@contact'));
 
 Route::get('/account/admin/fields', array('as' => 'account.admin.fields',  'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class],'uses' => 'SignupFieldsController@index'));
 Route::post('/account/admin/fields', array('as' => 'account.admin.fields',  'middleware' => ['auth', 'bindings', \App\Http\Middleware\Admin::class],'uses' => 'SignupFieldsController@create'));

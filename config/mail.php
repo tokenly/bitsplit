@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => env('EMAIL_ADDRESS', 'foldingcoin.net@gmail.com'), 'name' => env('EMAIL_NAME', 'Merged Folding')],
 
     /*
     |--------------------------------------------------------------------------

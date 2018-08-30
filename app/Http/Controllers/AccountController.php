@@ -1,10 +1,13 @@
 <?php 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ContactUser;
+use App\Mail\AdminMessage;
 use App\Models\SignupField;
 use App\Models\UserAccountData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Socialite;
 use Spatie\Permission\Models\Role;
 use Tokenly\LaravelEventLog\Facade\EventLog;
@@ -207,6 +210,11 @@ class AccountController extends Controller {
         $user->removeRole('admin');
         $user->admin = 0;
         $user->save();
+        return redirect(route('account.admin.users'));
+    }
+
+    public function contact(ContactUser $request, User $user) {
+        Mail::to($request->user())->queue(new AdminMessage($user, $request->input('message')));
         return redirect(route('account.admin.users'));
     }
 

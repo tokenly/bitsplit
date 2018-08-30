@@ -52,6 +52,34 @@
 					<span>Decline Account</span>
 				</a>
 			</div>
+			<div class="distribution-index__row__cta-container">
+				<a class="distribution-index__row__cta" href="#" data-toggle="modal" data-target="#email">
+					<span>Send email</span>
+				</a>
+			</div>
+			<!-- EMAIL MODAL -->
+			<div id="email" class="modal fade" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h3 class="modal-title" id="myModalLabel">Send email to {{ $row->name }}</h3>
+						</div>
+						<form action="{{ route('account.admin.users.message', $row->id) }}" method="post">
+							{{ csrf_field() }}
+							<div class="modal-body">
+								<div class="form-group">
+									<label for="email-message">Message you want to send</label>
+									<textarea name="message" id="email-message" cols="30" rows="10" class="form-control"></textarea>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-default btn-success">Send</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 		@elseif($row->approval_admin_id && $user->admin)
 			@if(!$row->admin)
 				@if(!$row->hasRole('moderator'))

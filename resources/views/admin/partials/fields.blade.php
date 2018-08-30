@@ -43,7 +43,7 @@
                     </td>
                 </tr>
             </tbody>
-            <div id="lol" class="modal fade" tabindex="-1" role="dialog">
+            <div id="creation" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -97,7 +97,7 @@
     @endif
 
     <p>
-        <a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#lol">
+        <a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#creation">
             <span>Create new</span>
         </a>
     </p>
