@@ -211,6 +211,28 @@ class EscrowAddressLedgerEntryRepository extends APIRepository
         return $sums;
     }
 
+    //
+    public function allForeignEntityBalancesForAsset($asset, $confirmed_only = false, $with_lock = true)
+    {
+        $query = $this->prototype_model
+            ->select('foreign_entity', DB::raw('SUM(amount) AS total_amount'))
+            ->where('asset', $asset)
+            ->groupBy('foreign_entity');
+
+        if ($confirmed_only) {
+            $query->where('confirmed', '1');
+        }
+
+        if ($with_lock) {
+            $query->lockForUpdate();
+        }
+
+        $results = $query->get();
+
+        $sums = $this->assembleBalancesByForeignEntity($results);
+        return $sums;
+    }
+
     public function debugDumpLedger($entries)
     {
         $bool = function ($val) {return $val ? '<info>true</info>' : '<comment>false</comment>';};
@@ -257,6 +279,20 @@ class EscrowAddressLedgerEntryRepository extends APIRepository
         }
 
         return $balance_by_asset;
+    }
+
+    protected function assembleBalancesByForeignEntity($results)
+    {
+        $balance_by_foreign_entity = [];
+
+        foreach ($results as $result) {
+            // reverse
+            $total_amount = 0 - $result['total_amount'];
+            $quantity = CryptoQuantity::fromSatoshis($total_amount);
+            $balance_by_foreign_entity[$result['foreign_entity']] = $quantity;
+        }
+
+        return $balance_by_foreign_entity;
     }
 
     protected function updateOrCreate(EscrowAddress $address, $is_credit, CryptoQuantity $quantity, $asset, $tx_type, $txid, $tx_identifier, $confirmed, $promise_id, $foreign_entity, $created_at)

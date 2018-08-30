@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\SignupField;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Carbon;
 
 /**
 *  UserHelper
@@ -117,5 +119,18 @@ class UserHelper
         return 'u'.substr(md5(uniqid('', true)), 0, 6).'@tokenly.co';
     }
 
+    public function approveUser(User $user)
+    {
+        // create a signup field
+        $field = ['name' => 'Name', 'type' => 'text', 'required' => true, 'position' => 0,];
+        SignupField::insert($field);
+        $field_object = SignupField::first();
+        $user->saveData($field_object, $user->name);
+
+        // accept terms and conditions
+        app(UserRepository::class)->update($user, [
+            'tac_accept' => Carbon::now(),
+        ]);
+    }
 
 }
