@@ -118,6 +118,9 @@ class DistributionService
             // since the UI uses the address as the identifier, generate a random uuid for the address here
             $distro->deposit_address = Uuid::uuid4()->toString();
             $distro->address_uuid = '';
+
+            // hold offchain distributions by default
+            $distro->hold = 1;
         }
 
         $save = $distro->save();
