@@ -34,6 +34,8 @@ class DistributionService
 
     public function __construct(SubmitDistribution $request)
     {
+        $user = $request->user();
+
         $this->request = $request;
         $this->folding_end_date = date("Y-m-d", strtotime($request->input('folding_end_date'))).' 23:59:59';
         $this->folding_start_date = date("Y-m-d", strtotime($request->input('folding_start_date')));
@@ -43,7 +45,7 @@ class DistributionService
         $this->distro_uuid = Uuid::uuid4()->toString();
 
         // calculate onchain vs offchain distribution
-        $is_official_distribution = ($this->asset == FLDCAssetName());
+        $is_official_distribution = ($this->asset == FLDCAssetName() and $user->isAdmin);
         if ($is_official_distribution and $request->input('offchain')) {
             $offchain = true;
         } else {
@@ -52,7 +54,7 @@ class DistributionService
         $this->offchain = $offchain;
         $this->onchain = !$offchain;
 
-        if ($this->calculation_type == 'clearinghouse') {
+        if ($this->calculation_type == 'clearinghouse' and $user->isAdmin) {
             $this->initClearinghouseDistribution($request);
             $this->is_clearinghouse = true;
         } else {

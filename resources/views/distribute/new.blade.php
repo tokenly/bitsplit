@@ -48,6 +48,7 @@
 	var standardBTCNetworkFee = {!! Config::get('settings.miner_satoshi_per_byte') !!};
 	var minBTCNetworkFee = {!! Config::get('settings.min_fee_per_byte') !!};
 	var maxBTCNetworkFee = {!! Config::get('settings.max_fee_per_byte') !!};
+	var userIsAdmin = {!! json_encode(!!$user->isAdmin) !!};
 
 	Vue.component('distro-form', {
 
@@ -168,7 +169,7 @@
 				return (this.isOfficialDistribution && !this.offchainDistribution && this.calculationType == 'clearinghouse' && this.validBTCNetworkFee)
 			},
 			isOfficialDistribution() {
-				if (this.validToken) {
+				if (userIsAdmin && this.validToken) {
 					if (this.tokenName == 'FLDC' || this.tokenName == 'TESTFLDC') {
 						return true
 					}
