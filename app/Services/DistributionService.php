@@ -167,7 +167,7 @@ class DistributionService
                 $this->addresses = $folders->getTopFolders($this->calculation_type, $this->request->input('amount_top_folders'));
                 break;
             case 'Random':
-                $this->addresses = $folders->getRandomFolders($this->calculation_type, $this->request->input('amount_random_folders'), $this->request->input('weight_cache_by_fah'));
+                $this->addresses = $folders->getRandomFolders($this->calculation_type, $this->request->input('amount_random_folders'), (bool) $this->request->input('weight_cache_by_fah', false));
                 break;
             default:
                 $this->addresses = $folders->getAllFolders($this->calculation_type);
