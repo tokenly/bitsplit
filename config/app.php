@@ -169,6 +169,8 @@ return [
 		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
         Tokenly\ConsulHealthDaemon\ServiceProvider\ConsulHealthDaemonServiceProvider::class,
         Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
+        
+        Laravel\Socialite\SocialiteServiceProvider::class,
 
 
     ],
