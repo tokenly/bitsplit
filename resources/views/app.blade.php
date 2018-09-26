@@ -39,7 +39,7 @@
 				<li><a href="https://github.com/tokenly/bitsplit" target="_blank"><i class="fa fa-github-alt"></i> Github</a></li>
 				<li><a href="http://tokenly.com" target="_blank"><i class="fa fa-globe"></i> Tokenly</a></li>
 			@if (Auth::guest())
-				<li><a href="{{ route('account.authorize') }}"><i class="fa fa-user"></i> Login/Register</a></li>
+				<li><a href="{{ route('tokenpass.authorize') }}"><i class="fa fa-user"></i> Login/Register</a></li>
 			@else
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> {{ Auth::user()->username }} <span class="caret"></span></a>
