@@ -26,7 +26,7 @@
             You can use <a href="https://bitcoinfees.21.co/" target="_blank">https://bitcoinfees.21.co/</a> to help
             with estimations, or if unsure you can email <a href="mailto:team@tokenly.com">team@tokenly.com</a> for a recommendation.<br>
             
-            This will be the status quo at least until bitcoin hard forks to a larger block size.
+            This will be the status quo at least until the bitcoin network capacity problem improves.
         </p>
 		<hr>
 		<div id="new-distro-form">
