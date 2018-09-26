@@ -39,19 +39,19 @@ Route::get('distribute/duplicate/{address}', array('as' => 'distribute.duplicate
 
 //tokenly accounts stuff
 // The welcome page for the user that requires a logged in user
-$router->get('/account/welcome', 'AccountController@welcome');
+Route::get('/account/welcome', 'AccountController@welcome');
 
 // routes for logging in and logging out
-$router->get('/account/login', array('as' => 'account.auth', 'uses' => 'AccountController@login'));
-$router->get('/account/logout', array('as' => 'account.auth.logout', 'uses' => 'AccountController@logout'));
+Route::get('/account/login', array('as' => 'account.auth', 'uses' => 'AccountController@login'));
+Route::get('/account/logout', array('as' => 'account.auth.logout', 'uses' => 'AccountController@logout'));
 
 // This is a route to sync the user with their Tokenpass information
 //   Redirect the user here to update their local user information with their Tokenpass information
-$router->get('/account/sync', 'AccountController@sync');
+Route::get('/account/sync', 'AccountController@sync');
 
 // oAuth handlers
-$router->get('/account/authorize', array('as' => 'account.authorize', 'uses' => 'AccountController@redirectToProvider'));
-$router->get('/account/authorize/callback', array('as' => 'account.authcallback', 'uses' => 'AccountController@handleProviderCallback'));
+Route::get('/account/auth', array('as' => 'account.authorize', 'uses' => 'AccountController@redirectToProvider'));
+Route::get('/account/auth/callback', array('as' => 'account.authcallback', 'uses' => 'AccountController@handleProviderCallback'));
 
 //API key management
 Route::get('api-keys', array('as' => 'account.api-keys', 'uses' => 'APIKeyController@index'));
