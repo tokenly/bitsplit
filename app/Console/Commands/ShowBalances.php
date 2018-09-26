@@ -58,7 +58,8 @@ class ShowBalances extends Command
         
 		$balances = false;
 		try{
-			$balances = $xchain->getAccountBalances($get->address_uuid, 'default');
+			//$balances = $xchain->getAccountBalances($get->address_uuid, 'default');
+			$balances = $xchain->getBalances($get->deposit_address, true);
 		}
 		catch(Exception $e){
 			Log::error('Error checking balances: '.$e->getMessage());
