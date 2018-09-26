@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "eed28c9a74fb4d2543ece2c42b579ed9",
+    "content-hash": "e4e8771e78a12923bb25f74d2a64879f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2872,7 +2872,7 @@
         },
         {
             "name": "tokenly/tokenpass-client",
-            "version": "dev-master",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/tokenpass-client.git",
@@ -4451,7 +4451,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "tokenly/tokenpass-client": 20,
         "tokenly/tokenslot-client": 20,
         "tokenly/xchain-client": 20
     },
