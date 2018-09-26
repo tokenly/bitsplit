@@ -21,8 +21,12 @@ class APIController extends Controller
     function __construct()
     {
         parent::__construct();
-        $action = Route::current()->getAction();
-        if(in_array($action['as'], $this->signed_routes)){
+        $route = Route::current();
+        $action = null;
+        if($route){
+            $action = $route->getAction();
+        }
+        if($action AND in_array($action['as'], $this->signed_routes)){
             $this->middleware('auth.api.signed');
         }
         else{
