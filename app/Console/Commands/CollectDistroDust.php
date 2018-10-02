@@ -15,7 +15,7 @@ class CollectDistroDust extends Command
      *
      * @var string
      */
-    protected $signature = 'bitsplit:collect-dust {user_email} {destination} {--asset=BTC} {--feerate=}';
+    protected $signature = 'bitsplit:collect-dust {user_email} {destination} {--asset=BTC} {--feerate=} {--chunk=25}';
 
     /**
      * The console command description.
@@ -42,6 +42,7 @@ class CollectDistroDust extends Command
     public function handle()
     {
         //set vars
+        $max_addresses = intval($this->option('chunk'));
         $user_email = $this->argument('user_email');
         $destination = $this->argument('destination');
         $asset = $this->option('asset');
@@ -102,12 +103,14 @@ class CollectDistroDust extends Command
             $address_uuids[] = $distro_address['address_uuid'];
         }
         
-        $uuid_list = join(',', $address_uuids);
+        $address_chunks = array_chunk($address_uuids, $max_addresses);
         
-        $cmd_output = 'xchain:multi-input-sweep '.$destination.' "'.$uuid_list.'" --fee-rate='.$feerate.' --broadcast';
-        
-        //output generated command
-        $this->info($cmd_output);
+        foreach($address_chunks as $chunk){
+            $uuid_list = join(',', $chunk);
+            $cmd_output = 'xchain:multi-input-sweep '.$destination.' "'.$uuid_list.'" --fee-rate='.$feerate.' --broadcast';
             
+            //output generated command
+            $this->info($cmd_output);
+        }
     }
 }
