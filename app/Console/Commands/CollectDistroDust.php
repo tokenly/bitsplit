@@ -50,6 +50,9 @@ class CollectDistroDust extends Command
             $is_btc = true;
         }
         $feerate = $this->option('feerate');
+        if(trim($feerate) == ''){
+            $feerate = 'low';
+        }
         $xchain = xchain();
         
         //load user
