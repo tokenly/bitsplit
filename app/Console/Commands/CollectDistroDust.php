@@ -99,7 +99,7 @@ class CollectDistroDust extends Command
         
         $address_uuids = array();
         foreach($distro_addresses as $distro_address){
-            $address_uuids[] = $distro['address_uuid'];
+            $address_uuids[] = $distro_address['address_uuid'];
         }
         
         $uuid_list = join(',', $address_uuids);
