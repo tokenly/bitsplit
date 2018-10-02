@@ -71,7 +71,7 @@ class CollectDistroDust extends Command
         
         $distro_addresses = array();
         
-        $this->info('Collecting distributions for user '.$user->id .'('.count($distributions).')');
+        $this->info('Collecting distributions for user '.$user->email .'('.count($distributions).')');
         foreach($distributions as $distro){
             try{
                 $distro_balances = $xchain->getBalances($distro->deposit_address, true);
