@@ -104,7 +104,7 @@ class CollectDistroDust extends Command
         
         $uuid_list = join(',', $address_uuids);
         
-        $cmd_output = 'xchain:multi-input-sweep '.$destination.'"'.$uuid_list.'" --fee-rate='.$feerate.' --broadcast';
+        $cmd_output = 'xchain:multi-input-sweep '.$destination.' "'.$uuid_list.'" --fee-rate='.$feerate.' --broadcast';
         
         //output generated command
         $this->info($cmd_output);
