@@ -34,6 +34,7 @@ class Kernel extends ConsoleKernel
          Commands\CloneDistro::class,
          Commands\EstimateFuelCost::class,
          Commands\generateUserBalanceReport::class,
+         Commands\CollectDistroDust::class,
 
         // vendor commands
         \Tokenly\ConsulHealthDaemon\Console\ConsulHealthMonitorCommand::class,
