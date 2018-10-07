@@ -8,7 +8,7 @@ use App\Libraries\Substation\UserWalletManager;
 use Config;
 use DB;
 use Exception;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Tokenly\CryptoQuantity\CryptoQuantity;
 use Tokenly\LaravelEventLog\Facade\EventLog;
 use User;
