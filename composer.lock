@@ -4431,16 +4431,16 @@
         },
         {
             "name": "tokenly/substation-client",
-            "version": "v0.7.1",
+            "version": "v0.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-client.git",
-                "reference": "e22f02d84beba141e373a428135c34cb655bc56b"
+                "reference": "38dd2032eae8c4043d5eb2779fd1822ece44a8d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/e22f02d84beba141e373a428135c34cb655bc56b",
-                "reference": "e22f02d84beba141e373a428135c34cb655bc56b",
+                "url": "https://api.github.com/repos/tokenly/substation-client/zipball/38dd2032eae8c4043d5eb2779fd1822ece44a8d2",
+                "reference": "38dd2032eae8c4043d5eb2779fd1822ece44a8d2",
                 "shasum": ""
             },
             "require": {
@@ -4485,7 +4485,7 @@
                 "substation",
                 "tokenly"
             ],
-            "time": "2018-10-06T23:53:05+00:00"
+            "time": "2018-10-16T15:47:11+00:00"
         },
         {
             "name": "tokenly/substation-distribution-client",
