@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use Distribute\Processor;
-
+use Illuminate\Console\Command;
+use Models\Distribution;
 
 class Distribute extends Command
 {
@@ -13,7 +13,7 @@ class Distribute extends Command
      *
      * @var string
      */
-    protected $signature = 'bitsplit:distribute';
+    protected $signature = 'bitsplit:distribute {id?}';
 
     /**
      * The console command description.
@@ -39,17 +39,30 @@ class Distribute extends Command
      */
     public function handle()
     {
+        $id = $this->argument('id');
+        $distro = null;
+        if ($id) {
+            $distro = Distribution::find($id);
+            if (!$distro) {
+                $this->error('Distribution not found');
+                return false;
+            }
+        }
+
         $processor = new Processor;
-        try{
-			$do = $processor->processDistributions();
-		}
-		catch(\Exception $e){
-			$this->error($e->getMessage());
-			return false;
-		}
-		if($do){
-			$this->info('...done');
-		}
+        try {
+            if ($distro) {
+                $do = $processor->processStage($distro);
+            } else {
+                $do = $processor->processDistributions();
+            }
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            return false;
+        }
+        if ($do) {
+            $this->info('...done');
+        }
         return true;
     }
 }
