@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6db9c063a8764dbf423ca97433fb1462",
+    "content-hash": "5d744edb4d74b1cd12e8660210dd2473",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4042,16 +4042,16 @@
         },
         {
             "name": "tokenly/fluentd-logger",
-            "version": "v0.2.2",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/fluentd-logger.git",
-                "reference": "91bcfaaf9fb98686ab695cbcb9edc74821c042f5"
+                "reference": "809da840b65ae19f7659ea9db44c4d36b0d024df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/fluentd-logger/zipball/91bcfaaf9fb98686ab695cbcb9edc74821c042f5",
-                "reference": "91bcfaaf9fb98686ab695cbcb9edc74821c042f5",
+                "url": "https://api.github.com/repos/tokenly/fluentd-logger/zipball/809da840b65ae19f7659ea9db44c4d36b0d024df",
+                "reference": "809da840b65ae19f7659ea9db44c4d36b0d024df",
                 "shasum": ""
             },
             "require": {
@@ -4065,8 +4065,10 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
+                "laravel": {
+                    "providers": [
+                        "Tokenly\\FluentdLogger\\FluentdLoggerServiceProvider"
+                    ]
                 }
             },
             "autoload": {
@@ -4094,7 +4096,7 @@
                 "fluentd",
                 "logging"
             ],
-            "time": "2017-08-16T21:40:23+00:00"
+            "time": "2018-03-09T20:55:45+00:00"
         },
         {
             "name": "tokenly/hmac-auth",

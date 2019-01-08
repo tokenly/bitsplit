@@ -23,7 +23,7 @@
         "tokenly/bitcoin-currency-lib": "^1",
         "tokenly/consul-health-daemon": "^0.2",
         "tokenly/crypto-quantity": "^2.3",
-        "tokenly/fluentd-logger": "^0.2.2",
+        "tokenly/fluentd-logger": "^1.2",
         "tokenly/laravel-api-provider": "^3.3",
         "tokenly/laravel-event-log": "^3.1",
         "tokenly/laravel-record-lock": "^1.1",
