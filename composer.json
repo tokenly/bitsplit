@@ -5,47 +5,50 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "bitwasp/bitcoin-lib": "1.0.*",
-        "doctrine/dbal": "2.6.3",
-        "fideloper/proxy": "^3.1",
+        "php": ">=7.2",
+        "bitwasp/bitcoin": "dev-master",
+        "doctrine/dbal": "2.10",
+        "fideloper/proxy": "^4",
         "guzzlehttp/guzzle": "~6.0",
-        "laravel/framework": "5.5.*",
-        "laravel/socialite": "^3.0",
-        "laravelcollective/html": "^5.4",
+        "laravel/framework": "6",
+        "laravel/socialite": "^4",
+        "laravelcollective/html": "^6",
         "league/flysystem-aws-s3-v3": "~1.0",
         "linusu/bitcoin-address-validator": "~0",
-        "nesbot/carbon": "*",
-        "pda/pheanstalk": "~3.0",
-        "php": ">=5.6.4",
-        "ramsey/uuid": "^3",
-        "simplesoftwareio/simple-qrcode": "1.4.*",        
-        "tokenly/asset-name-utils": "^0.2.0",
-        "tokenly/bitcoin-currency-lib": "^1",
-        "tokenly/consul-health-daemon": "^0.2",
-        "tokenly/crypto-quantity": "^2.3",
-        "tokenly/fluentd-logger": "^1.2",
-        "tokenly/laravel-api-provider": "^3.3",
-        "tokenly/laravel-event-log": "^3.1",
-        "tokenly/laravel-record-lock": "^1.1",
-        "tokenly/platform-admin": "^4.0",
-        "tokenly/signal-client": "^0.2.2",
-        "tokenly/substation-client": "^0.7.3",
-        "tokenly/substation-distribution-client": "^0.2",
-        "tokenly/token-generator": "^1",
-        "tokenly/tokenmap-client": "^2.0.2",
-        "tokenly/tokenpass-client": "^3.0.1",
-        "tokenly/tokenslot-client": "dev-master",
-        "tokenly/xcaller-client": "^0.3",
-        "spatie/laravel-permission": "^2.13"
+        "nesbot/carbon": "2",
+        "pda/pheanstalk": "~4",
+        "ramsey/uuid": "^3.9.2",
+        "simplesoftwareio/simple-qrcode": "2",
+        "tokenly/asset-name-utils": "dev-master",
+        "tokenly/bitcoin-currency-lib": "dev-master",
+        "tokenly/consul-health-daemon": "dev-master",
+        "tokenly/crypto-quantity": "dev-master",
+        "tokenly/fluentd-logger": "dev-master",
+        "tokenly/laravel-api-provider": "dev-master",
+        "tokenly/laravel-event-log": "dev-master",
+        "tokenly/laravel-record-lock": "dev-master",
+        "tokenly/platform-admin": "dev-master",
+        "tokenly/signal-client": "dev-master",
+        "tokenly/substation-client": "dev-master",
+        "tokenly/substation-distribution-client": "dev-master",
+        "tokenly/token-generator": "dev-master",
+        "tokenly/tokenmap-client": "dev-master",
+        "tokenly/tokenpass-client": "dev-master",
+        "spatie/laravel-permission": "3.6",
+        "rogervila/laravel-sqlite-foreign-keys-support": "dev-master",
+    		"laravel/helpers": "^1.1",
+        "php-amqplib/php-amqplib": "^2.11",
+    		"vladimir-yuldashev/laravel-queue-rabbitmq": "^10.1",
+        "mdanter/ecc": "^0.5.2"
     },
     "require-dev": {
-        "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "^1.0",
-        "phpunit/phpunit": "^6",
-        "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*",
-        "filp/whoops": "~2.0"
-        
+        "fzaninotto/faker": "~1.9",
+        "mockery/mockery": "^1.3",
+        "phpunit/phpunit": "~7",
+    		"symfony/dom-crawler": "~5",
+    		"symfony/css-selector": "~5",
+        "filp/whoops": "~2.7"
+
     },
     "minimum-stability": "dev",
     "autoload": {
@@ -65,19 +68,107 @@
         ]
     },
 	"repositories": [
+    {
+			"type": "vcs",
+			"url": "https://github.com/tokenly/php-amqplib.git"
+		},
 		{
 			"type": "vcs",
-			"url": "https://github.com/tokenly/tokenslot-client"
+			"url": "git@github.com:tokenly/bitcoin-currency-lib.git"
 		},
-        {
-            "type": "vcs",
-            "url": "git@github.com:tokenly/signal-client.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/tokenly/laravel-queue-rabbitmq"
-        }
-	],    
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/crypto-quote-client.git"
+		},
+    {
+			"type": "vcs",
+			"url": "git@github.com:tokenly/substation-distribution-client.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/substation-blockchains.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/tokenpass-client.git"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/cryptonaut420/laravel-sqlite-foreign-keys-support.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git://github.com/tokenly/bitcoin-lib-php.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/substation-client.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/xcpd-client.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/counterparty-op-return-builder.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/counterparty-asset-info-cache.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/api-client.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/signal-client.git"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/tokenly/laravel-queue-rabbitmq.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/hmac-auth.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/crypto-quantity.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/platform-admin.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/laravel-record-lock.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/fluentd-logger.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/laravel-api-provider.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/laravel-event-log.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/token-generator.git"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/tokenly/ethereum-php.git"
+		},
+		{
+			"type": "vcs",
+			"url": "git@github.com:tokenly/tokenmap-client.git"
+		}
+	],
     "scripts": {
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""

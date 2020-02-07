@@ -158,17 +158,16 @@ return [
 
         // local providers
         App\Libraries\EscrowWallet\EscrowWalletServiceProvider::class,
-        
+
 
         /*
          * Vendor Service Providers...
          */
-		SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
-        Tokenly\XcallerClient\Provider\XCallerClientServiceProvider::class,
+		    SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,        
         Tokenly\FluentdLogger\FluentdLoggerServiceProvider::class,
         Tokenly\PlatformAdmin\Provider\PlatformAdminServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        
+
         Tokenly\TokenmapClient\ServiceProvider\TokenmapServiceProvider::class,
 
     ],
@@ -219,7 +218,7 @@ return [
 		'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 		'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
 		'Input' => Illuminate\Support\Facades\Input::class,
-    
+
         'Form' => Collective\Html\FormFacade::class,
     ],
 

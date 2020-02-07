@@ -16,8 +16,6 @@ class Kernel extends HttpKernel
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
 
-        // trust configured proxies
-        \Fideloper\Proxy\TrustProxies::class,
     ];
 
     /**
