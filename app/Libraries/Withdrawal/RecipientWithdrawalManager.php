@@ -50,7 +50,7 @@ class RecipientWithdrawalManager
 
     // public function getTotalQuantityAndTokenpassPromiseIDs()
     // {
-        
+
     // }
 
     protected function buildAddressesForUser(User $user)
@@ -62,10 +62,12 @@ class RecipientWithdrawalManager
     protected function addLedgerBalancesToAddresses($addresses)
     {
         $output = [];
-        foreach($addresses as $address) {
-            // $raw_balances = $address['balances'];
-            $address['balances'] = $this->ledger->foreignEntityBalancesByAsset($address, $_confirmed_only = false);
-            $output[] = $address;
+        if($addresses){
+          foreach($addresses as $address) {
+              // $raw_balances = $address['balances'];
+              $address['balances'] = $this->ledger->foreignEntityBalancesByAsset($address, $_confirmed_only = false);
+              $output[] = $address;
+          }
         }
 
         return $output;
