@@ -5475,12 +5475,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tokenly/substation-distribution-client.git",
-                "reference": "831035baa900d1662b401c905577b23ce07beee8"
+                "reference": "6abd87a0e5efbd2d531df2441c2edc5c75bc1f48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/831035baa900d1662b401c905577b23ce07beee8",
-                "reference": "831035baa900d1662b401c905577b23ce07beee8",
+                "url": "https://api.github.com/repos/tokenly/substation-distribution-client/zipball/6abd87a0e5efbd2d531df2441c2edc5c75bc1f48",
+                "reference": "6abd87a0e5efbd2d531df2441c2edc5c75bc1f48",
                 "shasum": ""
             },
             "require": {
@@ -5541,7 +5541,7 @@
                 "source": "https://github.com/tokenly/substation-distribution-client/tree/master",
                 "issues": "https://github.com/tokenly/substation-distribution-client/issues"
             },
-            "time": "2020-02-07T05:15:28+00:00"
+            "time": "2020-02-07T08:21:04+00:00"
         },
         {
             "name": "tokenly/token-generator",
