@@ -23,7 +23,7 @@ use Tokenly\LaravelEventLog\Facade\EventLog;
 use Tokenly\SubstationClient\SubstationClient;
 use \Spatie\Permission\Models\Role;
 
-class User extends APIUser implements AuthenticatableContract, CanResetPasswordContract
+class User extends APIUser implements AuthenticatableContract, CanResetPasswordContract, APIPermissionedUserContract
 {
 	use Authenticatable, CanResetPassword;
     use Permissioned;
@@ -32,7 +32,7 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
 	protected $fillable = array('name','email','username','tokenly_uuid','oauth_token');
 
 	public static $cur_user = false;
-	
+
 	public static function currentUser()
 	{
 		if(!self::$cur_user){
@@ -40,7 +40,7 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
 		}
 		return self::$cur_user;
 	}
-	
+
     public function checkTACAccept()
     {
         $user = Auth::user();
@@ -264,8 +264,8 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
 
 
     public static function sendApproveAccountEmailToAdmins($userId = 0)
-    {   
-        
+    {
+
         if($userId == 0){
             return false;
         }
@@ -287,7 +287,7 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
                 }
             );
         }
-        
+
     }
 
 	public static function getDashInfo($userId = 0, $no_history = false)
@@ -351,7 +351,7 @@ class User extends APIUser implements AuthenticatableContract, CanResetPasswordC
         }
 		return $output;
 	}
-	
+
     public static function getFuelAddress($userId)
     {
         $fuel_address = UserMeta::getMeta($userId, 'fuel_address');
