@@ -13,7 +13,7 @@ class PrimeUtxosTest extends TestCase
         $mock = null;
         $mock = SubstationHelper::mock_getTxosById($mock);
         $mock = SubstationHelper::mock_createServerManagedWallet($mock);
-        $mock = SubstationHelper::mock_sendImmediatelyToDestinations($mock, 
+        $mock = SubstationHelper::mock_sendImmediatelyToDestinations($mock,
             function($expectation) {
                 $expectation->times(1);
             },
@@ -42,7 +42,7 @@ class PrimeUtxosTest extends TestCase
         $mock = SubstationHelper::ensureMockedSubstationClient($mock);
         $mock = SubstationHelper::mock_getTXOsById($mock);
         $mock = SubstationHelper::mock_createServerManagedWallet($mock);
-        $mock = SubstationHelper::mock_sendImmediatelyToDestinations($mock, 
+        $mock = SubstationHelper::mock_sendImmediatelyToDestinations($mock,
             function($expectation) {
                 $expectation->times(1);
             },
@@ -101,7 +101,7 @@ class PrimeUtxosTest extends TestCase
         $mock = SubstationHelper::ensureMockedSubstationClient($mock);
         $mock = SubstationHelper::mock_getTXOsById($mock);
         $mock = SubstationHelper::mock_createServerManagedWallet($mock);
-        $mock = SubstationHelper::mock_sendImmediatelyToDestinations($mock, 
+        $mock = SubstationHelper::mock_sendImmediatelyToDestinations($mock,
             function($expectation) {
                 $expectation->times(2);
             },
@@ -116,14 +116,14 @@ class PrimeUtxosTest extends TestCase
                         PHPUnit::assertEquals(8560, $destinations[1]['quantity']->getSatoshisString());
                         PHPUnit::assertEquals(8560, $destinations[2]['quantity']->getSatoshisString());
                         break;
-                    
+
                     case 1:
                         // second call has 2 txo primes
                         PHPUnit::assertCount(2, $destinations);
                         PHPUnit::assertEquals(8560, $destinations[0]['quantity']->getSatoshisString());
                         PHPUnit::assertEquals(8560, $destinations[1]['quantity']->getSatoshisString());
                         break;
-                    
+
                     default:
                         throw new Exception("Unexpected call offset: $call_offset", 1);
                 }

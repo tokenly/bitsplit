@@ -13,11 +13,11 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
     protected $baseUrl = 'http://localhost';
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
-        // bind the test case so we can typehint TestCase 
+        // bind the test case so we can typehint TestCase
         //   and have access to this instance
         app()->instance(TestCase::class, $this);
 
