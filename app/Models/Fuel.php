@@ -6,7 +6,7 @@ use DB, Models\Distribution, Models\DistributionTx, User, UserMeta, Exception, L
 use Tokenly\CryptoQuantity\CryptoQuantity;
 class Fuel
 {
-	
+
 	public static function pump($userId, $destination_address, $amount, $asset = 'BTC', $fee = null, $amount_is_in_satoshis = true)
 	{
         $user = null;
@@ -25,6 +25,7 @@ class Fuel
 				throw new Exception($userId.' distribution not found');
 			}
 			$fuel_address_uuid = $get->address_uuid;
+			$user = User::find($get->user_id);
 		}
 		else{
 			$user = User::where('id', $userId)->orWhere('username', $userId)->first();
@@ -102,7 +103,7 @@ class Fuel
         Log::info('Pumping '.$destination_quantity.' '.$asset.' from '.$fuel_address_uuid.' to '.$destination_address.' (fee rate: '.$send_parameters['feeRate'].')');
         return $substation->sendImmediatelyToSingleDestination($wallet_uuid, $fuel_address_uuid, $asset, $destination_quantity, $destination_address, $send_parameters);
 	}
-	
+
 	public static function masterFuelSwap($userId, $token_in, $token_out, $in_amount, $out_amount)
 	{
         throw new Exception("masterFuelSwap is unimplemented", 1);
@@ -116,7 +117,7 @@ class Fuel
 		}
 		return $output;
 	}
-	
+
 	public static function getFuelQuote($token, $amount, $amount_is_in_satoshis = true)
 	{
 		$valid_assets = Config::get('settings.valid_fuel_tokens');
@@ -145,18 +146,18 @@ class Fuel
 		if($quote <= 0.000055){
 			//too dusty
 			return false;
-		}		
+		}
 		if($amount_is_in_satoshis){
 			$quote = intval($quote * 100000000);
 		}
 		return $quote;
 	}
-	
+
 	public static function estimateFuelCost($tx_count, Distribution $distro)
 	{
         return self::calculateFuel($tx_count, $distro->fee_rate, $distro->getBTCDustSatoshis());
 	}
-    
+
     public static function calculateFuel($tx_count, $fee_rate = null, $dust_size = null)
     {
         //load settings
@@ -165,7 +166,7 @@ class Fuel
             $per_byte = $fee_rate;
         }
 		$max_txos = Config::get('settings.max_tx_outputs');
-        if($dust_size == null){        
+        if($dust_size == null){
             $dust_size = 0;
         }
         $extra_bytes = Config::get('settings.tx_extra_bytes');
@@ -173,28 +174,28 @@ class Fuel
         $xcp_tx_bytes = Config::get('settings.xcp_tx_bytes');
         $average_txo_bytes = Config::get('settings.average_txo_bytes');
         $service_fee = Config::get('settings.distribute_service_fee');
-        
+
 		//base cost for # of transactions they are making
 		$base_cost = ceil(($per_byte * $xcp_tx_bytes) * $tx_count); //get base amount of satoshis that will be used for distro fees
         $base_cost += ceil($tx_count * $dust_size); //add on dust output values
-        
+
         //tack on platform service fee
         $service_cost = ($service_fee * $tx_count);
-        
+
         //figure out how many utxos we need to make
         $num_primes = ceil($tx_count / $max_txos);
 		$txos_per_prime = ceil($tx_count / $num_primes);
         if($num_primes === 1){
             $txos_per_prime++; //add 1 for change output that has service fee
         }
-        
+
         //calculate base prime cost
-        $prime_size = $input_bytes + $extra_bytes + ($txos_per_prime * $average_txo_bytes); 
-        $prime_cost = 0;  
+        $prime_size = $input_bytes + $extra_bytes + ($txos_per_prime * $average_txo_bytes);
+        $prime_cost = 0;
 		for($i = 1; $i <= $num_primes; $i++){
 			$prime_cost += $prime_size * $per_byte;
 		}
-    
+
 		//cost for priming the priming transactions (if applicable)
 		$pre_prime_cost = 0;
         $pre_prime_size = 0;
@@ -204,15 +205,15 @@ class Fuel
 		}
 
         //add up total BTC fuel costs
-		$cost = intval($base_cost + $service_cost + $prime_cost + $pre_prime_cost);   
-        
+		$cost = intval($base_cost + $service_cost + $prime_cost + $pre_prime_cost);
+
         //add some buffer for each priming transaction to cover potential fee variations
         $cost += ceil(Config::get('settings.miner_fee') * $num_primes);
-        
+
         //add a little bit extra to cover cleanup transactions
         $btc_cleanup = ($input_bytes + $extra_bytes + $average_txo_bytes) * $per_byte;
         $xcp_cleanup = ($xcp_tx_bytes * $per_byte) + $dust_size;
-        
+
         $cost += $btc_cleanup;
         $cost += $xcp_cleanup;
 
